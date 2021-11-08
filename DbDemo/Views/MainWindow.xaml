@@ -1,0 +1,99 @@
+﻿<Window x:Class="DbDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DbDemo"
+        xmlns:viewModels="clr-namespace:DbDemo.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        FontSize="40"
+        d:DataContext="{d:DesignInstance viewModels:MainWindowViewModel}">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Grid.Row="1"
+                Grid.Column="1"
+                Content="SELECT"
+                Command="{Binding SelectCommand}" />
+        <Button Grid.Row="1"
+                Grid.Column="3"
+                Content="INSERT"
+                Command="{Binding InsertCommand}" />
+        <ScrollViewer Grid.Row="3"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="5">
+            <ItemsControl ItemsSource="{Binding Employees}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DataTemplate.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Setters>
+                                        <Setter Property="TextWrapping"
+                                                Value="Wrap" />
+                                        <Setter Property="TextAlignment"
+                                                Value="Center" />
+                                    </Style.Setters>
+                                </Style>
+                            </ResourceDictionary>
+                        </DataTemplate.Resources>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="{Binding Name, Mode=OneTime}" />
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="1"
+                                       HorizontalAlignment="Right">
+                                <TextBlock.Inlines>
+                                    <Run Text="{Binding Salary, Mode=OneTime, StringFormat=N2}" /><Run Text="$" />
+                                </TextBlock.Inlines>
+                            </TextBlock>
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="2"
+                                       HorizontalAlignment="Center"
+                                       Text="{Binding RoleName, Mode=OneTime}" />
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="3"
+                                       HorizontalAlignment="Center"
+                                       Text="{Binding RoleDescription, Mode=OneTime}" />
+                            <Separator Grid.Row="1"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="4" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>

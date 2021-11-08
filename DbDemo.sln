@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbDemo.WPF.MVVM", "DbDemo.WPF.MVVM\DbDemo.WPF.MVVM.csproj", "{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbDemo", "DbDemo\DbDemo.csproj", "{D7C671B0-B96F-4DF5-BE7C-948628004D3B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7C671B0-B96F-4DF5-BE7C-948628004D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7C671B0-B96F-4DF5-BE7C-948628004D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7C671B0-B96F-4DF5-BE7C-948628004D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7C671B0-B96F-4DF5-BE7C-948628004D3B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
