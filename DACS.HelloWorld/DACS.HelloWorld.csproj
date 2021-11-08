@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>netcoreapp3.1-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>DACS.HelloWorld</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Image.png" />
+      <Content Include="Resources\Image.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DACS.WPF.MVVM\DACS.WPF.MVVM.csproj" />
+    </ItemGroup>
+
+</Project>

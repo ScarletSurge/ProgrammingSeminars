@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.HelloWorld", "DACS.HelloWorld\DACS.HelloWorld.csproj", "{B42C4E4D-1B2E-428F-BC51-DEF34F239F6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.MVVM", "DACS.WPF.MVVM\DACS.WPF.MVVM.csproj", "{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.MultithreadingAndAsynchronious", "DACS.MultithreadingAndAsynchronious\DACS.MultithreadingAndAsynchronious.csproj", "{0C8B3BEE-01DD-4A38-A673-6F3A713862AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B42C4E4D-1B2E-428F-BC51-DEF34F239F6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42C4E4D-1B2E-428F-BC51-DEF34F239F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42C4E4D-1B2E-428F-BC51-DEF34F239F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42C4E4D-1B2E-428F-BC51-DEF34F239F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C8B3BEE-01DD-4A38-A673-6F3A713862AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C8B3BEE-01DD-4A38-A673-6F3A713862AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C8B3BEE-01DD-4A38-A673-6F3A713862AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C8B3BEE-01DD-4A38-A673-6F3A713862AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
