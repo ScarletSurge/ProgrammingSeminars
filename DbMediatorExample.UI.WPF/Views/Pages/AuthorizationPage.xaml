@@ -1,0 +1,56 @@
+﻿<Page x:Class="DbMediatorExample.UI.WPF.Views.Pages.AuthorizationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary>
+            <Style TargetType="{x:Type TextBlock}">
+                <Style.Setters>
+                    <Setter Property="FontSize"
+                            Value="50" />
+                </Style.Setters>
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Style.Setters>
+                    <Setter Property="FontSize"
+                            Value="50" />
+                </Style.Setters>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="1"
+                   Grid.Column="0"
+                   Text="Login: " />
+        <TextBox Grid.Row="1"
+                 Grid.Column="1"
+                 Text="{Binding Login, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Grid.Row="3"
+                   Grid.Column="0"
+                   Text="Password: " />
+        <TextBox Grid.Row="3"
+                 Grid.Column="1"
+                 Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Button Grid.Row="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                FontSize="50"
+                Content="Authorize"
+                Command="{Binding AuthorizeCommand, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
+</Page>

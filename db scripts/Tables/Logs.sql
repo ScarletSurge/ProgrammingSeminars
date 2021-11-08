@@ -1,0 +1,11 @@
+USE [DbMediator]
+
+GO
+
+CREATE TABLE [dbo].[logs]
+(
+    [id] INT NOT NULL PRIMARY KEY IDENTITY,
+	[description] VARCHAR(MAX) NOT NULL,
+	[created] DATETIME NOT NULL CHECK([created] <= GETDATE()) DEFAULT CURRENT_TIMESTAMP,
+	[owner_id] INT NULL FOREIGN KEY REFERENCES [dbo].[users]([id]) DEFAULT NULL
+)
