@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="OwnDefaultButtonStyle"
+           TargetType="{x:Type Button}">
+        <Style.Setters>
+            <Setter Property="FontSize"
+                    Value="50" />
+            <Setter Property="Foreground"
+                    Value="Red" />
+        </Style.Setters>
+    </Style>
+    <Style x:Key="DerivedButtonStyle"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource OwnDefaultButtonStyle}">
+        <Style.Setters>
+            <Setter Property="FontSize"
+                    Value="30" />
+        </Style.Setters>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsLeftStringVisible}"
+                         Value="True">
+                <DataTrigger.Setters>
+                    <Setter Property="Content"
+                            Value="Switch to right" />
+                </DataTrigger.Setters>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsLeftStringVisible}"
+                         Value="False">
+                <DataTrigger.Setters>
+                    <Setter Property="Content"
+                            Value="Switch to left" />
+                </DataTrigger.Setters>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

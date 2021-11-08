@@ -1,0 +1,179 @@
+﻿<Window x:Class="ThirdCourse.WPF.Strings.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converter="clr-namespace:ThirdCourse.WPF.MVVM.Converters;assembly=ThirdCourse.WPF.MVVM"
+        xmlns:controls="clr-namespace:ThirdCourse.WPF.Strings.Views.Controls"
+        xmlns:viewModel="clr-namespace:ThirdCourse.WPF.Strings.ViewModels"
+        mc:Ignorable="d">
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <!--<DataTemplate x:Key="StringsView">
+                <DataTemplate.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="TextAlignment"
+                                    Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
+                            <Setter Property="VerticalAlignment"
+                                    Value="Center" />
+                            <Setter Property="FontSize"
+                                    Value="40" />
+                            <Setter Property="TextWrapping"
+                                    Value="Wrap" />
+                        </Style>
+                    </ResourceDictionary>
+                </DataTemplate.Resources>
+                <Grid Margin="0,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Grid.RowSpan="2"
+                               Grid.Column="0"
+                               Text="{Binding First}">
+                        <TextBlock.Visibility>
+                            <Binding Path="IsLeftStringVisible">
+                                <Binding.Converter>
+                                    <converter:BoolToVisibilityConverter />
+                                </Binding.Converter>
+                            </Binding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
+                    <Button Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource DerivedButtonStyle}"
+                            Command="{Binding SwitchBoolCommand}" />
+                    <Button Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource OwnDefaultButtonStyle}"
+                            Content="Change text!"
+                            Command="{Binding RefreshStringsCommand}" />
+                    <TextBlock Grid.Row="0"
+                               Grid.RowSpan="2"
+                               Grid.Column="2"
+                               Text="{Binding Second}">
+                        <TextBlock.Visibility>
+                            <Binding Path="IsLeftStringVisible">
+                                <Binding.Converter>
+                                    <converter:BoolToInvertedVisibilityConverter />
+                                </Binding.Converter>
+                            </Binding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
+                    <Button Grid.Row="0"
+                            Grid.RowSpan="2"
+                            Grid.Column="3"
+                            VerticalAlignment="Center"
+                            Content="Delete"
+                            Command="{Binding RequestRemovingCommand}" />
+                </Grid>
+            </DataTemplate>-->
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Content>
+        <DockPanel>
+            <Button DockPanel.Dock="Top"
+                    FontSize="40"
+                    Content="+"
+                    Command="{Binding AddStringsCommand}" />
+            <controls:StringsView LeftString=""
+                                  DockPanel.Dock="Bottom" />
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Strings}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DataTemplate.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.MergedDictionaries>
+                                        <ResourceDictionary Source="/ThirdCourse.WPF.Strings;component/Views/Resources/Styles.xaml" />
+                                    </ResourceDictionary.MergedDictionaries>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="TextAlignment"
+                                                Value="Center" />
+                                        <Setter Property="HorizontalAlignment"
+                                                Value="Center" />
+                                        <Setter Property="VerticalAlignment"
+                                                Value="Center" />
+                                        <Setter Property="FontSize"
+                                                Value="40" />
+                                        <Setter Property="TextWrapping"
+                                                Value="Wrap" />
+                                    </Style>
+                                </ResourceDictionary>
+                            </DataTemplate.Resources>
+                            <Grid Margin="0,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.RowSpan="2"
+                                           Grid.Column="0"
+                                           Text="{Binding First}">
+                                    <TextBlock.Visibility>
+                                        <Binding Path="IsLeftStringVisible">
+                                            <Binding.Converter>
+                                                <converter:BoolToVisibilityConverter />
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </TextBlock.Visibility>
+                                </TextBlock>
+                                <Button Grid.Row="0"
+                                        Grid.Column="1"
+                                        Style="{StaticResource DerivedButtonStyle}"
+                                        Command="{Binding SwitchBoolCommand}" />
+                                <Button Grid.Row="1"
+                                        Grid.Column="1"
+                                        Style="{StaticResource OwnDefaultButtonStyle}"
+                                        Content="Change text!"
+                                        Command="{Binding RefreshStringsCommand}" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.RowSpan="2"
+                                           Grid.Column="2"
+                                           Text="{Binding Second}">
+                                    <TextBlock.Visibility>
+                                        <Binding Path="IsLeftStringVisible">
+                                            <Binding.Converter>
+                                                <converter:BoolToInvertedVisibilityConverter />
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </TextBlock.Visibility>
+                                </TextBlock>
+                                <Button Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="3"
+                                        VerticalAlignment="Center"
+                                        Content="Delete"
+                                        Command="{Binding RequestRemovingCommand}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </DockPanel>
+    </Window.Content>
+</Window>

@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="ThirdCourse.WPF.Spinner.Views.Controls.Spinner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:ThirdCourse.WPF.Spinner.Views.Controls"
+             xmlns:converters="clr-namespace:ThirdCourse.WPF.MVVM.Converters;assembly=ThirdCourse.WPF.MVVM"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d">
+    <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type controls:Spinner}}}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Canvas />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Ellipse Width="{x:Static controls:Spinner.ItemSizeParameter}"
+                         Height="{x:Static controls:Spinner.ItemSizeParameter}"
+                         Fill="Red" />
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemContainerStyle>
+            <Style TargetType="{x:Type FrameworkElement}">
+                <Setter Property="Canvas.Left"
+                        Value="{Binding X}" />
+                <Setter Property="Canvas.Top"
+                        Value="{Binding Y}" />
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <RotateTransform Angle="{Binding Angle}">
+                            <RotateTransform.CenterX>
+                                <Binding Path="ActualWidth"
+                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type controls:Spinner}}">
+                                    <Binding.Converter>
+                                        <converters:PercentageConverter />
+                                    </Binding.Converter>
+                                    <Binding.ConverterParameter>
+                                        <system:Double>
+                                            0.5
+                                        </system:Double>
+                                    </Binding.ConverterParameter>
+                                </Binding>
+                            </RotateTransform.CenterX>
+                            <RotateTransform.CenterY>
+                                <Binding Path="ActualHeight"
+                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type controls:Spinner}}">
+                                    <Binding.Converter>
+                                        <converters:PercentageConverter />
+                                    </Binding.Converter>
+                                    <Binding.ConverterParameter>
+                                        <system:Double>
+                                            0.5
+                                        </system:Double>
+                                    </Binding.ConverterParameter>
+                                </Binding>
+                            </RotateTransform.CenterY>
+                        </RotateTransform>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ItemsControl.ItemContainerStyle>
+    </ItemsControl>
+</UserControl>
