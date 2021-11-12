@@ -1,1 +1,1 @@
-CREATE DATABASE "db2122";
+CREATE DATABASE "db_third_course";

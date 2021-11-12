@@ -96,3 +96,17 @@ AS $$
           ON "e"."role_id" = "r"."id";
 $$
 LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION "f_insert_employee"
+    (
+        "name" VARCHAR(50),
+        "salary" MONEY,
+        "role_id" INTEGER DEFAULT 4
+
+    ) RETURNS VOID
+AS $$
+    INSERT INTO "employees"
+      VALUES ((SELECT MAX("e"."id") + 1
+                 FROM "employees" AS "e"), "name", "salary", "role_id");
+$$
+LANGUAGE sql;
