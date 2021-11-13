@@ -1,18 +1,18 @@
 ﻿namespace DbDemo.Models
 {
     
-    internal sealed class EmployeeFullInfo
+    public sealed class EmployeeFullInfo
     {
 
-        public int Id { get; private set; }
+        public int Id { get; }
         
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public decimal Salary { get; private set; }
+        public decimal Salary { get; }
 
-        public string RoleName { get; private set; }
+        public string RoleName { get; }
 
-        public string RoleDescription { get; private set; }
+        public string RoleDescription { get; }
 
         public EmployeeFullInfo(int id, string name, decimal salary,
             string roleName, string roleDescription)

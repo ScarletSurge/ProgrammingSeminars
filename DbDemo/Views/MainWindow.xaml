@@ -23,21 +23,76 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button Grid.Row="1"
-                Grid.Column="1"
+        <Button Grid.Row="0"
+                Grid.Column="0"
+                Margin="3"
                 Content="SELECT"
                 Command="{Binding SelectCommand}" />
-        <Button Grid.Row="1"
-                Grid.Column="3"
+        <Button Grid.Row="0"
+                Grid.Column="1"
+                Margin="3"
                 Content="INSERT"
                 Command="{Binding InsertCommand}" />
-        <ScrollViewer Grid.Row="3"
+        <Grid Grid.Row="0"
+              Grid.Column="2"
+              Grid.ColumnSpan="3"
+              Margin="5,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Name:" />
+            <TextBox Grid.Row="0"
+                     Grid.Column="1"
+                     Margin="5,3,0,3"
+                     Text="{Binding Name, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+            
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Salary:" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="1"
+                     Margin="5,3,0,3"
+                     Text="{Binding SalaryString, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
+            
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Role:" />
+            <ComboBox Grid.Row="2"
+                      Grid.Column="1"
+                      ItemsSource="{Binding Roles}"
+                      Margin="5,3,0,3"
+                      SelectedValue="{Binding SelectedRoleInfo, Mode=OneWayToSource}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name, Mode=OneTime}" />
+                            <TextBlock Margin="5,0,0,0">
+                                <TextBlock.Inlines>
+                                    <Run Text="(" /><Run Text="{Binding Description, Mode=OneTime}" /><Run Text=")" />
+                                </TextBlock.Inlines>
+                            </TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+        <ScrollViewer Grid.Row="1"
+                      Grid.RowSpan="3"
                       Grid.Column="0"
-                      Grid.ColumnSpan="5">
+                      Grid.ColumnSpan="5"
+                      Margin="3">
             <ItemsControl ItemsSource="{Binding Employees}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
