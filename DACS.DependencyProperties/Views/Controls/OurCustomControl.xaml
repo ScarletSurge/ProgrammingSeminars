@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="DACS.DependencyProperties.Views.Controls.OurCustomControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DACS.DependencyProperties.Views.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Margin="0,0,0,5"
+                   Text="{Binding SomeString, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OurCustomControl}}}" />
+        <TextBlock Grid.Row="1"
+                   Margin="0,0,0,5"
+                   Text="{Binding SomeString, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OurCustomControl}}}" />
+        <Button Grid.Row="2"
+                Content="Hardcode string -_-" />
+    </Grid>
+</UserControl>
