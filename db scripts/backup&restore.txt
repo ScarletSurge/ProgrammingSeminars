@@ -1,0 +1,6 @@
+Plain text (sql):
+pg_dump -h localhost -U postgres --password -f C:\Users\castl\Desktop\db_third_course.bak db_third_course
+psql -h localhost -U postgres --password -d db_third_course_restored < C:\Users\castl\Desktop\db_third_course.bak
+Data binary serialization (memento):
+pg_dump -h localhost -U postgres --password -F c -f C:\Users\castl\Desktop\db_third_course_tar.bak db_third_course_restored
+pg_restore -h localhost -U postgres --password -d db_third_course_restored_from_tar C:\Users\castl\Desktop\db_third_course_tar.bak
