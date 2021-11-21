@@ -60,6 +60,6 @@
                  Text="{Binding Text, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" />
         <controls:OurCustomControl Grid.Row="0"
                                    Grid.Column="2"
-                                   SomeString="{Binding Text, Mode=OneWay}" />
+                                   SomeString="{Binding Text, Mode=OneWay}"/>
     </Grid>
 </Window>

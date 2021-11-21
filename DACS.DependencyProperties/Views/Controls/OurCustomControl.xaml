@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DACS.DependencyProperties.Views.Controls"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -13,11 +14,24 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
-                   Margin="0,0,0,5"
-                   Text="{Binding SomeString, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OurCustomControl}}}" />
+                   Margin="0,0,0,5">
+            <TextBlock.Text>
+                <Binding Path="SomeString">
+                    <Binding.TargetNullValue>
+                        <system:String>
+                            I am null, kill me plz o___O
+                        </system:String>
+                    </Binding.TargetNullValue>
+                    <Binding.RelativeSource>
+                        <RelativeSource Mode="FindAncestor"
+                                        AncestorType="{x:Type local:OurCustomControl}" />
+                    </Binding.RelativeSource>
+                </Binding>
+            </TextBlock.Text>
+        </TextBlock>
         <TextBlock Grid.Row="1"
                    Margin="0,0,0,5"
-                   Text="{Binding SomeString, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OurCustomControl}}}" />
+                   Text="{Binding SomeInt, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OurCustomControl}}}" />
         <Button Grid.Row="2"
                 Content="Hardcode string -_-" />
     </Grid>
