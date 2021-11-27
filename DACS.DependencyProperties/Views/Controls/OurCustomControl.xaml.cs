@@ -9,6 +9,7 @@ namespace DACS.DependencyProperties.Views.Controls
         public OurCustomControl()
         {
             InitializeComponent();
+            //DataContext = this;
         }
 
         public int SomeInt

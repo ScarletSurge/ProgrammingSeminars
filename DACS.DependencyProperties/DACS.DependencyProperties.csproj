@@ -10,4 +10,11 @@
       <ProjectReference Include="..\DACS.WPF.MVVM\DACS.WPF.MVVM.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Assets\image.jpg" />
+      <Content Include="Assets\image.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
