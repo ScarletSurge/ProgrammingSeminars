@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DACS.RedisSample.Domain\DACS.RedisSample.Domain.csproj" />
+      <ProjectReference Include="..\DACS.RedisSample.Interceptor\DACS.RedisSample.Interceptor.csproj" />
+    </ItemGroup>
+
+</Project>

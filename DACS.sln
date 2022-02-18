@@ -8,6 +8,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.MultithreadingAndAsync
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DependencyProperties", "DACS.DependencyProperties\DACS.DependencyProperties.csproj", "{881856A4-64CF-476A-8BFB-ECFD2AA23E16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.RedisSample.Domain", "DACS.RedisSample.Domain\DACS.RedisSample.Domain.csproj", "{98A9D395-F716-4857-81F7-8FD74891142B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.RedisSample.Interceptor", "DACS.RedisSample.Interceptor\DACS.RedisSample.Interceptor.csproj", "{C3E1FE83-7310-4EED-BF2E-E5C3EF67ACB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.RedisSample.Demo", "DACS.RedisSample.Demo\DACS.RedisSample.Demo.csproj", "{BE6F22D3-9454-439B-9418-F27523471A64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +36,17 @@ Global
 		{881856A4-64CF-476A-8BFB-ECFD2AA23E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{881856A4-64CF-476A-8BFB-ECFD2AA23E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{881856A4-64CF-476A-8BFB-ECFD2AA23E16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98A9D395-F716-4857-81F7-8FD74891142B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98A9D395-F716-4857-81F7-8FD74891142B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98A9D395-F716-4857-81F7-8FD74891142B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98A9D395-F716-4857-81F7-8FD74891142B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3E1FE83-7310-4EED-BF2E-E5C3EF67ACB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3E1FE83-7310-4EED-BF2E-E5C3EF67ACB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3E1FE83-7310-4EED-BF2E-E5C3EF67ACB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3E1FE83-7310-4EED-BF2E-E5C3EF67ACB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE6F22D3-9454-439B-9418-F27523471A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE6F22D3-9454-439B-9418-F27523471A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE6F22D3-9454-439B-9418-F27523471A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE6F22D3-9454-439B-9418-F27523471A64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
