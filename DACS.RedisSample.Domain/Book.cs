@@ -39,18 +39,18 @@ namespace DACS.RedisSample.Domain
         {
             var writtenBytesCount = 0;
             
-            var authorBytes = (Author ?? string.Empty).ToByteArray();
+            var authorBytes = await (Author ?? string.Empty).ToByteArrayAsync(token);
             writtenBytesCount += authorBytes.Length;
             await stream.WriteAsync(authorBytes, token);
 
-            var titleBytes = (Title ?? string.Empty).ToByteArray();
+            var titleBytes = await (Title ?? string.Empty).ToByteArrayAsync(token);
             writtenBytesCount += titleBytes.Length;
             await stream.WriteAsync(titleBytes, token);
 
             writtenBytesCount += sizeof(int);
             await stream.WriteAsync(BitConverter.GetBytes(Year.Year), token);
 
-            var snBytes = (SN ?? string.Empty).ToByteArray();
+            var snBytes = await (SN ?? string.Empty).ToByteArrayAsync(token);
             writtenBytesCount += snBytes.Length;
             await stream.WriteAsync(snBytes, token);
             
@@ -68,12 +68,17 @@ namespace DACS.RedisSample.Domain
         {
             var intBytesBuffer = new byte[sizeof(int)];
             
-            var author = stream.StringFromMemoryStream();
-            var title = stream.StringFromMemoryStream();
-            _ = await stream.ReadAsync(intBytesBuffer, 0, intBytesBuffer.Length, token);
+            var author = await stream.StringFromMemoryStreamAsync(token)
+                .ConfigureAwait(false);
+            var title = await stream.StringFromMemoryStreamAsync(token)
+                .ConfigureAwait(false);
+            _ = await stream.ReadAsync(intBytesBuffer, 0, intBytesBuffer.Length, token)
+                .ConfigureAwait(false);
             var year = BitConverter.ToInt32(intBytesBuffer);
-            var sn = stream.StringFromMemoryStream();
-            _ = await stream.ReadAsync(intBytesBuffer, 0, intBytesBuffer.Length, token);
+            var sn = await stream.StringFromMemoryStreamAsync(token)
+                .ConfigureAwait(false);
+            _ = await stream.ReadAsync(intBytesBuffer, 0, intBytesBuffer.Length, token)
+                .ConfigureAwait(false);
             var count = BitConverter.ToInt32(intBytesBuffer);
 
             return new Book

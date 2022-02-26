@@ -40,7 +40,7 @@ namespace DACS.RedisSample.Interceptor
             var hashString = hash.ToHexString();
             var redisConnection = await ConnectionMultiplexer.ConnectAsync("127.0.0.1:6379");
             var redisDatabase = redisConnection.GetDatabase();
-            var cachedRequestResult = redisDatabase.StringGet(hashString);
+            var cachedRequestResult = await redisDatabase.StringGetAsync(hashString);
             
             if (cachedRequestResult == RedisValue.Null)
             {
@@ -151,6 +151,7 @@ namespace DACS.RedisSample.Interceptor
         /// <param name="minYear"></param>
         /// <param name="maxYear"></param>
         /// <returns></returns>
+        [Obsolete("это калич -_-")]
         private static byte[] ComputeHash(string authorSubstr, string titleSubstr, int minYear, int maxYear)
         {
             using var md5 = MD5.Create();
