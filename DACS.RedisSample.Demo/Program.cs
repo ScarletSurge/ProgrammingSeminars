@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using DACS.RedisSample.Interceptor;
 
 namespace DACS.RedisSample.Demo

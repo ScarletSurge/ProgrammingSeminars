@@ -13,6 +13,13 @@ using DACS.RedisSample.Domain;
 namespace DACS.RedisSample.Interceptor
 {
     
+    // IoC/DI, DryIoC
+    // Autofac
+    // Windsor.Castle
+    // IServiceProvider (Microsoft)
+    // DryIoc
+    // Unity (Microsoft)
+    
     /// <summary>
     /// 
     /// </summary>
