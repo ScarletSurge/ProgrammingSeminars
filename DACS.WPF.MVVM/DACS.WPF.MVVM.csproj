@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0-windows</TargetFramework>
         <UseWpf>true</UseWpf>
         <RootNamespace>DACS.WPF.MVVM</RootNamespace>
+        <Company>813</Company>
     </PropertyGroup>
 
 </Project>

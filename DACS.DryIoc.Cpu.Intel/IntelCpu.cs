@@ -1,4 +1,5 @@
 ﻿using System;
+
 using DACS.DryIoc.Domain;
 
 namespace DACS.DryIoc.Cpu.Intel

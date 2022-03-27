@@ -8,7 +8,7 @@ namespace DACS.DryIoc.Cat
 
         public Cat()
         {
-            var x = 5;
+            //var x = 5;
         }
 
         public int LegsCount =>

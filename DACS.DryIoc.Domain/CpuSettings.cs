@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DACS.DryIoc.Domain
+﻿namespace DACS.DryIoc.Domain
 {
     
     public class CpuSettings

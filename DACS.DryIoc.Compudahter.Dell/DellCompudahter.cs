@@ -1,10 +1,11 @@
 ﻿using System;
+
 using DACS.DryIoc.Domain;
 
 namespace DACS.DryIoc.Compudahter.Dell
 {
     
-    public class DellCompudahter : ICompudahter
+    public sealed class DellCompudahter : ICompudahter
     {
         
         #region Constructors

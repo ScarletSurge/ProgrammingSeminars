@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DryIoc;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+
 using DACS.DryIoc.Domain;
-using DryIoc;
-using Microsoft.Extensions.Configuration;
 
 namespace DACS.DryIoc.Target
 {
@@ -23,15 +24,15 @@ namespace DACS.DryIoc.Target
         {
             
             Container.Register<IAnimal, Cat.Cat>(Reuse.Singleton);
-            Container.Register<Zoo>(Reuse.Transient);
+            Container.Register<Zoo.Zoo>(Reuse.Transient);
 
             //var cat1 = Container.Resolve<IAnimal>();
             //var cat2 = Container.Resolve<IAnimal>();
             
             //Console.WriteLine(ReferenceEquals(cat1, cat2));
 
-            var zoo1 = Container.Resolve<Zoo>();
-            var zoo2 = Container.Resolve<Zoo>();
+            var zoo1 = Container.Resolve<Zoo.Zoo>();
+            var zoo2 = Container.Resolve<Zoo.Zoo>();
             
             zoo1.Voice();
 

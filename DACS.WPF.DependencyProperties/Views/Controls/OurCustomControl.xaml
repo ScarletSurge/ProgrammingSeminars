@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="DACS.WPF.DependencyProperties.Views.Controls.OurCustomControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:attached="clr-namespace:DACS.WPF.DependencyProperties.Views.Attached"
+             xmlns:converters="clr-namespace:DACS.WPF.MVVM.Converter;assembly=DACS.WPF.MVVM"
+             xmlns:local="clr-namespace:DACS.WPF.DependencyProperties.Views.Controls"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="ButtonImage"
+                         UriSource="/Assets/image.jpg" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Margin="0,0,0,5">
+            <TextBlock.Text>
+                <Binding Path="SomeString">
+                    <Binding.TargetNullValue>
+                        <system:String>
+                            I am null, kill me plz o___O
+                        </system:String>
+                    </Binding.TargetNullValue>
+                    <Binding.RelativeSource>
+                        <RelativeSource Mode="FindAncestor"
+                                        AncestorType="{x:Type local:OurCustomControl}" />
+                    </Binding.RelativeSource>
+                </Binding>
+            </TextBlock.Text>
+        </TextBlock>
+        <TextBlock Grid.Row="1"
+                   Margin="0,0,0,5"
+                   Text="{Binding SomeInt, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:OurCustomControl}}}" />
+        <Button Grid.Row="2"
+                Content="Hardcode string -_-">
+            <attached:ButtonAttachedProperties.SecondContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               TextWrapping="Wrap"
+                               Text="Я - attached content!1!!1" />
+                    <Ellipse Grid.Column="1"
+                             Width="30"
+                             Height="30"
+                             Fill="Blue" />
+                </Grid>
+            </attached:ButtonAttachedProperties.SecondContent>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Setters>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Image Grid.Row="0"
+                                               Source="{StaticResource ButtonImage}"
+                                               Stretch="None">
+                                            <Image.RenderTransform>
+                                                <ScaleTransform ScaleX="3">
+                                                    <ScaleTransform.CenterX>
+                                                        <MultiBinding Converter="{converters:ArithmeticCombinator}"
+                                                                      ConverterParameter="{x:Static converters:ArithmeticCombinator+Operators.Division}">
+                                                            <MultiBinding.Bindings>
+                                                                <Binding Path="ActualWidth"
+                                                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Image}}"
+                                                                         Mode="OneWay" />
+                                                                <Binding Mode="OneWay">
+                                                                    <Binding.Source>
+                                                                        <system:Double>
+                                                                            2.0
+                                                                        </system:Double>
+                                                                    </Binding.Source>
+                                                                </Binding>
+                                                            </MultiBinding.Bindings>
+                                                        </MultiBinding>
+                                                    </ScaleTransform.CenterX>
+                                                    <ScaleTransform.CenterY>
+                                                        <MultiBinding Converter="{converters:ArithmeticCombinator}"
+                                                                      ConverterParameter="{x:Static converters:ArithmeticCombinator+Operators.Division}">
+                                                            <MultiBinding.Bindings>
+                                                                <Binding Path="ActualHeight"
+                                                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Image}}"
+                                                                         Mode="OneWay" />
+                                                                <Binding Mode="OneWay">
+                                                                    <Binding.Source>
+                                                                        <system:Double>
+                                                                            2.0
+                                                                        </system:Double>
+                                                                    </Binding.Source>
+                                                                </Binding>
+                                                            </MultiBinding.Bindings>
+                                                        </MultiBinding>
+                                                    </ScaleTransform.CenterY>
+                                                </ScaleTransform>
+                                            </Image.RenderTransform>
+                                        </Image>
+                                        <Label Grid.Row="0"
+                                               Content="{TemplateBinding Content}"
+                                               HorizontalAlignment="Center"
+                                               HorizontalContentAlignment="Center" />
+                                        <ContentPresenter Grid.Row="1"
+                                                          Content="{Binding Path=(attached:ButtonAttachedProperties.SecondContent),
+                                                              RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}}}" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style.Setters>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</UserControl>
