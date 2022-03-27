@@ -54,6 +54,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.MVVM", "WPF\DACS.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.ThreadLock", "WPF\DACS.WPF.ThreadLock\DACS.WPF.ThreadLock.csproj", "{30C63E68-C291-4038-B5A5-E5D8DD5655DB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{6C029AE8-D65B-42C6-ADB9-BA2D5C6FDEF6}"
+	ProjectSection(SolutionItems) = preProject
+		Tasks\part 1.pdf = Tasks\part 1.pdf
+		Tasks\part 2.pdf = Tasks\part 2.pdf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
