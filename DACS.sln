@@ -1,58 +1,58 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.HelloWorld", "DACS.WPF.HelloWorld\DACS.WPF.HelloWorld.csproj", "{B42C4E4D-1B2E-428F-BC51-DEF34F239F6C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.MVVM", "DACS.WPF.MVVM\DACS.WPF.MVVM.csproj", "{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.DependencyProperties", "DACS.WPF.DependencyProperties\DACS.WPF.DependencyProperties.csproj", "{881856A4-64CF-476A-8BFB-ECFD2AA23E16}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.Redis.Domain", "DACS.Redis.Domain\DACS.Redis.Domain.csproj", "{98A9D395-F716-4857-81F7-8FD74891142B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.Redis.Interceptor", "DACS.Redis.Interceptor\DACS.Redis.Interceptor.csproj", "{C3E1FE83-7310-4EED-BF2E-E5C3EF67ACB7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.Redis.Demo", "DACS.Redis.Demo\DACS.Redis.Demo.csproj", "{BE6F22D3-9454-439B-9418-F27523471A64}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Redis", "Redis", "{81254161-E2AF-489C-B978-652383ABDF83}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{E779F3B7-1D57-4E82-9569-D8F64AAF1A15}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DryIoc", "DryIoc", "{B2EB6DFD-3F2F-43C7-BD5A-72E09041A850}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Target", "DACS.DryIoc.Target\DACS.DryIoc.Target.csproj", "{1664CF04-5F1E-4875-ACFD-D4AD7563EC7F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Domain", "DACS.DryIoc.Domain\DACS.DryIoc.Domain.csproj", "{F7F23FB7-2662-41E1-8976-A9391BD450C9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Cat", "DACS.DryIoc.Cat\DACS.DryIoc.Cat.csproj", "{8422456A-ED89-46BA-810D-D882819CBBC8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Dog", "DACS.DryIoc.Dog\DACS.DryIoc.Dog.csproj", "{F2369B47-F153-4C7F-8432-16E6DEEC278A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cpu", "Cpu", "{15EF7B31-809B-40A8-A127-8049F01FA415}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OperatingSystem", "OperatingSystem", "{EA1F80C6-9370-467B-9733-64BCD9981B4D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compudahter", "Compudahter", "{C3E27556-CFC4-40C4-BEF2-663E7DBD98C5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Cpu.Intel", "DACS.DryIoc.Cpu.Intel\DACS.DryIoc.Cpu.Intel.csproj", "{78513686-0C1A-45E1-9BAE-67951D2CE88D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Cpu.AMD", "DACS.DryIoc.Cpu.AMD\DACS.DryIoc.Cpu.AMD.csproj", "{84C24ABB-5909-4821-AC8C-FF9FB7A619BB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.OperatingSystem.Windows", "DACS.DryIoc.OperatingSystem.Windows\DACS.DryIoc.OperatingSystem.Windows.csproj", "{16C67672-F359-4631-A618-9094620B4B36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.OperatingSystem.MintLinux", "DACS.DryIoc.OperatingSystem.MintLinux\DACS.DryIoc.OperatingSystem.MintLinux.csproj", "{E80CA72C-33DB-4CDA-A47B-173372AC7880}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Compudahter.Dell", "DACS.DryIoc.Compudahter.Dell\DACS.DryIoc.Compudahter.Dell.csproj", "{612A936B-52A4-45DF-A231-99EC7B5FE481}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.ThreadLock", "DACS.WPF.ThreadLock\DACS.WPF.ThreadLock.csproj", "{30C63E68-C291-4038-B5A5-E5D8DD5655DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Animals", "Animals", "{196EFBFF-96B1-4294-872B-83E2B786F4D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Cat", "DryIoc\Animals\DACS.DryIoc.Cat\DACS.DryIoc.Cat.csproj", "{8422456A-ED89-46BA-810D-D882819CBBC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Dog", "DryIoc\Animals\DACS.DryIoc.Dog\DACS.DryIoc.Dog.csproj", "{F2369B47-F153-4C7F-8432-16E6DEEC278A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Zoo", "DryIoc\Animals\DACS.DryIoc.Zoo\DACS.DryIoc.Zoo.csproj", "{8AFF105E-0051-4E88-86A4-F94DB32060CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compudahter", "Compudahter", "{C3E27556-CFC4-40C4-BEF2-663E7DBD98C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Compudahter.Dell", "DryIoc\Compudahter\DACS.DryIoc.Compudahter.Dell\DACS.DryIoc.Compudahter.Dell.csproj", "{612A936B-52A4-45DF-A231-99EC7B5FE481}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cpu", "Cpu", "{15EF7B31-809B-40A8-A127-8049F01FA415}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Cpu.AMD", "DryIoc\Cpu\DACS.DryIoc.Cpu.AMD\DACS.DryIoc.Cpu.AMD.csproj", "{84C24ABB-5909-4821-AC8C-FF9FB7A619BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Cpu.Intel", "DryIoc\Cpu\DACS.DryIoc.Cpu.Intel\DACS.DryIoc.Cpu.Intel.csproj", "{78513686-0C1A-45E1-9BAE-67951D2CE88D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OperatingSystem", "OperatingSystem", "{EA1F80C6-9370-467B-9733-64BCD9981B4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.OperatingSystem.MintLinux", "DryIoc\OperatingSystem\DACS.DryIoc.OperatingSystem.MintLinux\DACS.DryIoc.OperatingSystem.MintLinux.csproj", "{E80CA72C-33DB-4CDA-A47B-173372AC7880}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.OperatingSystem.Windows", "DryIoc\OperatingSystem\DACS.DryIoc.OperatingSystem.Windows\DACS.DryIoc.OperatingSystem.Windows.csproj", "{16C67672-F359-4631-A618-9094620B4B36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Domain", "DryIoc\DACS.DryIoc.Domain\DACS.DryIoc.Domain.csproj", "{F7F23FB7-2662-41E1-8976-A9391BD450C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Target", "DryIoc\DACS.DryIoc.Target\DACS.DryIoc.Target.csproj", "{1664CF04-5F1E-4875-ACFD-D4AD7563EC7F}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RabbitMQ", "RabbitMQ", "{72D499B9-A4EA-459A-B430-8ACC6A4F78CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.RabbitMQ.Receiver", "DACS.RabbitMQ.Receiver\DACS.RabbitMQ.Receiver.csproj", "{BA3757C4-DC3B-4773-8FFE-74B4AAF94C88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.RabbitMQ.Receiver", "RabbitMQ\DACS.RabbitMQ.Receiver\DACS.RabbitMQ.Receiver.csproj", "{BA3757C4-DC3B-4773-8FFE-74B4AAF94C88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.RabbitMQ.Sender", "DACS.RabbitMQ.Sender\DACS.RabbitMQ.Sender.csproj", "{CEF699DD-A03A-4860-A5E4-B103596CFC82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.RabbitMQ.Sender", "RabbitMQ\DACS.RabbitMQ.Sender\DACS.RabbitMQ.Sender.csproj", "{CEF699DD-A03A-4860-A5E4-B103596CFC82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.DryIoc.Zoo", "DACS.DryIoc.Zoo\DACS.DryIoc.Zoo.csproj", "{8AFF105E-0051-4E88-86A4-F94DB32060CD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Redis", "Redis", "{81254161-E2AF-489C-B978-652383ABDF83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.Redis.Demo", "Redis\DACS.Redis.Demo\DACS.Redis.Demo.csproj", "{BE6F22D3-9454-439B-9418-F27523471A64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.Redis.Domain", "Redis\DACS.Redis.Domain\DACS.Redis.Domain.csproj", "{98A9D395-F716-4857-81F7-8FD74891142B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.Redis.Interceptor", "Redis\DACS.Redis.Interceptor\DACS.Redis.Interceptor.csproj", "{C3E1FE83-7310-4EED-BF2E-E5C3EF67ACB7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{E779F3B7-1D57-4E82-9569-D8F64AAF1A15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.DependencyProperties", "WPF\DACS.WPF.DependencyProperties\DACS.WPF.DependencyProperties.csproj", "{881856A4-64CF-476A-8BFB-ECFD2AA23E16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.HelloWorld", "WPF\DACS.WPF.HelloWorld\DACS.WPF.HelloWorld.csproj", "{B42C4E4D-1B2E-428F-BC51-DEF34F239F6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.MVVM", "WPF\DACS.WPF.MVVM\DACS.WPF.MVVM.csproj", "{CBFD096E-3AB0-4BC1-AD42-8FCA449E1374}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DACS.WPF.ThreadLock", "WPF\DACS.WPF.ThreadLock\DACS.WPF.ThreadLock.csproj", "{30C63E68-C291-4038-B5A5-E5D8DD5655DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Company>813</Company>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\DACS.DryIoc.Domain\DACS.DryIoc.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

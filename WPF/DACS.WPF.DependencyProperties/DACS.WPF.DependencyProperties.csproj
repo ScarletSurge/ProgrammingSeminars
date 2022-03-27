@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <Company>813</Company>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DACS.WPF.MVVM\DACS.WPF.MVVM.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\image.jpg" />
+      <Content Include="Assets\image.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>
