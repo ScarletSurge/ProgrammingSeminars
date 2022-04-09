@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using DACS.Grpc.Server;
+using Grpc.Core;
 using Grpc.Net.Client;
+
+//await new MyAwaiter<int>();
 
 var unsafeHandler = new HttpClientHandler();
 unsafeHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
@@ -56,21 +60,30 @@ while (true)
     };
     
     // TODO: test cancellation
-    var response = await client.SolveQuadraticEquationAsync(request, cancellationToken: cts.Token);
+    //var responseSync = client.SolveQuadraticEquation(request, cancellationToken: cts.Token);
+    var responseAsync = await client.SolveQuadraticEquationAsync(request, cancellationToken: cts.Token);
     
 
-    if (double.IsNaN(response.X1))
+    if (double.IsNaN(responseAsync.X1))
     {
         Console.WriteLine("No solutions found.");
     }
-    else if (double.IsNaN(response.X2))
+    else if (double.IsNaN(responseAsync.X2))
     {
-        Console.WriteLine($"One solution found: x = {response.X1}.");
+        Console.WriteLine($"One solution found: x = {responseAsync.X1}.");
     }
     else
     {
-        Console.WriteLine($"Two solutions found: x1 = {response.X1} and x2 = {response.X2}.");
+        Console.WriteLine($"Two solutions found: x1 = {responseAsync.X1} and x2 = {responseAsync.X2}.");
     }
 
     Console.WriteLine();
 }
+
+/*class MyAwaiter<T>
+{
+    public System.Runtime.CompilerServices.TaskAwaiter<T> GetAwaiter()
+    {
+        throw new NotImplementedException();
+    }
+}*/

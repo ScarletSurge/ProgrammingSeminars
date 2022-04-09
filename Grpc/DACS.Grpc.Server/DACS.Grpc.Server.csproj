@@ -20,4 +20,10 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DACS.Grpc.Domain\DACS.Grpc.Domain.csproj" />
+      <ProjectReference Include="..\DACS.Grpc.SquareEquationSolver.Discriminant\DACS.Grpc.SquareEquationSolver.Discriminant.csproj" />
+      <ProjectReference Include="..\DACS.Grpc.SquareEquationSolver.Viet\DACS.Grpc.SquareEquationSolver.Viet.csproj" />
+    </ItemGroup>
+
 </Project>

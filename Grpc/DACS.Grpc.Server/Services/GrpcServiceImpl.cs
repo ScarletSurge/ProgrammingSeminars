@@ -1,3 +1,4 @@
+using DACS.Grpc.Domain;
 using Grpc.Core;
 
 namespace DACS.Grpc.Server.Services;
@@ -8,14 +9,18 @@ public class GrpcServiceImpl : GrpcService.GrpcServiceBase
     #region Fields
     
     private readonly ILogger<GrpcServiceImpl> _logger;
+    private readonly ISquareEquationSolver _squareEquationSolver;
     
     #endregion
     
     #region Constructors
     
-    public GrpcServiceImpl(ILogger<GrpcServiceImpl> logger)
+    public GrpcServiceImpl(
+        ILogger<GrpcServiceImpl> logger,
+        ISquareEquationSolver squareEquationSolver)
     {
-        _logger = logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _squareEquationSolver = squareEquationSolver ?? throw new ArgumentNullException(nameof(squareEquationSolver));
     }
     
     #endregion
@@ -27,7 +32,7 @@ public class GrpcServiceImpl : GrpcService.GrpcServiceBase
         try
         {
             _logger.LogInformation($"{nameof(SayHello)} method called.");
-            
+
             return Task.FromResult(new HelloResponse
             {
                 Message = "Hello " + request.Name
@@ -42,33 +47,17 @@ public class GrpcServiceImpl : GrpcService.GrpcServiceBase
 
     public override Task<QuadraticEquationResponse> SolveQuadraticEquation(QuadraticEquationRequest request, ServerCallContext context)
     {
-        const double Epsilon = 1e-8;
-        
         try
         {
             _logger.LogInformation($"{nameof(SolveQuadraticEquation)} method called.");
 
-            var discr = Math.Pow(request.BCoeff, 2) - 4d * request.ACoeff * request.CCoeff;
+            var solution = _squareEquationSolver.Solve(request.ACoeff, request.BCoeff, request.CCoeff);
 
-            var response = new QuadraticEquationResponse();
-            
-            if (Math.Abs(discr) < Epsilon)
+            return Task.FromResult(new QuadraticEquationResponse
             {
-                response.X1 = -request.BCoeff / (2 * request.ACoeff);
-                response.X2 = double.NaN;
-            }
-            else if (discr > Epsilon)
-            {
-                response.X1 = (-request.BCoeff + Math.Sqrt(discr)) / (2 * request.ACoeff);
-                response.X2 = (-request.BCoeff - Math.Sqrt(discr)) / (2 * request.ACoeff);
-            }
-            else
-            {
-                response.X1 = double.NaN;
-                response.X2 = double.NaN;
-            }
-
-            return Task.FromResult(response);
+                X1 = solution.Item1,
+                X2 = solution.Item2
+            });
         }
         catch (Exception ex)
         {
@@ -76,7 +65,8 @@ public class GrpcServiceImpl : GrpcService.GrpcServiceBase
             return Task.FromResult(new QuadraticEquationResponse
             {
                 X1 = double.NaN,
-                X2 = double.NaN
+                X2 = double.NaN,
+                
             });
         }
     }
