@@ -70,6 +70,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{6C029AE8
 	ProjectSection(SolutionItems) = preProject
 		Tasks\part 1.pdf = Tasks\part 1.pdf
 		Tasks\part 2.pdf = Tasks\part 2.pdf
+		Tasks\part 3.pdf = Tasks\part 3.pdf
 	EndProjectSection
 EndProject
 Global
