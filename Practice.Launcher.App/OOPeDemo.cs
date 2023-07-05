@@ -18,6 +18,12 @@
             _myField = myField;
         }
 
+        public OOPeDemo():
+            this(3)
+        {
+            
+        }
+
         public void Foo()
         {
             Console.WriteLine("где лабы");

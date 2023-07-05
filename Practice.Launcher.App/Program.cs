@@ -6,6 +6,21 @@ namespace Practice.Launcher.App
 {
     class Program
     {
+        
+        private static IEnumerable<int> GetCollection()
+        {
+            yield return 1;
+            yield return 2;
+            yield return -13;
+            yield return 48;
+            yield return 11;
+            yield return 27;
+            foreach (var item in new[] { 1, 2, 3, 4 })
+            {
+                yield return item;
+            }
+        }
+        
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
@@ -66,7 +81,7 @@ namespace Practice.Launcher.App
             
             RefInOutParamsDemo.RefValueDemo(ref valueByRef);
             Console.WriteLine(valueByRef);
-
+            
             int valueByOut;
             RefInOutParamsDemo.OutValueDemo(out valueByOut);
             Console.WriteLine(valueByOut);
@@ -77,17 +92,17 @@ namespace Practice.Launcher.App
             
             RefInOutParamsDemo.RefRefDemo(ref refByRef);
             Console.WriteLine(refByRef);
-
+            
             string refByOut;
             RefInOutParamsDemo.OutRefDemo(out refByOut);
             Console.WriteLine(refByOut);
-
+            
             try
             {
                 //RefInOutParamsDemo.Average(null);
                 var avgParams = RefInOutParamsDemo.Average(1, 2, 3, 4, 5, 6);
                 //var avgArray = RefInOutParamsDemo.Average(new int[] { 1, 2, 3, 4, 5, 6 });
-
+            
                 Console.WriteLine($"Avg of params == {avgParams}");
                 Console.WriteLine($"Avg of array == {RefInOutParamsDemo.Average(new int[] { 1, 2, 3, 4, 5, 6 })}");
             }
@@ -109,12 +124,58 @@ namespace Practice.Launcher.App
             {
                 
             }
-
-            var ownArray = new OwnArray();
+            
+            var ownArray = new OwnArray<MihailGdeLaby>();
+            ownArray
+                .Insert(new MihailGdeDiplom("123", 1), 0)
+                .Insert(new MihailGdeDiplom("234", 2), 1)
+                .Insert(new MihailGdeDiplom("345", -3), 0)
+                .Insert(new MihailGdeDiplom("456", 4), 1)
+                .Insert(new MihailGdeDiplom("456", -12), 1)
+                .Insert(new MihailGdeDiplom("456", 28), 1)
+                .Insert(new MihailGdeDiplom("456", 13), 1)
+                .Insert(new MihailGdeDiplom("456", 87), 1)
+                .Insert(new MihailGdeDiplom("456", -113), 1)
+                .Insert(new MihailGdeDiplom("567", -5), 3)
+                .FindByIndex(3, out var foundByIndex3Value);
             foreach (var item in ownArray)
             {
                 Console.Write($"{item} ");
             }
+            
+            Console.WriteLine($"{Environment.NewLine}ownArray[3] == {foundByIndex3Value}");
+            
+            ownArray.Sort(MihailGdeLabyComparer.Instance);
+            Console.WriteLine(ownArray);
+
+            var dictionary = new Dictionary<MihailGdeLaby, string>(MihailGdeLabyEqualityComparer.Instance);
+            dictionary.Add(new MihailGdeDiplom("123", 25), "");
+            dictionary.Add(new MihailGdeDiplom("124", 24), "");
+            var x = 10;
+
+            var array = GetCollection().Where(IsEven).Select(DivBy2).ToArray();
+            var array1 = GetCollection()
+                .Where(x => x % 2 == 0)
+                .Select(x => x / 2)
+                .ToArray();
+            //var array1 = Enumerable.ToArray(GetCollection());
+            foreach (var item in array)
+            {
+                Console.Write($"{item} ");
+            }
+            //var obj = default(MihailGdeLaby);
+            //obj?.Foo();
+            //Console.Write("\"Hi!\"");
+        }
+
+        private static bool IsEven(int value) // Func<int, bool>
+        {
+            return value % 2 == 0;
+        }
+
+        private static int DivBy2(int value)
+        {
+            return value / 2;
         }
     }
 }

@@ -6,7 +6,9 @@ public abstract class MihailGdeLaby:
     IEquatable<string>,
     IEquatable<int>,
     IEquatable<MihailGdeLaby>,
-    IEquatable<object>
+    IEquatable<object>,
+    IComparable,
+    IComparable<MihailGdeLaby>
 {
     
     // const, readonly
@@ -122,7 +124,7 @@ public abstract class MihailGdeLaby:
     }
 
     public bool Equals(
-        MihailGdeLaby mgl)
+        MihailGdeLaby? mgl)
     {
         if (mgl == null)
         {
@@ -130,7 +132,7 @@ public abstract class MihailGdeLaby:
         }
         
         return IntValue == mgl.IntValue
-               && StringValue.Equals(mgl.StringValue);
+               && StringValue.Equals(mgl.StringValue, StringComparison.Ordinal);
     }
     
     // Explicit interface implementation
@@ -160,6 +162,33 @@ public abstract class MihailGdeLaby:
         }
 
         return false;
+    }
+
+    public int CompareTo(
+        object? obj)
+    {
+        if (obj == null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
+        if (obj is MihailGdeLaby mgl)
+        {
+            return CompareTo(mgl);
+        }
+
+        throw new ArgumentException("Can't perform comparison operation", nameof(obj));
+    }
+
+    public int CompareTo(
+        MihailGdeLaby? obj)
+    {
+        if (obj == null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
+        return IntValue.CompareTo(obj.IntValue);
     }
 }
 
