@@ -154,10 +154,15 @@ namespace Practice.Launcher.App
             var x = 10;
 
             var array = GetCollection().Where(IsEven).Select(DivBy2).ToArray();
+                // .Where(new Predicate<T>(this, "IsEven"))
             var array1 = GetCollection()
                 .Where(x => x % 2 == 0)
-                .Select(x => x / 2)
+                .DivideBy2()
                 .ToArray();
+
+            var array2 = EnumerableExtensions.DivideBy2(GetCollection()
+                .Where(x => x % 2 == 0)).ToArray();
+            
             //var array1 = Enumerable.ToArray(GetCollection());
             foreach (var item in array)
             {
@@ -166,6 +171,31 @@ namespace Practice.Launcher.App
             //var obj = default(MihailGdeLaby);
             //obj?.Foo();
             //Console.Write("\"Hi!\"");
+
+            EqComparer<string> dlg = Subscriber;
+            dlg += Subscriber2;
+            dlg += Subscriber;
+            dlg += delegate(string? value1, string? value2)
+            {
+                if (ReferenceEquals(value1, null) && ReferenceEquals(value2, null))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(value1, null))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(value2, null))
+                {
+                    return false;
+                }
+                
+                return value1.Equals(value2, StringComparison.Ordinal);
+            };
+            Delegates(dlg);
+            DelegateVsEventDemoDemo();
         }
 
         private static bool IsEven(int value) // Func<int, bool>
@@ -177,5 +207,58 @@ namespace Practice.Launcher.App
         {
             return value / 2;
         }
+
+        private static bool Subscriber(string? value1, string? value2)
+        {
+            Console.WriteLine($"{Environment.NewLine}Subscriber method work...");
+            return true;
+        }
+
+        private static bool Subscriber2(string? value1, string? value2)
+        {
+            Console.WriteLine($"{Environment.NewLine}Subscriber2 method work...");
+            return false;
+        }
+        
+        // Func<int, MihailGdeKursach[], IEnumerable<string>, string>
+        //public string Foo(
+        //    int value1,
+        //    MihailGdeKursach[] value2,
+        //    IEnumerable<string> value3)
+        //{}
+//
+        //public int Foo1()
+        //{
+        //}
+// Func<int>
+
+        // delegate Delegate MulticastDelegate
+        // Action<int, MihailGdeKursach[], IEnumerable<string>>
+        // Action<...>, Func<..., T>
+        // Predicate<T> == Func<T, bool>
+        // Comparer<T> == Func<T, T, int>
+        // EventHandler == Action<object, EventArgs>
+
+        private static void Delegates(EqComparer<string> dlg)
+        {
+            //var result = dlg("", "");
+            var result = dlg?.Invoke("", "123");
+            Console.WriteLine(result);
+        }
+
+        private static void DelegateVsEventDemoDemo()
+        {
+            var obj = new DelegateVsEventDemo();
+            obj.Action += (@int, @string) =>
+            {
+                Console.WriteLine("Lambda subscriber work...");
+            };
+            obj.Action += delegate(int @int, string @string)
+            {
+                Console.WriteLine("Anonymous function work...");
+            };
+            //obj.Action?.Invoke(1, "");
+        }
+        public delegate bool EqComparer<in T>(T? obj1, T? obj2);
     }
 }

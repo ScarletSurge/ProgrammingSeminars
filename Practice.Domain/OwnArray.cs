@@ -62,6 +62,15 @@ public class OwnArray<T>:
         return this;
     }
 
+    public void ForEach(
+        Action<T> action)
+    {
+        foreach (var item in _array)
+        {
+            action(item);
+        }
+    }
+
     public IEnumerator<T> GetEnumerator()
     {
         foreach (var arrayItem in _array)
