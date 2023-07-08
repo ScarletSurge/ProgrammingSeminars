@@ -20,9 +20,30 @@ namespace Practice.Launcher.App
                 yield return item;
             }
         }
+
+        private class ForeachIterable
+        {
+            public IEnumerator<int> GetEnumerator()
+            {
+                return GetCollection().GetEnumerator();
+            }
+        }
         
         static void Main(string[] args)
         {
+            var instance = new ForeachIterable();
+            foreach (var item in instance)
+            {
+                Console.Write($"{item} ");
+            }
+            
+            //StudentZakharov s1 = new StudentZakharov("", "", "", "", "");
+            //StudentZakharov s2 = new StudentZakharov("", "", "", "", "");
+//
+            //object o = s2;
+//
+            //s1.Equals(o);
+            
             Console.WriteLine("Hello, World!");
             // int, uint, short, ushort, byte, sbyte, long, ulong
             // char, string, bool
@@ -130,15 +151,54 @@ namespace Practice.Launcher.App
                 .Insert(new MihailGdeDiplom("123", 1), 0)
                 .Insert(new MihailGdeDiplom("234", 2), 1)
                 .Insert(new MihailGdeDiplom("345", -3), 0)
-                .Insert(new MihailGdeDiplom("456", 4), 1)
-                .Insert(new MihailGdeDiplom("456", -12), 1)
+                .Insert(new MihailGdeDiplom("456", 4), 1);
+            
+            var ownArray2 = new OwnArray<MihailGdeLaby>();
+            ownArray2
+                .Insert(new MihailGdeDiplom("456", -12), 0)
                 .Insert(new MihailGdeDiplom("456", 28), 1)
                 .Insert(new MihailGdeDiplom("456", 13), 1)
                 .Insert(new MihailGdeDiplom("456", 87), 1)
                 .Insert(new MihailGdeDiplom("456", -113), 1)
                 .Insert(new MihailGdeDiplom("567", -5), 3)
                 .FindByIndex(3, out var foundByIndex3Value);
-            foreach (var item in ownArray)
+
+
+            OwnArray<MihailGdeLaby> GetObj()
+            {
+                //using (var obj = ownArray + ownArray2)
+                {
+                    return ownArray + ownArray2;
+                }
+            }
+
+            using (var concArray = ownArray + ownArray2)
+            {
+                // some actions here...
+            }
+
+            var concArray1 = default(OwnArray<MihailGdeLaby>);
+            try
+            {
+                concArray1 = ownArray + ownArray2;
+                // some actions here...
+            }
+            finally
+            {
+                concArray1?.Dispose();
+            }
+            
+            using var concatenatedArray = ownArray + ownArray2;
+
+            Console.WriteLine(concatenatedArray[2]);
+            ownArray[1] = null;
+            
+            System.GC.Collect();
+
+            var ownArrayClone = concatenatedArray.Clone() as OwnArray<MihailGdeLaby>;
+            concatenatedArray.Dispose();
+            
+            foreach (var item in ownArrayClone)
             {
                 Console.Write($"{item} ");
             }
@@ -237,7 +297,7 @@ namespace Practice.Launcher.App
         // Action<...>, Func<..., T>
         // Predicate<T> == Func<T, bool>
         // Comparer<T> == Func<T, T, int>
-        // EventHandler == Action<object, EventArgs>
+        //EventHandler == Action<object, EventArgs>
 
         private static void Delegates(EqComparer<string> dlg)
         {
@@ -260,5 +320,12 @@ namespace Practice.Launcher.App
             //obj.Action?.Invoke(1, "");
         }
         public delegate bool EqComparer<in T>(T? obj1, T? obj2);
+        
+        public class M
+        {
+            
+        }
     }
+    
+    
 }

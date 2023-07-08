@@ -10,4 +10,11 @@ public static class EnumerableExtensions
             yield return item / 2;
         }
     }
+
+    public static IEnumerable<IEnumerable<T>> Permutations<T>(
+        this IEnumerable<T> values,
+        IEqualityComparer<T> equalityComparer)
+    {
+        throw new NotImplementedException();
+    }
 }

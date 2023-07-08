@@ -216,6 +216,24 @@ public sealed class MihailGdeKursach :
 public sealed class MihailGdeDiplom :
     MihailGdeLaby
 {
+    public static MihailGdeDiplom operator +(
+        MihailGdeDiplom? leftSummand,
+        MihailGdeDiplom? rightSummand)
+    {
+        if (leftSummand is null)
+        {
+            throw new ArgumentNullException(nameof(leftSummand));
+        }
+
+        if (rightSummand is null)
+        {
+            throw new ArgumentNullException(nameof(rightSummand));
+        }
+
+        return new MihailGdeDiplom(leftSummand.StringValue + rightSummand.StringValue,
+            leftSummand.IntValue + rightSummand.IntValue);
+    }
+    
     public MihailGdeDiplom(
         string @string,
         int @int) : base(@int, @string)
