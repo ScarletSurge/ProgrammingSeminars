@@ -1,11 +1,10 @@
 ﻿namespace RGU.Minor.GraphTheory.Domain;
 
-// @scarletsurge
-
 /// <summary>
 /// 
 /// </summary>
-public sealed class Vertex : IEquatable<Vertex>
+public sealed class Vertex:
+    IEquatable<Vertex>
 {
     
     /// <summary>
@@ -22,11 +21,6 @@ public sealed class Vertex : IEquatable<Vertex>
     {
         _name = name;
     }
-
-    // public string GetName()
-    // {
-    //     return _name;
-    // }
     
     /// <summary>
     /// 
@@ -40,12 +34,6 @@ public sealed class Vertex : IEquatable<Vertex>
         {
             return false;
         }
-
-        // Vertex v;
-        // if (obj is Vertex)
-        // {
-        //     v = (Vertex)obj;
-        // }
         
         if (obj is Vertex vertex)
         {
@@ -70,5 +58,9 @@ public sealed class Vertex : IEquatable<Vertex>
     {
         return _name.GetHashCode();
     }
-    
+
+    public override string ToString()
+    {
+        return $"Vertex with name == \"{_name}\"";
+    }
 }

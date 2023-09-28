@@ -1,9 +1,12 @@
-﻿namespace RGU.Minor.GraphTheory.Domain;
+﻿using System.Collections;
+
+namespace RGU.Minor.GraphTheory.Domain;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class Edge
+public sealed class Edge:
+    IEnumerable<Vertex>
 {
     
     /// <summary>
@@ -27,17 +30,6 @@ public sealed class Edge
             throw new ArgumentException("Vertices array is empty", nameof(vertices));
         }
 
-        // int i = 0;
-        // foreach (var item in _vertices)
-        // {
-        //     if (item == null)
-        //     {
-        //         throw new ArgumentNullException($"{vertices}[{i}]");
-        //     } // System.AggregateException
-        //     
-        //     i++;
-        // }
-
         if (_vertices.Any(x => x is null))
         {
             throw new ArgumentNullException(nameof(vertices), "Item inside collection is null");
@@ -49,6 +41,35 @@ public sealed class Edge
         }
     }
     
+    /// <summary>
+    /// Get first vertex of an edge.
+    /// </summary>
+    public Vertex FirstVertex =>
+        _vertices[0];
     
+    /// <summary>
+    /// Get second vertex of an edge; if not exists, returns null.
+    /// </summary>
+    public Vertex? SecondVertex =>
+        _vertices.Length == 1 ? null : _vertices[1];
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public int VerticesCount =>
+        _vertices.Length;
+
+    public IEnumerator GetEnumerator()
+    {
+        return _vertices.GetEnumerator();
+    }
+
+    IEnumerator<Vertex> IEnumerable<Vertex>.GetEnumerator()
+    {
+        foreach (var vertex in _vertices)
+        {
+            yield return vertex;
+        }
+    }
 
 }
