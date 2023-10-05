@@ -32,8 +32,37 @@ UPDATE public.students
       -- ,name = '123'
   WHERE surname = 'Tryukina'
 
-
 DELETE FROM public.students WHERE 1=1-- AND  OR
 
 SELECT *
-  FROM public.students s
+  FROM public.teachers
+SELECT *
+  FROM public.students
+  --WHERE name = 'Ivan' OR surname = 'Bryukin'
+  WHERE surname LIKE '_i%'
+
+CREATE TABLE public.teachers
+(
+    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    surname TEXT NOT NULL,
+    name TEXT NOT NULL,
+    patronymic TEXT NULL,
+    birthday DATE NOT NULL DEFAULT (DATE '01.01.2000'),
+    academic_degree TEXT NULL,
+    academic_title TEXT NULL
+)
+
+ALTER TABLE public.students
+  ADD COLUMN scientific_adviser INT NULL DEFAULT(NULL)
+
+ALTER TABLE public.students
+  ADD CONSTRAINT FK__students_scientific_adviser__teachers_id FOREIGN KEY(scientific_adviser) REFERENCES public.teachers(id)
+
+INSERT INTO public.teachers(surname, name, patronymic, birthday, academic_degree, academic_title)
+  VALUES
+    ('Иванов', 'Иван', 'Иванович', DATE '02.28.1975', 'Ph.D in physics', DEFAULT)
+
+UPDATE public.students
+  SET scientific_adviser = 2
+    WHERE record_book_number = '666-1337'
+
