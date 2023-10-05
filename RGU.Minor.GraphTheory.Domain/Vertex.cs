@@ -1,4 +1,6 @@
-﻿namespace RGU.Minor.GraphTheory.Domain;
+﻿using System;
+
+namespace RGU.Minor.GraphTheory.Domain;
 
 /// <summary>
 /// 
@@ -27,8 +29,10 @@ public sealed class Vertex:
     /// </summary>
     public string Name =>
         _name;
-
-    public override bool Equals(object? obj)
+    
+    /// <inheritdoc cref="object.Equals(object?)" />
+    public override bool Equals(
+        object? obj)
     {
         if (obj is null)
         {
@@ -37,12 +41,13 @@ public sealed class Vertex:
         
         if (obj is Vertex vertex)
         {
-            return this.Equals(vertex);
+            return Equals(vertex);
         }
 
         return false;
     }
-
+    
+    /// <inheritdoc cref="IEquatable{T}.Equals(T?)" />
     public bool Equals(
         Vertex? vertex)
     {
@@ -53,12 +58,14 @@ public sealed class Vertex:
 
         return _name.Equals(vertex.Name);
     }
-
+    
+    /// <inheritdoc cref="object.GetHashCode" />
     public override int GetHashCode()
     {
         return _name.GetHashCode();
     }
-
+    
+    /// <inheritdoc cref="object.ToString" />
     public override string ToString()
     {
         return $"Vertex with name == \"{_name}\"";

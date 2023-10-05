@@ -9,14 +9,13 @@ try
     graph.AddVertex("123")
         .AddVertex("234")
         .AddVertex("345")
-        .AddVertex("456");
-    Console.WriteLine(graph);
+        .AddVertex("456")
+        .AddEdge("edge1", "234", "345")
+        .AddEdge("edge2", "234", "345", "456")
+        .RemoveVertex("234", Graph.RemoveVertexStrategy.CascadeDeleteEdges);
 
-    if (!graph.RemoveVertex("notfound"))
-    {
-        Console.WriteLine("Vertex not found!");
-    }
-    
+    Console.WriteLine($"Got graph: {graph}");
+
     Console.WriteLine(graph);
 }
 catch (ArgumentNullException ex)
@@ -28,4 +27,4 @@ catch (ArgumentException ex)
     Console.WriteLine(ex.Message);
 }
 
-Edge e = new Edge(new Vertex("1"), new Vertex("2"));
+Edge e = new Edge("I'm an edge!", new Vertex("1"), new Vertex("2"));
