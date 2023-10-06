@@ -10,6 +10,7 @@ namespace DACS.DryIoc.OperatingSystem.MintLinux
             IConfiguration configuration)
         {
             registrator.Register<IOperatingSystem, MintLinuxOS>(Reuse.Transient);
+            registrator.Register<OperatingSystemSettings>(Reuse.Singleton);
         }
     }
 }

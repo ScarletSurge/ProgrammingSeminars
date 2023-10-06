@@ -22,19 +22,18 @@ namespace DACS.DryIoc.Target
         
         static void Main(string[] args)
         {
-            
-            Container.Register<IAnimal, Cat.Cat>(Reuse.Singleton);
-            Container.Register<Zoo.Zoo>(Reuse.Transient);
-
-            //var cat1 = Container.Resolve<IAnimal>();
-            //var cat2 = Container.Resolve<IAnimal>();
-            
-            //Console.WriteLine(ReferenceEquals(cat1, cat2));
-
-            var zoo1 = Container.Resolve<Zoo.Zoo>();
-            var zoo2 = Container.Resolve<Zoo.Zoo>();
-            
-            zoo1.Voice();
+            //Container.Register<IAnimal, Cat.Cat>(Reuse.Singleton);
+            //Container.Register<Zoo.Zoo>(Reuse.Transient);
+            //
+            ////var cat1 = Container.Resolve<IAnimal>();
+            ////var cat2 = Container.Resolve<IAnimal>();
+            //
+            ////Console.WriteLine(ReferenceEquals(cat1, cat2));
+            //
+            //var zoo1 = Container.Resolve<Zoo.Zoo>();
+            //var zoo2 = Container.Resolve<Zoo.Zoo>();
+            //
+            //zoo1.Voice();
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Environment.CurrentDirectory)
@@ -62,16 +61,16 @@ namespace DACS.DryIoc.Target
                     continue;
                 }
                 
-                ((IServiceRegistrator)Activator.CreateInstance(targetType))
+                (Activator.CreateInstance(targetType) as IServiceRegistrator)
                     .Register(Container, configuration);
             }
             
-            Container.RegisterInstance(
-                new OperatingSystemSettings
-                {
-                    Version = "10",
-                    BitDepth = BitDepth.x64
-                });
+            //Container.RegisterInstance(
+            //    new OperatingSystemSettings
+            //    {
+            //        Version = "10",
+            //        BitDepth = BitDepth.x64
+            //    });
             
             Container.RegisterInstance(
                 new CpuSettings
