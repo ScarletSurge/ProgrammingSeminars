@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Company>813</Company>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DryIoc.dll" Version="4.8.7" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+      <PackageReference Include="DryIoc.dll" Version="5.4.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0.0" />
     </ItemGroup>
 
 </Project>

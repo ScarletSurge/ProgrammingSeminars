@@ -1,12 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Company>813</Company>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\DACS.DryIoc.Domain\DACS.DryIoc.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DryIoc.dll" Version="5.4.1" />
     </ItemGroup>
 
 </Project>
