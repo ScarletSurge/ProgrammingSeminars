@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <malloc.h>
+#include <stdarg.h>
 
 void work_with_floating_point_numbers_comparison()
 {
@@ -237,19 +238,65 @@ int validate_solution(
     return 0;
 }
 
+double average_geom(
+    double epsilon,
+    int values_count,
+    ...)
+{
+    int i;
+    va_list l;
+    double result = 1.0;
+
+    va_start(l, values_count);
+    for (i = 0; i < values_count; i++)
+    {
+        result *= va_arg(l, double);
+    }
+
+    if (fabs(result) < -epsilon && (values_count & 1) == 0)
+    {
+        return NAN;
+    }
+
+    return pow(result, 1. / values_count);
+}
+
+double average_geom2(
+    double epsilon,
+    ...)
+{
+    int i;
+    va_list l;
+    double actual_
+    double result = 1.0;
+
+    va_start(l, epsilon);
+    while (1)
+    {
+        result *= va_arg(l, double);
+    }
+
+    if (fabs(result) < -epsilon && (values_count & 1) == 0)
+    {
+        return NAN;
+    }
+
+    return pow(result, 1. / values_count);
+}
+
 int main(
 	int argc,
 	char *argv[])
 {
-    switch (validate_solution("task.txt"))
-    {
-        case -1:
-            printf("Input file can't be opened!");
-            break;
-        case 0:
-            printf("Task finished.");
-            break;
-    }
+    // switch (validate_solution("task.txt"))
+    // {
+    //     case -1:
+    //         printf("Input file can't be opened!");
+    //         break;
+    //     case 0:
+    //         printf("Task finished.");
+    //         break;
+    // }
 
     return 0;
 }
