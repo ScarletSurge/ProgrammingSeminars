@@ -60,9 +60,15 @@ ALTER TABLE public.students
 
 INSERT INTO public.teachers(surname, name, patronymic, birthday, academic_degree, academic_title)
   VALUES
-    ('Иванов', 'Иван', 'Иванович', DATE '02.28.1975', 'Ph.D in physics', DEFAULT)
+    ('Petrov', 'Petr', 'Petrovich', DATE '01.31.1976', 'Ph.D in math', DEFAULT)
 
 UPDATE public.students
   SET scientific_adviser = 2
     WHERE record_book_number = '666-1337'
 
+SELECT t.surname teacher, s.surname student
+  FROM public.students s
+    LEFT JOIN public.teachers t
+      ON t.id = s.scientific_adviser
+  --GROUP BY
+    --HAVING
