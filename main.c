@@ -261,29 +261,6 @@ double average_geom(
     return pow(result, 1. / values_count);
 }
 
-double average_geom2(
-    double epsilon,
-    ...)
-{
-    int i;
-    va_list l;
-    double actual_
-    double result = 1.0;
-
-    va_start(l, epsilon);
-    while (1)
-    {
-        result *= va_arg(l, double);
-    }
-
-    if (fabs(result) < -epsilon && (values_count & 1) == 0)
-    {
-        return NAN;
-    }
-
-    return pow(result, 1. / values_count);
-}
-
 int main(
 	int argc,
 	char *argv[])
