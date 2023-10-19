@@ -136,13 +136,13 @@ public sealed class Edge:
     #region IEnumerable<out Vertex>
     
     /// <inheritdoc cref="IEnumerable.GetEnumerator" />
-    public IEnumerator GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator()
     {
         return _vertices.GetEnumerator();
     }
     
     /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
-    IEnumerator<Vertex> IEnumerable<Vertex>.GetEnumerator()
+    public IEnumerator<Vertex> GetEnumerator()
     {
         foreach (var vertex in _vertices)
         {

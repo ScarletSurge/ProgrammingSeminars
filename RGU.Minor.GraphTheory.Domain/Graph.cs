@@ -1,9 +1,14 @@
-﻿namespace RGU.Minor.GraphTheory.Domain;
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace RGU.Minor.GraphTheory.Domain;
 
 /// <summary>
 /// 
 /// </summary>
-public sealed class Graph
+public sealed class Graph:
+    IEnumerable<Vertex>,
+    IEnumerable<Edge>
 {
     
     #region Nested
@@ -19,12 +24,12 @@ public sealed class Graph
     /// <summary>
     /// Graph's vertices collection.
     /// </summary>
-    private HashSet<Vertex> _vertices;
+    private readonly HashSet<Vertex> _vertices;
     
     /// <summary>
     /// Graph's edges collection.
     /// </summary>
-    private HashSet<Edge> _edges;
+    private readonly HashSet<Edge> _edges;
     
     /// <summary>
     /// 
@@ -36,6 +41,35 @@ public sealed class Graph
     }
     
     #region Vertex
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public int VerticesCount =>
+        _vertices.Count;
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="vertexName"></param>
+    /// <param name="gotVertex"></param>
+    /// <returns></returns>
+    public bool GetVertex(
+        string vertexName,
+        ref Vertex gotVertex)
+    {
+        var foundVertex = _vertices
+            .SingleOrDefault(v => v.Name.Equals(vertexName));
+
+        if (foundVertex is null)
+        {
+            return false;
+        }
+
+        gotVertex = foundVertex;
+
+        return true;
+    }
     
     /// <summary>
     /// 
@@ -60,7 +94,7 @@ public sealed class Graph
         AddVertex(new Vertex(vertexName));
         return this;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -105,6 +139,35 @@ public sealed class Graph
     #endregion
     
     #region Edge
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public int EdgesCount =>
+        _edges.Count;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="edgeName"></param>
+    /// <param name="gotEdge"></param>
+    /// <returns></returns>
+    public bool GetEdge(
+        string edgeName,
+        ref Edge gotEdge)
+    {
+        var foundEdge = _edges
+            .SingleOrDefault(v => v.Name.Equals(edgeName));
+
+        if (foundEdge is null)
+        {
+            return false;
+        }
+
+        gotEdge = foundEdge;
+
+        return true;
+    }
 
     public Graph AddEdge(
         string edgeName,
@@ -149,10 +212,50 @@ public sealed class Graph
     
     #region System.Object overrides
     
+    // TODO: GetHashCode & Equals
+
     /// <inheritdoc cref="object.ToString" />
     public override string ToString()
     {
         return $"Vertices: [{string.Join(", ", _vertices)}], Edges: [{string.Join(", ", _edges)}]";
+    }
+
+    #endregion
+    
+    #region System.Collections.IEnumerable implementation
+    
+    /// <inheritdoc cref="GetEnumerator" />
+    public IEnumerator GetEnumerator()
+    {
+        foreach (var vertex in this as IEnumerable<Vertex>)
+        {
+            yield return vertex;
+        }
+        
+        foreach (var edge in this as IEnumerable<Edge>)
+        {
+            yield return edge;
+        }
+    }
+    
+    #endregion
+    
+    #region System.Collections.Generic.IEnumerable<Vertex> implementation
+    
+    /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
+    IEnumerator<Vertex> IEnumerable<Vertex>.GetEnumerator()
+    {
+        return _vertices.GetEnumerator();
+    }
+    
+    #endregion
+    
+    #region System.Collections.Generic.IEnumerable<Edge> implementation
+    
+    /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
+    IEnumerator<Edge> IEnumerable<Edge>.GetEnumerator()
+    {
+        return _edges.GetEnumerator();
     }
     
     #endregion
