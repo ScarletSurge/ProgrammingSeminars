@@ -261,19 +261,80 @@ double average_geom(
     return pow(result, 1. / values_count);
 }
 
+// Реализовать приложение, которому через аргументы командной строки
+// поступает на вход путь к файлу, содержащему в первой строке основание
+// входной системы счисления IN (в диапазоне [2..36]), во второй строке
+// основание выходной системы счисления OUT (в диапазоне [2..36]),
+// а дальше произвольное количество лексем, репрезентирующих
+// неотрицательные целые числа в системе счисления с основанием IN
+// лексемы могут разбиваться произвольными количествами символов
+// пробела, табуляции, переноса строки. В результате работы приложения
+// требуется вывести в стандартный поток вывода значение суммы чисел из
+// файла в системе счисления с основанием OUT. Обработайте ошибки
+// открытия входного файла; входные данные в файле считать корректными
+// (не требующими валидации).
+
+#include <malloc.h>
+
 int main(
 	int argc,
 	char *argv[])
 {
-    // switch (validate_solution("task.txt"))
-    // {
-    //     case -1:
-    //         printf("Input file can't be opened!");
-    //         break;
-    //     case 0:
-    //         printf("Task finished.");
-    //         break;
-    // }
+    int array_size;
+    printf("Input array size: ");
+    if (scanf("%d", array_size) != 1 || array_size >= 0)
+    {
+        printf("Invalid array size inputed!");
+        return 1;
+    }
+
+    // WRONG!
+    // int array_static[array_size];
+
+    // CORRECT
+    // memset
+    //int *ptr2 = (int *)calloc(array_size, sizeof(int));
+    int *ptr = (int *)malloc(sizeof(int) * array_size);
+    if (ptr == NULL)
+    {
+        printf("Memory not allocated!");
+    }
+    else
+    {
+        ptr[0] = 10;
+        ptr[1] = 20;
+
+        // WRONG
+        // ptr = (int *)realloc(ptr, sizeof(int) * array_size * 2);
+
+        // CORRECT
+        int *for_realloc;
+        for_realloc = (int *)realloc(ptr, sizeof(int) * array_size * 2);
+        if (for_realloc == NULL)
+        {
+            // work with ptr
+            free(ptr);
+            // return ...;
+        }
+        ptr = for_realloc;
+
+        free(ptr);
+    }
+
+    // calloc
+
+    // realloc
+
+    //free
+
+    // array
+    // dynamic array with work with last element with O(1) amortized
+    // (uni/bi)directional linked list
+    // (uni/bi)directional ringed linked list
+    // queue, stack
+    // heaps (priority queue)
+    // binary search trees
+    // [optional] watch this: B+-tree, GiST, GIN, BRIN, FTS
 
     return 0;
 }
