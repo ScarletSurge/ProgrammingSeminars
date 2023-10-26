@@ -1,18 +1,24 @@
-﻿using System;
-
-namespace RGU.Minor.GraphTheory.Domain;
+﻿namespace RGU.Minor.GraphTheory.Domain;
 
 /// <summary>
 /// 
 /// </summary>
 public sealed class Vertex:
-    IEquatable<Vertex>
+    IEquatable<Vertex>,
+    IComparable,
+    IComparable<Vertex>
 {
+    
+    #region Fields
     
     /// <summary>
     /// 
     /// </summary>
     private readonly string _name;
+    
+    #endregion
+    
+    #region Constructors
     
     /// <summary>
     /// 
@@ -24,11 +30,19 @@ public sealed class Vertex:
         _name = name;
     }
     
+    #endregion
+    
+    #region Properties
+    
     /// <summary>
     /// 
     /// </summary>
     public string Name =>
         _name;
+    
+    #endregion
+    
+    #region System.Object overrides
     
     /// <inheritdoc cref="object.Equals(object?)" />
     public override bool Equals(
@@ -47,6 +61,22 @@ public sealed class Vertex:
         return false;
     }
     
+    /// <inheritdoc cref="object.GetHashCode" />
+    public override int GetHashCode()
+    {
+        return _name.GetHashCode();
+    }
+    
+    /// <inheritdoc cref="object.ToString" />
+    public override string ToString()
+    {
+        return $"{{vertex: name = \"{_name}\"}}";
+    }
+    
+    #endregion
+    
+    #region System.IEquatable<Vertex> implementation
+    
     /// <inheritdoc cref="IEquatable{T}.Equals(T?)" />
     public bool Equals(
         Vertex? vertex)
@@ -59,15 +89,43 @@ public sealed class Vertex:
         return _name.Equals(vertex.Name);
     }
     
-    /// <inheritdoc cref="object.GetHashCode" />
-    public override int GetHashCode()
-    {
-        return _name.GetHashCode();
-    }
+    #endregion
     
-    /// <inheritdoc cref="object.ToString" />
-    public override string ToString()
+    #region System.IComparable implementation
+    
+    /// <inheritdoc cref="IComparable.CompareTo" />
+    public int CompareTo(
+        object? obj)
     {
-        return $"Vertex with name == \"{_name}\"";
+        if (obj is null)
+        {
+            throw new ArgumentNullException(nameof(obj));
+        }
+
+        if (obj is Vertex vertex)
+        {
+            return CompareTo(vertex);
+        }
+
+        throw new ArgumentException("Can't compare objects", nameof(obj));
     }
+
+    #endregion
+    
+    #region System.IComparable<Vertex> implementation
+    
+    /// <inheritdoc cref="IComparable{T}.CompareTo" />
+    public int CompareTo(
+        Vertex? other)
+    {
+        if (other is null)
+        {
+            throw new ArgumentNullException(nameof(other));
+        }
+
+        return string.CompareOrdinal(_name , other._name);
+    }
+
+    #endregion
+
 }

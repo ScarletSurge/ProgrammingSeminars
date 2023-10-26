@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 
 namespace RGU.Minor.GraphTheory.Domain;
 
@@ -7,15 +7,25 @@ namespace RGU.Minor.GraphTheory.Domain;
 /// 
 /// </summary>
 public sealed class Graph:
+    IEquatable<Graph>,
     IEnumerable<Vertex>,
     IEnumerable<Edge>
 {
     
     #region Nested
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public enum RemoveVertexStrategy
     {
+        /// <summary>
+        /// 
+        /// </summary>
         CascadeDeleteEdges,
+        /// <summary>
+        /// 
+        /// </summary>
         ThrowAnException
     }
     
@@ -24,20 +34,20 @@ public sealed class Graph:
     /// <summary>
     /// Graph's vertices collection.
     /// </summary>
-    private readonly HashSet<Vertex> _vertices;
+    private readonly SortedSet<Vertex> _vertices;
     
     /// <summary>
     /// Graph's edges collection.
     /// </summary>
-    private readonly HashSet<Edge> _edges;
+    private readonly SortedSet<Edge> _edges;
     
     /// <summary>
     /// 
     /// </summary>
     public Graph()
     {
-        _vertices = new HashSet<Vertex>();
-        _edges = new HashSet<Edge>();
+        _vertices = new SortedSet<Vertex>();
+        _edges = new SortedSet<Edge>();
     }
     
     #region Vertex
@@ -168,15 +178,24 @@ public sealed class Graph:
 
         return true;
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="weight"></param>
+    /// <param name="verticesNames"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     public Graph AddEdge(
-        string edgeName,
-        // TODO: add edge weight parameter
+        string name,
+        double weight,
         params string[] verticesNames)
     {
-        if (_edges.Any(x => x.Name.Equals(edgeName)))
+        if (_edges.Any(x => x.Name.Equals(name)))
         {
-            throw new ArgumentException($"Edge with name \"{edgeName}\" already exists.", nameof(edgeName));
+            throw new ArgumentException($"Edge with name \"{name}\" already exists.", nameof(name));
         }
 
         var vertices = verticesNames
@@ -188,11 +207,17 @@ public sealed class Graph:
             throw new InvalidOperationException("One or more graph's vertices not found.");
         }
 
-        _edges.Add(new Edge(edgeName, vertices!));
+        _edges.Add(new Edge(name, weight, vertices!));
 
         return this;
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="edgeName"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public Graph RemoveEdge(
         string edgeName)
     {
@@ -211,13 +236,62 @@ public sealed class Graph:
     #endregion
     
     #region System.Object overrides
-    
-    // TODO: GetHashCode & Equals
 
     /// <inheritdoc cref="object.ToString" />
     public override string ToString()
     {
-        return $"Vertices: [{string.Join(", ", _vertices)}], Edges: [{string.Join(", ", _edges)}]";
+        return $"{{graph: vertices = [{string.Join(", ", _vertices)}], edges = [{string.Join(", ", _edges)}]}}";
+    }
+    
+    /// <inheritdoc cref="object.Equals(object?)" />
+    public override bool Equals(
+        object? obj)
+    {
+        if (obj is null)
+        {
+            return false;
+        }
+
+        if (obj is Graph graph)
+        {
+            return Equals(graph);
+        }
+
+        return false;
+    }
+    
+    /// <inheritdoc cref="object.GetHashCode" />
+    public override int GetHashCode()
+    {
+        var result = new HashCode();
+        
+        foreach (var vertex in _vertices)
+        {
+            result.Add(vertex);
+        }
+
+        foreach (var edge in _edges)
+        {
+            result.Add(edge);
+        }
+
+        return result.ToHashCode();
+    }
+
+    #endregion
+    
+    #region System.IEquatable<Graph> implementation
+    
+    /// <inheritdoc cref="IEquatable{T}.Equals(T?)" />
+    public bool Equals(
+        Graph? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return _vertices.SequenceEqual(other._vertices) && _edges.SequenceEqual(other._edges);
     }
 
     #endregion

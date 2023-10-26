@@ -41,7 +41,7 @@ public static class SerializationHelper
     /// </summary>
     /// <param name="stream"></param>
     /// <returns></returns>
-    public static string StringFromMemoryStream(
+    public static string StringFromStream(
         this Stream stream)
     {
         var destination = new byte[sizeof(int)];
@@ -52,6 +52,31 @@ public static class SerializationHelper
         stream.Read(destination, 0, destination.Length);
 
         return Encoding.Unicode.GetString(destination);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="stream"></param>
+    public static void ToStream(
+        this double value,
+        Stream stream)
+    {
+        stream.Write(BitConverter.GetBytes(value));
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static double DoubleFromStream(
+        this Stream stream)
+    {
+        var doubleBytes = new byte[sizeof(double)];
+        stream.Read(doubleBytes, 0, sizeof(double));
+        return BitConverter.ToDouble(doubleBytes, 0);
     }
         
 }

@@ -27,6 +27,7 @@ public static class GraphExtensions
         foreach (var edge in graphToStore as IEnumerable<Edge>)
         {
             edge.Name.ToStream(stream);
+            edge.Weight.ToStream(stream);
             stream.Write(BitConverter.GetBytes(edge.VerticesCount));
             foreach (var vertex in edge)
             {
@@ -41,9 +42,38 @@ public static class GraphExtensions
     /// <param name="stream"></param>
     /// <returns></returns>
     public static Graph RestoreFrom(
-        MemoryStream stream)
+        Stream stream)
     {
-        throw new NotImplementedException();
+        var restoredGraph = new Graph();
+        
+        var intBytes = new byte[sizeof(int)];
+        
+        stream.Read(intBytes, 0, sizeof(int));
+        var verticesCount = BitConverter.ToInt32(intBytes, 0);
+        for (var i = 0; i < verticesCount; i++)
+        {
+            restoredGraph.AddVertex(stream.StringFromStream());
+        }
+        
+        stream.Read(intBytes, 0, sizeof(int));
+        var edgesCount = BitConverter.ToInt32(intBytes, 0);
+        for (var i = 0; i < edgesCount; i++)
+        {
+            var edgeName = stream.StringFromStream();
+            var edgeWeight = stream.DoubleFromStream();
+            stream.Read(intBytes, 0, sizeof(int));
+            verticesCount = BitConverter.ToInt32(intBytes, 0);
+            var edgeVerticesNames = new string[verticesCount];
+            
+            for (var j = 0; j < verticesCount; j++)
+            {
+                edgeVerticesNames[j] = stream.StringFromStream();
+            }
+
+            restoredGraph.AddEdge(edgeName, edgeWeight, edgeVerticesNames);
+        }
+
+        return restoredGraph;
     }
 
 }
