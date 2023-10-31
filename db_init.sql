@@ -63,12 +63,35 @@ INSERT INTO public.teachers(surname, name, patronymic, birthday, academic_degree
     ('Petrov', 'Petr', 'Petrovich', DATE '01.31.1976', 'Ph.D in math', DEFAULT)
 
 UPDATE public.students
-  SET scientific_adviser = 2
-    WHERE record_book_number = '666-1337'
+  SET scientific_adviser = 1
+    WHERE record_book_number = '123-456'
 
-SELECT t.surname teacher, s.surname student
-  FROM public.students s
-    LEFT JOIN public.teachers t
-      ON t.id = s.scientific_adviser
-  --GROUP BY
-    --HAVING
+SELECT *
+  FROM public.teachers
+    CROSS JOIN public.teachers t
+
+SELECT *
+  FROM public.teachers
+SELECT *
+  FROM public.students
+
+INSERT INTO public.teachers(surname, name, patronymic, birthday, academic_degree, academic_title)
+  VALUES
+    ('Kosarev', 'Andrew', 'Mikhailovich', DATE '09.23.1956', 'Ph.D in pravoslavie', 'Academic')
+
+UPDATE public.students
+  SET scientific_adviser = 2
+    WHERE surname = 'Petrov'
+
+SELECT t.surname AS teacher_surname,
+       t.name AS teacher_name,
+       count AS students_count
+  FROM (SELECT scientific_adviser, COUNT(*) AS count
+          FROM public.students s
+            INNER JOIN public.teachers t
+              ON s.scientific_adviser = t.id
+          WHERE s.surname != 'Bryukin'
+          GROUP BY scientific_adviser
+            HAVING scientific_adviser != 1) AS sbqr
+  INNER JOIN public.teachers t
+    ON scientific_adviser = t.id
