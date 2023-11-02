@@ -25,13 +25,13 @@ try
     stream.Flush();
     stream.Close();
 
-    graph.AddVertex("vertex1");
+    //graph.AddVertex("vertex1");
 
     stream = new FileStream("graph.bin", FileMode.Open);
     var restoredGraph = GraphExtensions.RestoreFrom(stream);
     stream.Close();
 
-    Console.WriteLine($"{(graph.Equals(restoredGraph) ? "E" : "Not e")}quals");
+    Console.WriteLine($"{(graph.Equals(restoredGraph.Clone()) ? "E" : "Not e")}quals");
 }
 catch (ArgumentNullException ex)
 {
@@ -41,5 +41,3 @@ catch (ArgumentException ex)
 {
     Console.WriteLine(ex.Message);
 }
-
-Edge e = new Edge("I'm an edge!", 5.1, new Vertex("1"), new Vertex("2"));

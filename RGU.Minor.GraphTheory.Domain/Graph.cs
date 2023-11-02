@@ -9,7 +9,8 @@ namespace RGU.Minor.GraphTheory.Domain;
 public sealed class Graph:
     IEquatable<Graph>,
     IEnumerable<Vertex>,
-    IEnumerable<Edge>
+    IEnumerable<Edge>,
+    ICloneable
 {
     
     #region Nested
@@ -34,6 +35,7 @@ public sealed class Graph:
     /// <summary>
     /// Graph's vertices collection.
     /// </summary>
+    /// TODO: replace with SortedDictionary<Vertex, SortedSet<Edge>>()
     private readonly SortedSet<Vertex> _vertices;
     
     /// <summary>
@@ -164,19 +166,42 @@ public sealed class Graph:
     /// <returns></returns>
     public bool GetEdge(
         string edgeName,
-        ref Edge gotEdge)
+        out Edge? gotEdge)
     {
         var foundEdge = _edges
             .SingleOrDefault(v => v.Name.Equals(edgeName));
 
         if (foundEdge is null)
         {
+            gotEdge = null;
             return false;
         }
 
         gotEdge = foundEdge;
 
         return true;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="edgeToAdd"></param>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
+    private void AddEdge(
+        Edge edgeToAdd)
+    {
+        if (GetEdge(edgeToAdd.Name, out _))
+        {
+            throw new ArgumentException($"Edge with name \"{edgeToAdd.Name}\" already exists.", nameof(edgeToAdd));
+        }
+
+        if (edgeToAdd.Any(x => x is null))
+        {
+            throw new InvalidOperationException("One or more graph's vertices not found.");
+        }
+
+        _edges.Add(edgeToAdd);
     }
     
     /// <summary>
@@ -193,22 +218,11 @@ public sealed class Graph:
         double weight,
         params string[] verticesNames)
     {
-        if (_edges.Any(x => x.Name.Equals(name)))
-        {
-            throw new ArgumentException($"Edge with name \"{name}\" already exists.", nameof(name));
-        }
-
-        var vertices = verticesNames
-            .Select(x => _vertices.SingleOrDefault(y => y.Name.Equals(x)))
+        var edgeVertices = verticesNames
+            .Select(vertexName => _vertices.SingleOrDefault(vertex => vertex.Name.Equals(vertexName)))
             .ToArray();
-
-        if (vertices.Any(x => x is null))
-        {
-            throw new InvalidOperationException("One or more graph's vertices not found.");
-        }
-
-        _edges.Add(new Edge(name, weight, vertices!));
-
+        AddEdge(new Edge(name, weight, edgeVertices!));
+        
         return this;
     }
     
@@ -330,6 +344,27 @@ public sealed class Graph:
     IEnumerator<Edge> IEnumerable<Edge>.GetEnumerator()
     {
         return _edges.GetEnumerator();
+    }
+    
+    #endregion
+    
+    #region System.ICloneable implementation
+
+    public object Clone()
+    {
+        var clonedGraph = new Graph();
+
+        foreach (var vertex in this as IEnumerable<Vertex>)
+        {
+            clonedGraph.AddVertex((Vertex)vertex.Clone());
+        }
+
+        foreach (var edge in this as IEnumerable<Edge>)
+        {
+            clonedGraph.AddEdge((Edge)edge.Clone());
+        }
+
+        return clonedGraph;
     }
     
     #endregion

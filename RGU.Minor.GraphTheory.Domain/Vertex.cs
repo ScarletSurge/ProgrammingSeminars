@@ -6,7 +6,8 @@
 public sealed class Vertex:
     IEquatable<Vertex>,
     IComparable,
-    IComparable<Vertex>
+    IComparable<Vertex>,
+    ICloneable
 {
     
     #region Fields
@@ -126,6 +127,15 @@ public sealed class Vertex:
         return string.CompareOrdinal(_name , other._name);
     }
 
+    #endregion
+    
+    #region System.ICloneable implementation
+
+    public object Clone()
+    {
+        return this;
+    }
+    
     #endregion
 
 }

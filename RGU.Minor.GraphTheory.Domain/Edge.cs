@@ -9,7 +9,8 @@ public sealed class Edge:
     IEquatable<Edge>,
     IComparable,
     IComparable<Edge>,
-    IEnumerable<Vertex>
+    IEnumerable<Vertex>,
+    ICloneable
 {
     
     #region Constants
@@ -26,13 +27,13 @@ public sealed class Edge:
     /// <summary>
     /// 
     /// </summary>
-    private readonly SortedSet<Vertex> _vertices;
+    private readonly string _name;
     
     /// <summary>
     /// 
     /// </summary>
-    private readonly string _name;
-    
+    private readonly SortedSet<Vertex> _vertices;
+
     /// <summary>
     /// 
     /// </summary>
@@ -58,22 +59,23 @@ public sealed class Edge:
         _name = name ?? throw new ArgumentNullException(nameof(name));
         _weight = weight;
         _ = vertices ?? throw new ArgumentNullException(nameof(vertices));
-        _vertices = new SortedSet<Vertex>(vertices);
-        
-        if (_vertices.Count == 0)
+
+        if (vertices.Length == 0)
         {
             throw new ArgumentException("Vertices array is empty", nameof(vertices));
         }
         
-        if (_vertices.Any(x => x is null))
+        if (vertices.Any(x => x is null))
         {
             throw new ArgumentNullException(nameof(vertices), "Item inside collection is null");
         }
 
-        if (_vertices.Count != _vertices.Distinct().Count())
+        if (vertices.Length != vertices.Distinct().Count())
         {
             throw new ArgumentException("There are some equal vertices inside collection", nameof(vertices));
         }
+        
+        _vertices = new SortedSet<Vertex>(vertices);
     }
     
     #endregion
@@ -259,5 +261,14 @@ public sealed class Edge:
     }
     
     #endregion
+    
+    #region System.ICloneable implementation
 
+    public object Clone()
+    {
+        return this;
+    }
+    
+    #endregion
+    
 }
