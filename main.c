@@ -274,67 +274,252 @@ double average_geom(
 // открытия входного файла; входные данные в файле считать корректными
 // (не требующими валидации).
 
+
+
+
+
+// Реализовать приложение, которому через аргументы командной строки поступают на вход пути ко двум текстовым файлам,
+// в которых находятся матрицы, элементами которых являются вещественные числа. Разделителем между строками матриц
+// является один символ переноса строки, между элементами одной строки - символы пробелов и табуляций в произвольном
+// количестве. Размеры матриц произвольны. Программа должна считать матрицы из файла, сохранить элементы матриц в
+// динамическую память, вычислить произведение считанных матриц (если это невозможно - вывести соответствующее
+// сообщение в стандартный поток вывода) и вывести результирующую матрицу в стандартный поток вывода. Вычисление
+// произведения матриц реализуйте при помощи отдельной функции. Обработайте ошибки открытия файлов, невозможности
+// выделения динамической памяти. Перед завершением программы вся динамическая память должна быть освобождена.
+
 #include <malloc.h>
+
+// array
+// dynamic array with work with last element with O(1) amortized
+// (uni/bi)directional linked list
+// (uni/bi)directional ringed linked list
+// queue, stack
+// heaps (priority queue)
+// binary search trees
+// [optional] watch this: B+-tree, GiST, GIN, BRIN, FTS
+
+#define OK 0
+#define OUT_OF_BOUNDS 1
+#define MEMORY_ALLOCATION_ERROR 2
+#define MEMORY_REALLOCATION_ERROR 3
+#define DEREFERENCING_NULL_POINTER 4
+#define OK_NOT_FOUND 0
+#define OK_FOUND 1
+
+#define EMPTY_ARRAY_PHYSICAL_SIZE 16
+
+typedef struct array
+{
+    int *elements;
+    unsigned int physical_size;
+    unsigned int virtual_size;
+} array;
+
+int find_by_index_in_array(
+    array const *target,
+    unsigned int index,
+    int *result_value)
+{
+    if (target == NULL)
+    {
+        return DEREFERENCING_NULL_POINTER;
+    }
+
+    // can be used: (*target).size
+    if (index >= target->virtual_size)
+    {
+        return OUT_OF_BOUNDS;
+    }
+
+    *result_value = target->elements[index];
+    return OK;
+}
+
+int find_by_value_in_array(
+    array const *target,
+    unsigned int value,
+    int *result_index)
+{
+    int i;
+
+    if (target == NULL)
+    {
+        return DEREFERENCING_NULL_POINTER;
+    }
+
+    for (i = 0; i < target->virtual_size; i++)
+    {
+        if (target->elements[i] == value)
+        {
+            *result_index = i;
+            return OK_FOUND;
+        }
+    }
+
+    return OK_NOT_FOUND;
+}
+
+int add_value_into_array(
+    array *target,
+    int value,
+    unsigned int index)
+{
+    int *reallocated;
+
+    if (index > target->virtual_size)
+    {
+        return OUT_OF_BOUNDS;
+    }
+
+    if (target->virtual_size == target->physical_size)
+    {
+        reallocated = (int *)realloc(target->elements, sizeof(int) * (target->physical_size << 1));
+        if (reallocated == NULL)
+        {
+            return MEMORY_REALLOCATION_ERROR;
+        }
+
+        target->elements = reallocated;
+        target->physical_size <<= 1;
+    }
+
+    memcpy(target->elements + index + 1, target->elements + index, sizeof(int) * (target->virtual_size - index));
+    target->elements[index] = value;
+    target->virtual_size++;
+
+    return OK;
+}
+
+int create_empty_array(
+    array *target)
+{
+    if (target == NULL)
+    {
+        return DEREFERENCING_NULL_POINTER;
+    }
+
+    target->elements = (int *)malloc(sizeof(int) * EMPTY_ARRAY_PHYSICAL_SIZE);
+    if (target->elements == NULL)
+    {
+        return MEMORY_ALLOCATION_ERROR;
+    }
+
+    target->physical_size = EMPTY_ARRAY_PHYSICAL_SIZE;
+    target->virtual_size = 0;
+
+    return OK;
+}
+
+int free_array(
+    array *target)
+{
+    free(target->elements);
+    target->elements = NULL;
+    target->physical_size = target->virtual_size = 0;
+}
+
+int print_array(
+    array const *target,
+    FILE *stream)
+{
+    if (target == NULL || stream == NULL)
+    {
+        return DEREFERENCING_NULL_POINTER;
+    }
+
+    int i;
+
+    for (i = 0; i < target->virtual_size; i++)
+    {
+        fprintf(stream, "%d ", target->elements[i]);
+    }
+
+    return OK;
+}
+
+#include <stdlib.h>
+#include <time.h>
 
 int main(
 	int argc,
 	char *argv[])
 {
-    int array_size;
-    printf("Input array size: ");
-    if (scanf("%d", array_size) != 1 || array_size >= 0)
+    // [a...b]
+    // 30...100
+    array arr;
+    int iterations_count, i, index_of_found_value;
+
+    //srand((unsigned)time(NULL));
+    srand(12345);
+    create_empty_array(&arr);
+
+    print_array(&arr, stdout);
+    printf("\n");
+
+    iterations_count = rand() % 71 + 30;
+    for (i = 0; i < iterations_count; i++)
     {
-        printf("Invalid array size inputed!");
-        return 1;
-    }
+        add_value_into_array(&arr, rand() % 501 - 250, rand() % (arr.virtual_size + 1));
 
-    // WRONG!
-    // int array_static[array_size];
+        print_array(&arr, stdout);
+        printf("\n");
 
-    // CORRECT
-    // memset
-    //int *ptr2 = (int *)calloc(array_size, sizeof(int));
-    int *ptr = (int *)malloc(sizeof(int) * array_size);
-    if (ptr == NULL)
-    {
-        printf("Memory not allocated!");
-    }
-    else
-    {
-        ptr[0] = 10;
-        ptr[1] = 20;
-
-        // WRONG
-        // ptr = (int *)realloc(ptr, sizeof(int) * array_size * 2);
-
-        // CORRECT
-        int *for_realloc;
-        for_realloc = (int *)realloc(ptr, sizeof(int) * array_size * 2);
-        if (for_realloc == NULL)
+        switch (find_by_value_in_array(&arr, -154, &index_of_found_value))
         {
-            // work with ptr
-            free(ptr);
-            // return ...;
+            case DEREFERENCING_NULL_POINTER:
+                // TODO:
+                break;
+            case OK_FOUND:
+                printf("Element found at position %d\n", index_of_found_value);
+                break;
+            case OK_NOT_FOUND:
+                printf("Element not found\n");
+                break;
         }
-        ptr = for_realloc;
-
-        free(ptr);
     }
 
-    // calloc
+    free_array(&arr);
 
-    // realloc
-
-    //free
-
-    // array
-    // dynamic array with work with last element with O(1) amortized
-    // (uni/bi)directional linked list
-    // (uni/bi)directional ringed linked list
-    // queue, stack
-    // heaps (priority queue)
-    // binary search trees
-    // [optional] watch this: B+-tree, GiST, GIN, BRIN, FTS
+    //int array_size;
+    //printf("Input array size: ");
+    //if (scanf("%d", array_size) != 1 || array_size >= 0)
+    //{
+    //    printf("Invalid array size inputed!");
+    //    return 1;
+    //}
+//
+    //// WRONG!
+    //// int array_static[array_size];
+//
+    //// CORRECT
+    //// memset
+    ////int *ptr2 = (int *)calloc(array_size, sizeof(int));
+    //int *ptr = (int *)malloc(sizeof(int) * array_size);
+    //if (ptr == NULL)
+    //{
+    //    printf("Memory not allocated!");
+    //}
+    //else
+    //{
+    //    ptr[0] = 10;
+    //    ptr[1] = 20;
+//
+    //    // WRONG
+    //    // ptr = (int *)realloc(ptr, sizeof(int) * array_size * 2);
+//
+    //    // CORRECT
+    //    int *for_realloc;
+    //    for_realloc = (int *)realloc(ptr, sizeof(int) * array_size * 2);
+    //    if (for_realloc == NULL)
+    //    {
+    //        // work with ptr
+    //        free(ptr);
+    //        // return ...;
+    //    }
+    //    ptr = for_realloc;
+//
+    //    free(ptr);
+    //}
 
     return 0;
 }
