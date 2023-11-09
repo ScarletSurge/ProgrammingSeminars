@@ -13,6 +13,29 @@ public sealed class Edge:
     ICloneable
 {
     
+    #region Nested
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum Direction
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        FromFirstToSecond,
+        /// <summary>
+        /// 
+        /// </summary>
+        FromSecondToFirst,
+        /// <summary>
+        /// 
+        /// </summary>
+        Bidirectional
+    }
+    
+    #endregion
+    
     #region Constants
     
     /// <summary>
@@ -39,6 +62,11 @@ public sealed class Edge:
     /// </summary>
     private readonly double _weight;
     
+    /// <summary>
+    /// 
+    /// </summary>
+    private readonly Direction _direction;
+    
     #endregion
     
     #region Constructors
@@ -48,16 +76,19 @@ public sealed class Edge:
     /// </summary>
     /// <param name="name">name of the edge.</param>
     /// <param name="weight">weight of the edge instance.</param>
+    /// <param name="direction">direction of the edge instance.</param>
     /// <param name="vertices">vertices array contained by the edge instance.</param>
     /// <exception cref="ArgumentNullException">vertices array is empty.</exception>
     /// <exception cref="ArgumentException">vertices array is empty or any it's component is empty.</exception>
     public Edge(
         string name,
         double weight,
+        Direction direction = Direction.Bidirectional,
         params Vertex[] vertices)
     {
         _name = name ?? throw new ArgumentNullException(nameof(name));
         _weight = weight;
+        _direction = direction;
         _ = vertices ?? throw new ArgumentNullException(nameof(vertices));
 
         if (vertices.Length == 0)
@@ -97,8 +128,61 @@ public sealed class Edge:
     /// <summary>
     /// 
     /// </summary>
+    public Direction EdgeDirection =>
+        _direction;
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public int VerticesCount =>
         _vertices.Count;
+    
+    #endregion
+    
+    #region Methods
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    private string DirectionToString(
+        Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Bidirectional:
+                return "Bidirectional";
+            case Direction.FromFirstToSecond:
+                return "FromFirstToSecond";
+            case Direction.FromSecondToFirst:
+                return "FromSecondToFirst";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(direction));
+        }
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stringifiedDirection"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    private Direction StringToDirection(
+        string stringifiedDirection)
+    {
+        switch (stringifiedDirection)
+        {
+            case "Bidirectional":
+                return Direction.Bidirectional;
+            case "FromFirstToSecond":
+                return Direction.FromFirstToSecond;
+            case "FromSecondToFirst":
+                return Direction.FromSecondToFirst;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(stringifiedDirection));
+        }
+    }
     
     #endregion
     
@@ -124,6 +208,7 @@ public sealed class Edge:
     /// <inheritdoc cref="object.GetHashCode" />
     public override int GetHashCode()
     {
+        // TODO: don't forget about direction
         var result = new HashCode();
         
         result.Add(_name);
@@ -139,7 +224,8 @@ public sealed class Edge:
     /// <inheritdoc cref="object.ToString" />
     public override string ToString()
     {
-        return $"{{edge: name = \"{_name}\", weight = {_weight}, vertices = [{string.Join(", ", _vertices as IEnumerable<Vertex>)}]}}";
+        // TODO: don't forget about direction
+        return $"{{edge: name = \"{_name}\", weight = {_weight}, vertices = [{string.Join(", ", _vertices)}]}}";
     }
 
     #endregion
@@ -155,8 +241,10 @@ public sealed class Edge:
             return false;
         }
         
-        return _name == edge.Name && Math.Abs(_weight - edge.Weight) < Epsilon &&
-            _vertices.SequenceEqual(edge._vertices);
+        return _name == edge.Name
+               && Math.Abs(_weight - edge.Weight) < Epsilon
+               && _vertices.SequenceEqual(edge._vertices)
+               && _direction == edge.EdgeDirection;
     }
     
     #endregion
@@ -167,6 +255,7 @@ public sealed class Edge:
     public int CompareTo(
         object? obj)
     {
+        // TODO: don't forget about direction
         if (obj is null)
         {
             throw new ArgumentNullException(nameof(obj));
@@ -188,9 +277,16 @@ public sealed class Edge:
     public int CompareTo(
         Edge? other)
     {
+        // TODO: don't forget about direction
         if (other is null)
         {
             throw new ArgumentNullException(nameof(other));
+        }
+        
+        // TODO: think about it ._.
+        if (ReferenceEquals(this, other))
+        {
+            return 0;
         }
 
         var comparisonResult = string.CompareOrdinal(_name , other._name);

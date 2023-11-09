@@ -12,8 +12,9 @@ try
         .AddVertex("456")
         .AddEdge("edge1", 1.13, "234", "345")
         .AddEdge("edge2", -8.91, "234", "345", "456")
-        .AddEdge("edge3", 10, "234", "345", "456", "123");
-        //.RemoveVertex("234", Graph.RemoveVertexStrategy.CascadeDeleteEdges);
+        .AddEdge("edge3", 10, "234", "345", "456", "123")
+        .AddVertex("I'm so sad :(");
+    graph.RemoveVertex("234", Graph.RemoveVertexStrategy.CascadeDeleteEdges);
 
     Console.WriteLine($"Got graph: {graph}");
 
@@ -24,8 +25,6 @@ try
     graph.StoreInto(stream);
     stream.Flush();
     stream.Close();
-
-    //graph.AddVertex("vertex1");
 
     stream = new FileStream("graph.bin", FileMode.Open);
     var restoredGraph = GraphExtensions.RestoreFrom(stream);

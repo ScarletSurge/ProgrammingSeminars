@@ -32,25 +32,32 @@ public sealed class Graph:
     
     #endregion
     
+    #region Fields
+    
     /// <summary>
     /// Graph's vertices collection.
     /// </summary>
-    /// TODO: replace with SortedDictionary<Vertex, SortedSet<Edge>>()
-    private readonly SortedSet<Vertex> _vertices;
+    private readonly SortedDictionary<Vertex, SortedSet<Edge>> _vertices;
     
     /// <summary>
     /// Graph's edges collection.
     /// </summary>
     private readonly SortedSet<Edge> _edges;
     
+    #endregion
+    
+    #region Constructor
+    
     /// <summary>
     /// 
     /// </summary>
     public Graph()
     {
-        _vertices = new SortedSet<Vertex>();
+        _vertices = new SortedDictionary<Vertex, SortedSet<Edge>>();
         _edges = new SortedSet<Edge>();
     }
+    
+    #endregion
     
     #region Vertex
     
@@ -71,14 +78,14 @@ public sealed class Graph:
         ref Vertex gotVertex)
     {
         var foundVertex = _vertices
-            .SingleOrDefault(v => v.Name.Equals(vertexName));
+            .SingleOrDefault(v => v.Key.Name.Equals(vertexName));
 
-        if (foundVertex is null)
+        if (foundVertex.Equals(default(KeyValuePair<Vertex, SortedSet<Edge>>)))
         {
             return false;
         }
 
-        gotVertex = foundVertex;
+        gotVertex = foundVertex.Key;
 
         return true;
     }
@@ -92,7 +99,7 @@ public sealed class Graph:
         Vertex vertexToAdd)
     {
         _ = vertexToAdd ?? throw new ArgumentNullException(nameof(vertexToAdd));
-        _vertices.Add(vertexToAdd);
+        _vertices.Add(vertexToAdd, new SortedSet<Edge>());
     }
     
     /// <summary>
@@ -117,33 +124,35 @@ public sealed class Graph:
         string vertexName,
         RemoveVertexStrategy removeStrategy = RemoveVertexStrategy.ThrowAnException)
     {
-        var targetVertex = _vertices.SingleOrDefault(x => x.Name == vertexName);
-        if (targetVertex is null)
+        var targetVertex = _vertices.SingleOrDefault(x => x.Key.Name == vertexName);
+        if (targetVertex.Equals(default(KeyValuePair<Vertex, SortedSet<Edge>>)))
         {
             throw new InvalidOperationException("Can't remove vertex, as it doesn't exist in graph");
         }
-
-        var affectedEdges = new LinkedList<Edge>();
-        foreach (var edge in _edges)
+        
+        if (targetVertex.Value.Count != 0 && removeStrategy == RemoveVertexStrategy.ThrowAnException)
         {
-            if (edge.Any(edgeVertex => vertexName == edgeVertex.Name))
-            {
-                if (removeStrategy == RemoveVertexStrategy.ThrowAnException)
-                {
-                    throw new InvalidOperationException(
-                        "Can't remove vertex, as it contains in one or more graph's edges.");
-                }
-
-                affectedEdges.AddFirst(edge);
-            }       
+            throw new InvalidOperationException(
+                "Can't remove vertex, as it contains in one or more graph's edges.");
         }
 
-        foreach (var affectedEdge in affectedEdges)
+        var affectedEdges = new List<Edge>();
+        // TODO: this maybe could be done faster
+        foreach (var affectedEdge in targetVertex.Value)
         {
+            affectedEdges.Add(affectedEdge);
             _edges.Remove(affectedEdge);
         }
 
-        _vertices.Remove(targetVertex);
+        foreach (var vertex in _vertices)
+        {
+            foreach (var edge in affectedEdges)
+            {
+                vertex.Value.Remove(edge);
+            }
+        }
+
+        _vertices.Remove(targetVertex.Key);
 
         return this;
     }
@@ -219,9 +228,14 @@ public sealed class Graph:
         params string[] verticesNames)
     {
         var edgeVertices = verticesNames
-            .Select(vertexName => _vertices.SingleOrDefault(vertex => vertex.Name.Equals(vertexName)))
+            .Select(vertexName => _vertices.SingleOrDefault(vertex => vertex.Key.Name.Equals(vertexName)))
             .ToArray();
-        AddEdge(new Edge(name, weight, edgeVertices!));
+        var addedEdge = new Edge(name, weight, edgeVertices.Select(vertex => vertex.Key).ToArray());
+        AddEdge(addedEdge);
+        foreach (var vertex in edgeVertices)
+        {
+            vertex.Value.Add(addedEdge);
+        }
         
         return this;
     }
@@ -243,6 +257,10 @@ public sealed class Graph:
         }
 
         _edges.Remove(edgeToRemove);
+        foreach (var vertex in _vertices)
+        {
+            vertex.Value.Remove(edgeToRemove);
+        }
 
         return this;
     }
@@ -254,7 +272,7 @@ public sealed class Graph:
     /// <inheritdoc cref="object.ToString" />
     public override string ToString()
     {
-        return $"{{graph: vertices = [{string.Join(", ", _vertices)}], edges = [{string.Join(", ", _edges)}]}}";
+        return $"{{graph: vertices = [{string.Join(", ", this as IEnumerable<Vertex>)}], edges = [{string.Join(", ", _edges)}]}}";
     }
     
     /// <inheritdoc cref="object.Equals(object?)" />
@@ -333,7 +351,10 @@ public sealed class Graph:
     /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
     IEnumerator<Vertex> IEnumerable<Vertex>.GetEnumerator()
     {
-        return _vertices.GetEnumerator();
+        foreach (var vertex in _vertices)
+        {
+            yield return vertex.Key;
+        }
     }
     
     #endregion
