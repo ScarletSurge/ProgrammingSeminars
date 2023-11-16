@@ -157,6 +157,23 @@ public sealed class Graph:
         return this;
     }
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="vertexName"></param>
+    /// <returns></returns>
+    public IEnumerable<Edge> GetIncidentEdges(
+        string vertexName)
+    {
+        var vertexByName = default(Vertex);
+        if (!GetVertex(vertexName, ref vertexByName))
+        {
+            throw new ArgumentException($"Vertex with name \"{vertexByName}\" not exist in graph", nameof(vertexName));
+        }
+
+        return _vertices[vertexByName];
+    }
+    
     #endregion
     
     #region Edge
@@ -218,6 +235,7 @@ public sealed class Graph:
     /// </summary>
     /// <param name="name"></param>
     /// <param name="weight"></param>
+    /// <param name="direction"></param>
     /// <param name="verticesNames"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
@@ -225,12 +243,13 @@ public sealed class Graph:
     public Graph AddEdge(
         string name,
         double weight,
+        Edge.Direction direction = Edge.Direction.Bidirectional,
         params string[] verticesNames)
     {
         var edgeVertices = verticesNames
             .Select(vertexName => _vertices.SingleOrDefault(vertex => vertex.Key.Name.Equals(vertexName)))
             .ToArray();
-        var addedEdge = new Edge(name, weight, edgeVertices.Select(vertex => vertex.Key).ToArray());
+        var addedEdge = new Edge(name, weight, direction, edgeVertices.Select(vertex => vertex.Key).ToArray());
         AddEdge(addedEdge);
         foreach (var vertex in edgeVertices)
         {

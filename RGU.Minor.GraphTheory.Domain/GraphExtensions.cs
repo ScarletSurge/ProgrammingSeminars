@@ -28,6 +28,7 @@ public static class GraphExtensions
         {
             edge.Name.ToStream(stream);
             edge.Weight.ToStream(stream);
+            ((int)edge.EdgeDirection).ToStream(stream);
             stream.Write(BitConverter.GetBytes(edge.VerticesCount));
             foreach (var vertex in edge)
             {
@@ -61,6 +62,7 @@ public static class GraphExtensions
         {
             var edgeName = stream.StringFromStream();
             var edgeWeight = stream.DoubleFromStream();
+            var edgeDirection = (Edge.Direction)stream.IntFromStream();
             stream.Read(intBytes, 0, sizeof(int));
             verticesCount = BitConverter.ToInt32(intBytes, 0);
             var edgeVerticesNames = new string[verticesCount];
@@ -70,7 +72,7 @@ public static class GraphExtensions
                 edgeVerticesNames[j] = stream.StringFromStream();
             }
 
-            restoredGraph.AddEdge(edgeName, edgeWeight, edgeVerticesNames);
+            restoredGraph.AddEdge(edgeName, edgeWeight, edgeDirection, edgeVerticesNames);
         }
 
         return restoredGraph;

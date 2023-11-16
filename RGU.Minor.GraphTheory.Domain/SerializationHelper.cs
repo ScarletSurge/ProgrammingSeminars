@@ -69,6 +69,18 @@ public static class SerializationHelper
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="value"></param>
+    /// <param name="stream"></param>
+    public static void ToStream(
+        this int value,
+        Stream stream)
+    {
+        stream.Write(BitConverter.GetBytes(value));
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="stream"></param>
     /// <returns></returns>
     public static double DoubleFromStream(
@@ -77,6 +89,19 @@ public static class SerializationHelper
         var doubleBytes = new byte[sizeof(double)];
         stream.Read(doubleBytes, 0, sizeof(double));
         return BitConverter.ToDouble(doubleBytes, 0);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    public static int IntFromStream(
+        this Stream stream)
+    {
+        var intBytes = new byte[sizeof(int)];
+        stream.Read(intBytes, 0, sizeof(int));
+        return BitConverter.ToInt32(intBytes, 0);
     }
         
 }

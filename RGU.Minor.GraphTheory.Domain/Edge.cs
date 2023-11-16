@@ -9,7 +9,7 @@ public sealed class Edge:
     IEquatable<Edge>,
     IComparable,
     IComparable<Edge>,
-    IEnumerable<Vertex>,
+    IEnumerable<Vertex?>,
     ICloneable
 {
     
@@ -84,7 +84,7 @@ public sealed class Edge:
         string name,
         double weight,
         Direction direction = Direction.Bidirectional,
-        params Vertex[] vertices)
+        params Vertex?[] vertices)
     {
         _name = name ?? throw new ArgumentNullException(nameof(name));
         _weight = weight;
@@ -106,7 +106,7 @@ public sealed class Edge:
             throw new ArgumentException("There are some equal vertices inside collection", nameof(vertices));
         }
         
-        _vertices = new SortedSet<Vertex>(vertices);
+        _vertices = new SortedSet<Vertex>(vertices!);
     }
     
     #endregion
@@ -146,42 +146,16 @@ public sealed class Edge:
     /// </summary>
     /// <param name="direction"></param>
     /// <returns></returns>
-    private string DirectionToString(
+    private static string DirectionToString(
         Direction direction)
     {
-        switch (direction)
+        return direction switch
         {
-            case Direction.Bidirectional:
-                return "Bidirectional";
-            case Direction.FromFirstToSecond:
-                return "FromFirstToSecond";
-            case Direction.FromSecondToFirst:
-                return "FromSecondToFirst";
-            default:
-                throw new ArgumentOutOfRangeException(nameof(direction));
-        }
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="stringifiedDirection"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    private Direction StringToDirection(
-        string stringifiedDirection)
-    {
-        switch (stringifiedDirection)
-        {
-            case "Bidirectional":
-                return Direction.Bidirectional;
-            case "FromFirstToSecond":
-                return Direction.FromFirstToSecond;
-            case "FromSecondToFirst":
-                return Direction.FromSecondToFirst;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(stringifiedDirection));
-        }
+            Direction.Bidirectional => "Bidirectional",
+            Direction.FromFirstToSecond => "FromFirstToSecond",
+            Direction.FromSecondToFirst => "FromSecondToFirst",
+            _ => throw new ArgumentOutOfRangeException(nameof(direction))
+        };
     }
     
     #endregion
@@ -208,11 +182,11 @@ public sealed class Edge:
     /// <inheritdoc cref="object.GetHashCode" />
     public override int GetHashCode()
     {
-        // TODO: don't forget about direction
         var result = new HashCode();
         
         result.Add(_name);
         result.Add(_weight);
+        result.Add(_direction);
         foreach (var vertex in _vertices)
         {
             result.Add(vertex);
@@ -224,13 +198,12 @@ public sealed class Edge:
     /// <inheritdoc cref="object.ToString" />
     public override string ToString()
     {
-        // TODO: don't forget about direction
-        return $"{{edge: name = \"{_name}\", weight = {_weight}, vertices = [{string.Join(", ", _vertices)}]}}";
+        return $"{{edge: name = \"{_name}\", weight = {_weight}, direction = {DirectionToString(_direction)} vertices = [{string.Join(", ", _vertices)}]}}";
     }
 
     #endregion
     
-    #region System.IEquatable<out Edge> implementation
+    #region System.IEquatable<Edge> implementation
     
     /// <inheritdoc cref="IEquatable{T}.Equals(T?)" />
     public bool Equals(
@@ -255,18 +228,12 @@ public sealed class Edge:
     public int CompareTo(
         object? obj)
     {
-        // TODO: don't forget about direction
-        if (obj is null)
+        return obj switch
         {
-            throw new ArgumentNullException(nameof(obj));
-        }
-
-        if (obj is Edge edge)
-        {
-            return CompareTo(edge);
-        }
-
-        throw new ArgumentException("Can't compare objects", nameof(obj));
+            null => throw new ArgumentNullException(nameof(obj)),
+            Edge edge => CompareTo(edge),
+            _ => throw new ArgumentException("Can't compare objects", nameof(obj))
+        };
     }
 
     #endregion
@@ -277,19 +244,23 @@ public sealed class Edge:
     public int CompareTo(
         Edge? other)
     {
-        // TODO: don't forget about direction
         if (other is null)
         {
             throw new ArgumentNullException(nameof(other));
         }
         
-        // TODO: think about it ._.
         if (ReferenceEquals(this, other))
         {
             return 0;
         }
 
-        var comparisonResult = string.CompareOrdinal(_name , other._name);
+        var comparisonResult = _direction.CompareTo(other._direction);
+        if (comparisonResult != 0)
+        {
+            throw new InvalidOperationException("Can't compare edges with different directions");
+        }
+
+        comparisonResult = string.CompareOrdinal(_name , other._name);
         if (comparisonResult != 0)
         {
             return comparisonResult;
