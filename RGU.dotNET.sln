@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGU.dotNET", "RGU.dotNET\RGU.dotNET.csproj", "{21E17C18-E6B8-4A6F-A526-0B887C007B02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lab1", "Lab1", "{8D97BE65-1FF0-4C71-A34A-83BC78EF66C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lab2", "Lab2", "{9F437FDD-3F5B-4E2C-9962-BB1F33BF42CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab2.1", "Lab2.1\Lab2.1.csproj", "{B88F299C-5B84-4B17-AE3B-44C5D3271270}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21E17C18-E6B8-4A6F-A526-0B887C007B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21E17C18-E6B8-4A6F-A526-0B887C007B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21E17C18-E6B8-4A6F-A526-0B887C007B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21E17C18-E6B8-4A6F-A526-0B887C007B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B88F299C-5B84-4B17-AE3B-44C5D3271270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B88F299C-5B84-4B17-AE3B-44C5D3271270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B88F299C-5B84-4B17-AE3B-44C5D3271270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B88F299C-5B84-4B17-AE3B-44C5D3271270}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{21E17C18-E6B8-4A6F-A526-0B887C007B02} = {8D97BE65-1FF0-4C71-A34A-83BC78EF66C5}
+		{B88F299C-5B84-4B17-AE3B-44C5D3271270} = {9F437FDD-3F5B-4E2C-9962-BB1F33BF42CD}
+	EndGlobalSection
+EndGlobal
