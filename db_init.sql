@@ -11,6 +11,8 @@ CREATE TABLE public.students
     course INT CHECK (course >= 1 AND course <= 4)
 )
 
+UPDATE public.students SET birthday = DATE '02.11.1955' WHERE record_book_number = '123-456'
+
 DROP TABLE public.students
 
 ALTER TABLE public.students
@@ -95,3 +97,67 @@ SELECT t.surname AS teacher_surname,
             HAVING scientific_adviser != 1) AS sbqr
   INNER JOIN public.teachers t
     ON scientific_adviser = t.id
+
+CREATE TABLE IF NOT EXISTS public.logs
+(
+    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    text TEXT NOT NULL,
+    date DATE DEFAULT now()
+);
+
+INSERT INTO public.logs(text) VALUES
+('log example');
+
+SELECT * FROM public.logs;
+
+
+DROP FUNCTION f_trg_after_insert_student CASCADE;
+CREATE FUNCTION f_trg_after_insert_student()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO public.logs(text) VALUES
+      (FORMAT('Inserted value into %s.%s: record_book_number = ''%s'', surname = ''%s'', name = ''%s'', patronymic = ''%s''',
+          TG_TABLE_SCHEMA, TG_TABLE_NAME, NEW.record_book_number, NEW.surname, NEW.name, NEW.patronymic));
+
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_after_insert_student
+  AFTER INSERT
+  ON public.students
+  FOR EACH ROW
+  EXECUTE FUNCTION f_trg_after_insert_student();
+
+DROP FUNCTION f_trg_after_update_student CASCADE;
+CREATE FUNCTION f_trg_after_update_student()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO public.logs(text) VALUES
+      (FORMAT('Updated value into %s.%s: record_book_number = ''%s'', surname = ''%s'', name = ''%s'', patronymic = ''%s''',
+          TG_TABLE_SCHEMA, TG_TABLE_NAME, NEW.record_book_number, NEW.surname, NEW.name, NEW.patronymic));
+
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_after_update_student
+  AFTER UPDATE
+  ON public.students
+  FOR EACH ROW
+  EXECUTE FUNCTION f_trg_after_update_student();
+
+SELECT * from public.students;
+SELECT * FROM public.logs;
+
+INSERT INTO public.students (record_book_number, surname, name, patronymic, course) VALUES
+  ('1337-1340', 'Bundin', 'Klim', 'Otetsovich', 3);
+SELECT * FROM public.logs;
+
+UPDATE public.students
+  SET patronymic = 'Andreevich'
+  WHERE name = 'Klim'
