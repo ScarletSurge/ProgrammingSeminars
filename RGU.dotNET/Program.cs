@@ -160,8 +160,8 @@ public abstract class BasicPrimalityTest : IPrimalityTest
         for (var i = 0; i < iterationsCount; i++)
         {
             // TODO: generate a
-            // TODO: different a
-            if (!TestIteration(value, a))
+            // TODO: unmock iterationParameter
+            if (!TestIteration(value, BigInteger.One))
             {
                 return IPrimalityTest.PrimalityTestResult.Composite;
             }
@@ -184,24 +184,39 @@ public sealed class FermatPrimalityTest : BasicPrimalityTest
 {
     protected override double OneIterationCompositanceProbability =>
         0.5;
-    
-    
+
+    protected override bool TestIteration(
+        BigInteger primeCandidate,
+        BigInteger iterationParameter)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public sealed class SolovayStrassenPrimalityTest : BasicPrimalityTest
 {
     protected override double OneIterationCompositanceProbability =>
         0.5;
-    
-    
+
+    protected override bool TestIteration(
+        BigInteger primeCandidate,
+        BigInteger iterationParameter)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public sealed class MillerRabinPrimalityTest : BasicPrimalityTest
 {
     protected override double OneIterationCompositanceProbability =>
         0.25;
-    
-    
+
+    protected override bool TestIteration(
+        BigInteger primeCandidate,
+        BigInteger iterationParameter)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 class Program
@@ -223,7 +238,7 @@ class Program
                     break;
             }
         }
-        catch (ArgumentException ex)
+        catch (ArgumentException)
         {
             Console.WriteLine("Invalid value passed!");
         }
@@ -231,6 +246,40 @@ class Program
 
     static void Main(string[] args)
     {
+        try
+        {
+            var student = new Student("1", "2", "3", "4", 3, "12345");
+            object student2 = new Student("123", "12", "1", "1", 3, "1");
+            var rbn = student.RecordBookNumber;
+            //rbn = student2?.RecordBookNumber;
+
+            Console.WriteLine(student2.Equals(student));
+
+            foreach (var fieldValue in student)
+            {
+                Console.WriteLine(fieldValue);
+            }
+        }
+        catch (ArgumentNullException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        catch (AggregateException ex)
+        {
+            foreach (var e in ex.InnerExceptions)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        //using // IDisposable
+
+        Environment.Exit(0);
+        
         var test = new DeterminedPrimalityTest();
         
         Foo(test);
@@ -263,7 +312,7 @@ class Program
             Console.WriteLine("Solutions: {0}, {1}, {2}", results[0], results[1], results[2]);
             
         }
-        catch (ArgumentNullException ex)
+        catch (ArgumentNullException)
         {
             // 
         }

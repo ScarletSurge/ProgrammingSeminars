@@ -33,13 +33,21 @@ public sealed class Car : Drivable
         Console.WriteLine("Driving car...");
     }
 
-    public static Car operator +(Car car1, Car car2)
+    public static Car MergeCars(Car car1, Car car2)
     {
         return new Car(car1._baranka + car2._baranka,
             car1._clutchPedal + car2._clutchPedal,
             car1._gasPedal + car2._gasPedal,
             car1._brakePedal + car2._brakePedal, car1._wheels + car2._wheels,
             car1._korobka + car2._korobka);
+    }
+    
+    // .NET: C#, F#, VB.NET
+    // JIT-compiler
+    
+    public static Car operator +(Car car1, Car car2)
+    {
+        return MergeCars(car1, car2);
     }
 
     public override string ToString()
