@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace RGU.dotNET;
@@ -11,6 +12,76 @@ public sealed class Student:
     IEquatable<Student>,
     IEnumerable
 {
+    
+    #region Nested
+
+    public sealed class NameSurnamePatronymicEqualityComparer :
+        IEqualityComparer<Student>
+    {
+
+        public bool Equals(
+            Student? student1,
+            Student? student2)
+        {
+            if (ReferenceEquals(student1, student2))
+            {
+                return true;
+            }
+
+            if (student1 is null || student2 is null)
+            {
+                return false;
+            }
+
+            return student1.Name.Equals(student2.Name)
+                   && student1.Surname.Equals(student2.Surname)
+                   && student1.Patronymic.Equals(student2.Patronymic);
+        }
+
+        public int GetHashCode(
+            [DisallowNull] Student student)
+        {
+            var result = new HashCode();
+            result.Add(student.Name);
+            result.Add(student.Surname);
+            result.Add(student.Patronymic);
+            return result.ToHashCode();
+        }
+        
+    }
+
+    public sealed class RecordBookNumberEqualityComparer :
+        IEqualityComparer<Student>
+    {
+        
+        public bool Equals(
+            Student? student1,
+            Student? student2)
+        {
+            if (ReferenceEquals(student1, student2))
+            {
+                return true;
+            }
+
+            if (student1 is null || student2 is null)
+            {
+                return false;
+            }
+
+            return student1.RecordBookNumber.Equals(student2.RecordBookNumber);
+        }
+
+        public int GetHashCode(
+            Student student)
+        {
+            var result = new HashCode();
+            result.Add(student.RecordBookNumber);
+            return result.ToHashCode();
+        }
+        
+    }
+
+    #endregion
 
     #region Fields
 
@@ -117,8 +188,11 @@ public sealed class Student:
     
     public string Surname
     {
-        get =>
-            _surname;
+        get
+        {
+            // 
+            return _surname;
+        }
 
         private init =>
             _surname = ThrowIfNullOrEmpty(value);
@@ -235,6 +309,7 @@ public sealed class Student:
     /// <inheritdoc cref="object.ToString" />
     public override string ToString()
     {
+        
         return $"Name: {_name}, Surname: {_surname}, Group: {_group}, Course: {_course}";
     }
     

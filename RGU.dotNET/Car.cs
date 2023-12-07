@@ -59,6 +59,7 @@ public sealed class Car : Drivable
         const string wheels = "\", \"wheels\": \"";
         const string korobka = "\", \"korobka\": \"";
         const string postfix = "\" }";
+        // GoF
         //return prefix + _baranka + clutch + _clutchPedal + gas + _gasPedal + brake + _brakePedal + wheels + _wheels + korobka + _korobka + postfix;
 
         return new StringBuilder(prefix.Length + clutch.Length + gas.Length + brake.Length + wheels.Length + korobka.Length + postfix.Length + _baranka.Length + _clutchPedal.Length + _gasPedal.Length + _brakePedal.Length + _wheels.Length + _korobka.Length)

@@ -43,7 +43,9 @@
 //Console.WriteLine(student2);
 //
 
+using System.Collections;
 using System.Numerics;
+using System.Text;
 using RGU.dotNET;
 
 // class struct record interface
@@ -62,8 +64,10 @@ public interface IPrimalityTest
         double minimalPrimalityProbability);
 }
 
-public class BigIntegerAdditions
+public class BigIntegerAdditions:
+    object
 {
+    
     public static BigInteger Sqrt(BigInteger n)
     {
         if (n == 0) return 0;
@@ -219,10 +223,35 @@ public sealed class MillerRabinPrimalityTest : BasicPrimalityTest
     }
 }
 
+public static class IntExtensions
+{
+    public static string Strindified(
+        this int value)
+    {
+        return $"I'm int value == {value}!";
+    }
+}
+
 class Program
 {
+    static void Foo1(out StringBuilder value)
+    {
+        value = new StringBuilder();
+        value.Append("124");
+    }
+    
     static void Foo(IPrimalityTest test)
     {
+        // List<int> array = new List<int> { 1, 2, 3, 4, 5 };
+        // var enumerable = array as IEnumerable<int>;
+        // enumerable.Any()
+        // Flyweight
+        
+        string str1 = "12345";
+        string str2 = "12345";
+        Console.WriteLine(ReferenceEquals(str1, str2));
+        
+
         try
         {
             switch (test.Check(BigInteger.Zero, 0.9995))
@@ -244,8 +273,53 @@ class Program
         }
     }
 
+    static double Average(
+        params double[] values)
+    {
+        if (values is null)
+        {
+            throw new ArgumentNullException(nameof(values));
+        }
+        return values.Sum() / values.Length;
+    }
+
+    public sealed class Context : IEnumerable<int>
+    {
+        public IEnumerator<int> GetEnumerator()
+        {
+            yield return 1;
+        }
+        
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return 2;
+        }
+    }
+    
     static void Main(string[] args)
     {
+        var ctxt = new Context();
+        foreach (var item in ctxt)
+        {
+            Console.WriteLine(item);
+        }
+        
+        var eqCmp1 = new Student.NameSurnamePatronymicEqualityComparer();
+        var eqCmp2 = new Student.RecordBookNumberEqualityComparer();
+
+        var student1 = new Student("Ivad", "Ivanov", "Ivanovich", "Group", 3, "123-457");
+        var student11 = new Student("Ivan", "Ivanov", "Ivanovich", "Group", 3, "123-457");
+        
+        Console.WriteLine(eqCmp1.Equals(student1, student11));
+        Console.WriteLine(eqCmp2.Equals(student1, student11));
+
+        Console.WriteLine(10.Strindified());
+        Console.WriteLine(Average());
+        StringBuilder str;
+        Foo1(out str);
+        Console.WriteLine(str.ToString());
+        
+        Foo(null);
         try
         {
             var student = new Student("1", "2", "3", "4", 3, "12345");
@@ -274,6 +348,10 @@ class Program
             {
                 Console.WriteLine(e.Message);
             }
+        }
+        finally
+        {
+            
         }
 
         //using // IDisposable
