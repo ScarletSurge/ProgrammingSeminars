@@ -16,11 +16,13 @@ try
         .AddVertex("7")
         .AddEdge("edge1", 2.0, Edge.Direction.Bidirectional, "1", "2")
         .AddEdge("edge2", 1.0, Edge.Direction.Bidirectional, "1", "4")
-        .AddEdge("edge3",  3.0, Edge.Direction.Bidirectional, "1", "7")
+        .AddEdge("edge3", 3.0, Edge.Direction.Bidirectional, "1", "7")
         .AddEdge("edge4", 3.0, Edge.Direction.Bidirectional, "1", "6")
         .AddEdge("edge5", 4.0, Edge.Direction.Bidirectional, "3", "5")
         .AddEdge("edge6", 1.0, Edge.Direction.Bidirectional, "4", "6");
-    var paths = DijkstraAlgorithm.Make(graph, "2");
+
+    graph = GraphExtensions.RestoreFrom(new FileStream("file.txt", FileMode.Open));
+    var paths = graph.Dijkstra("2");
     foreach (var path in paths)
     {
         Console.WriteLine($"Shortest path from \"2\" to \"{path.Key}\" == {path.Value}");

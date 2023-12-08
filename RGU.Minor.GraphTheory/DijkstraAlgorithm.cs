@@ -25,8 +25,8 @@ public static class DijkstraAlgorithm
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public static IReadOnlyDictionary<string, double> Make(
-        Graph? targetGraph,
+    public static IReadOnlyDictionary<string, double> Dijkstra(
+        this Graph? targetGraph,
         string? vertexName)
     {
         _ = targetGraph ?? throw new ArgumentNullException(nameof(targetGraph));
