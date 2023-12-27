@@ -302,6 +302,7 @@ double average_geom(
 #include <time.h>
 #include "dynamic_array.h"
 #include "unidirectional_list.h"
+#include "binary_heap.h"
 
 void dynamic_array_demo()
 {
@@ -385,11 +386,49 @@ void unidirectional_list_demo()
     traverse_list(&list, print_int_value);
 }
 
+int int_comparer(
+    int const *left,
+    int const *right)
+{
+    return *left - *right;
+}
+
+void binary_heap_demo()
+{
+    binary_heap* heap;
+    T removed_from_heap_value;
+    create_binary_heap(&heap, int_comparer);
+
+    heap->values[0] = 4;
+    heap->values[1] = 10;
+    heap->values[2] = 7;
+    heap->values[3] = 20;
+    heap->values[4] = 15;
+    heap->values[5] = 9;
+    heap->values[6] = 13;
+    heap->values[7] = 21;
+    heap->values[8] = 27;
+    heap->values[9] = 23;
+    heap->virtual_size = 10;
+
+    print_binary_heap(heap);
+    do
+    {
+        remove_minimum_from_binary_heap(heap, &removed_from_heap_value);
+        printf("Removed value: %d, heap after removing: ", removed_from_heap_value);
+        print_binary_heap(heap);
+    }
+    while (heap->virtual_size != 0);
+
+    destroy_binary_heap(&heap);
+}
+
 int main(
     int argc,
     char *argv[])
 {
-    unidirectional_list_demo();
+    //unidirectional_list_demo();
+    binary_heap_demo();
 
     //int array_size;
     //printf("Input array size: ");
@@ -431,6 +470,8 @@ int main(
 //
     //    free(ptr);
     //}
+
+
 
     return 0;
 }
