@@ -23,6 +23,11 @@ Foo @delegate = Foo2;
 // CORRECT:
 @delegate?.Invoke(1, 2);
 
+if (@delegate != null)
+{
+    @delegate(1, 2);
+}
+
 void Foo111(int value1, string value2)
 {
     
@@ -48,11 +53,12 @@ dlg += Foo4;
 int? res = dlg?.Invoke(10, 5);
 Console.WriteLine(res);
 
-var results = new List<int>();
+var results = new List<int ?>();
 
 foreach (var invocationItem in dlg?.GetInvocationList() ?? Enumerable.Empty<Delegate>())
 {
-    results.Add((int)invocationItem?.DynamicInvoke(10, 5));
+    var valueToInsert = (int ?)invocationItem?.DynamicInvoke(10, "");
+    results.Add(valueToInsert);
 }
 
 foreach (var result in results)
@@ -65,15 +71,34 @@ void Foo123()
     
 }
 
-EventDemo obj = new EventDemo();
-obj._delegate += Foo123;
-obj._delegate -= Foo123;
-obj._delegate?.Invoke();
+int MultiplyByTwo(
+    int valueToMultiply)
+{
+    return valueToMultiply * 2;
+}
 
-obj._event += Foo123;
-obj._event -= Foo123;
-//CAN'T BE INVOKED
-//obj._event?.Invoke();
+var values = new int[10];
+
+var newValues = values
+    //.Select(MultiplyByTwo)
+    //.Select(x => x * 2)
+    .Select(delegate(int value) { return value * 2; })
+    .ToArray();
+
+EventDemo obj = new EventDemo();
+obj.Value = 10;
+Console.WriteLine(obj.Value + 10);
+obj.SelfMadeSubUnsub += Foo123;
+obj.SelfMadeSubUnsub -= Foo123;
+//obj._delegate += Foo123;
+//obj._delegate -= Foo123;
+//obj._delegate?.Invoke();
+//
+//obj._event += Foo123;
+//obj._event -= Foo123;
+////CAN'T BE INVOKED
+//
+//obj._event();
 
 //Action
 //    Func
