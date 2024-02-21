@@ -1,84 +1,84 @@
 #include <iostream>
 
-class ul_class
-{
-
-private:
-
-    int _value;
-
-public:
-
-    explicit ul_class(
-        int value = 0)
-    {
-        _value = value;
-    }
-
-    ul_class(
-        ul_class const &obj)
-    {
-
-    }
-
-    ul_class operator=(
-        ul_class const &obj)
-    {
-
-    }
-
-    ~ul_class()
-    {
-
-    }
-
-public:
-
-    // getter, accessor
-    int get_value() const
-    {
-        return this->_value;
-    }
-
-private:
-
-    // setter, mutator
-    void set_value(
-        int new_value)
-    {
-        _value = new_value;
-    }
-
-};
-
-typedef struct ul_item
-{
-    int value;
-    struct ul_item *next;
-} ul_item, *p_ul_item;
-
-typedef struct ul
-{
-private:
-    p_ul_item head;
-};
-
-int insert_at_beginning(
-    ul_item **head,
-    int value_to_insert)
-{
-    ul_item *new_head = (ul_item *)malloc(sizeof(ul_item));
-    if (new_head == NULL)
-    {
-        return 1;
-    }
-
-    new_head->value = value_to_insert;
-    new_head->next = *head;
-    *head = new_head;
-
-    return 0;
-}
+// class ul_class
+// {
+//
+// private:
+//
+//     int _value;
+//
+// public:
+//
+//     explicit ul_class(
+//         int value = 0)
+//     {
+//         _value = value;
+//     }
+//
+//     ul_class(
+//         ul_class const &obj)
+//     {
+//
+//     }
+//
+//     ul_class operator=(
+//         ul_class const &obj)
+//     {
+//
+//     }
+//
+//     ~ul_class()
+//     {
+//
+//     }
+//
+// public:
+//
+//     // getter, accessor
+//     int get_value() const
+//     {
+//         return this->_value;
+//     }
+//
+// private:
+//
+//     // setter, mutator
+//     void set_value(
+//         int new_value)
+//     {
+//         _value = new_value;
+//     }
+//
+// };
+//
+// typedef struct ul_item
+// {
+//     int value;
+//     struct ul_item *next;
+// } ul_item, *p_ul_item;
+//
+// typedef struct ul
+// {
+// private:
+//     p_ul_item head;
+// };
+//
+// int insert_at_beginning(
+//     ul_item **head,
+//     int value_to_insert)
+// {
+//     ul_item *new_head = (ul_item *)malloc(sizeof(ul_item));
+//     if (new_head == NULL)
+//     {
+//         return 1;
+//     }
+//
+//     new_head->value = value_to_insert;
+//     new_head->next = *head;
+//     *head = new_head;
+//
+//     return 0;
+// }
 
 // Г. Шилдт "Самоучитель C++" (3 издание)
 // Липпманн "C++. Базовый курс"
@@ -86,16 +86,161 @@ int insert_at_beginning(
 
 #include <math.h>
 
+class sample
+{
+private:
+    int value;
+public:
+    sample(
+        int value)
+    {
+        this->value = value;
+    }
+
+    ~sample()
+    {
+        std::cout << "Destructor of sample called" << std::endl;
+    }
+
+};
+
+inline sample foo()
+{
+    return sample(10);
+}
+
+class double_linked_list
+{
+
+private:
+
+    struct node
+    {
+        int value;
+        node *previous;
+        node *next;
+    };
+
+public:
+
+    struct node_info
+    {
+        int value;
+        size_t position;
+    };
+
+private:
+
+    node *_head;
+    node *_tail;
+
+public:
+
+    double_linked_list()
+    {
+        _head = nullptr;
+        _tail = nullptr;
+    }
+
+public:
+
+    // destructor
+    virtual ~double_linked_list()
+    {
+        // TODO:
+    }
+
+    // copy constructor
+    double_linked_list(
+        double_linked_list const &other)
+    {
+
+    }
+
+    // assignment operator
+    double_linked_list &operator=(
+        double_linked_list const &other)
+    {
+
+    }
+
+    // move constructor - if You want :)
+    // move assignment operator - if You want :)
+
+public:
+
+    void insert_value(
+        int value,
+        size_t position)
+    {
+
+    }
+
+    int remove_value(
+        size_t position)
+    {
+
+    }
+
+    int &get_value(
+        size_t position)
+    {
+        
+    }
+
+public:
+
+    double_linked_list &operator+=(
+        node_info const &value)
+    {
+
+    }
+
+    int operator-=(
+        node_info const &value)
+    {
+
+    }
+
+    int &operator[](
+        size_t position)
+    {
+
+    }
+
+public:
+
+    friend std::ostream &operator<<(
+        std::ostream& stream,
+        double_linked_list const &to_print)
+    {
+
+    }
+
+};
+
 int main()
 {
+    sample s(foo());
+    //if (1)
+    //{
+    //    sample object1(10);
+    //}
+    //sample object2(20);
+
+    return 0;
+}
+
+int main1()
+{
     int x, y, z;
-    ul_class object;
+    //ul_class object;
 
     std::cout << "Input 3 integral values: ";
     std::cin >> x >> y >> z;
     std::cout << x << ' ' << y << ' ' << z << std::endl;
 
-    std::cout << object.get_value() << std::endl; // Fluent API
+    //std::cout << object.get_value() << std::endl; // Fluent API
 
     return 0;
     // (a = (b = c));
@@ -104,19 +249,19 @@ int main()
     // ul u;
     // u.head = NULL;
 
-    ul_item *head = NULL;
-    printf("%p\n", head);
-    switch (insert_at_beginning(&head, 10))
-    {
-        case 0:
-            printf("%p", head);
-            free(head);
-            break;
-        case 1:
-            fprintf(stderr, "Memory allocation error occured!\n");
-            return 1;
-    }
-    head = NULL;
+    //ul_item *head = NULL;
+    //printf("%p\n", head);
+    //switch (insert_at_beginning(&head, 10))
+    //{
+    //    case 0:
+    //        printf("%p", head);
+    //        free(head);
+    //        break;
+    //    case 1:
+    //        fprintf(stderr, "Memory allocation error occured!\n");
+    //        return 1;
+    //}
+    //head = NULL;
 
     return 0;
 }
