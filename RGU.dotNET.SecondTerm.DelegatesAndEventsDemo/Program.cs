@@ -103,4 +103,11 @@ obj.SelfMadeSubUnsub -= Foo123;
 //Action
 //    Func
 
+// Comparison<int>: Func<int, int, int>
+// EventHandler: Action<object, EventArgs>
+// EventHandler<TEventArgs>: Action<object, TEventArgs> where TEventArgs: EventArgs
+// ThreadStart
+// ParameterizedThreadStart
+// Predicate<T>: Func<T, bool>
+
 delegate bool Foo(int value1, int value2);
