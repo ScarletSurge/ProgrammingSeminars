@@ -219,9 +219,80 @@ public:
 
 };
 
+#include <cstring>
+
+class another_sample
+{
+
+private:
+
+    char *_string_value;
+
+public:
+
+    another_sample(
+        char const *string_value)
+    {
+        _string_value = new char[strlen(string_value) + 1];
+        strcpy(_string_value, string_value);
+    }
+
+    another_sample(
+        another_sample const &obj)
+    {
+        _string_value = new char[strlen(obj._string_value) + 1];
+        strcpy(_string_value, obj._string_value);
+    }
+
+    another_sample &operator=(
+        another_sample const &obj)
+    {
+        if (this != &obj)
+        {
+            delete[] _string_value;
+            _string_value = new char[strlen(obj._string_value) + 1];
+            strcpy(_string_value, obj._string_value);
+        }
+
+        return *this;
+    }
+
+    ~another_sample()
+    {
+        delete[] _string_value;
+    }
+
+};
+
+#include <cstring>
+
 int main()
 {
-    sample s(foo());
+    another_sample obj("12345");
+    another_sample obj2 = obj; // another_sample obj2(obj);
+    obj = obj;
+    (obj = obj2);
+    obj.operator=(obj2);
+
+
+    //another_sample *objj = new another_sample;
+    //delete objj;
+//
+    //{
+    //    another_sample *obj_dyn = reinterpret_cast<another_sample *>(::operator new(sizeof(another_sample)));
+    //    memset(obj_dyn, 114, sizeof(another_sample));
+    //    new (obj_dyn) another_sample();
+//
+    //    // TODO: work with object...
+//
+    //    obj_dyn->~another_sample();
+    //    ::operator delete(obj_dyn);
+//
+    //    //another_sample obj;
+    //    //obj.~another_sample();
+    //}
+//
+    //sample s(foo());
     //if (1)
     //{
     //    sample object1(10);
