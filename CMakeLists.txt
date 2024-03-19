@@ -3,4 +3,4 @@ project(interpreters C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(interpreters arrays/main.c)
+add_executable(interpreters main.c stack.h stack.c)

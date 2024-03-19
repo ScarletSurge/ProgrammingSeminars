@@ -1,0 +1,20 @@
+{
+    ShowVar;
+    var1=5;
+    {
+        var2=45;
+        var1=14;
+        ShowVar;
+        {
+            {
+                var3=677;
+            }
+            var5=1;
+            ShowVar;
+            var21=234;
+        }
+        var22=500;
+    }
+    var267=7;
+    ShowVar;
+}
