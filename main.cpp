@@ -109,116 +109,6 @@ inline sample foo()
     return sample(10);
 }
 
-class double_linked_list
-{
-
-private:
-
-    struct node
-    {
-        int value;
-        node *previous;
-        node *next;
-    };
-
-public:
-
-    struct node_info
-    {
-        int value;
-        size_t position;
-    };
-
-private:
-
-    node *_head;
-    node *_tail;
-
-public:
-
-    double_linked_list()
-    {
-        _head = nullptr;
-        _tail = nullptr;
-    }
-
-public:
-
-    // destructor
-    virtual ~double_linked_list()
-    {
-        // TODO:
-    }
-
-    // copy constructor
-    double_linked_list(
-        double_linked_list const &other)
-    {
-
-    }
-
-    // assignment operator
-    double_linked_list &operator=(
-        double_linked_list const &other)
-    {
-
-    }
-
-    // move constructor - if You want :)
-    // move assignment operator - if You want :)
-
-public:
-
-    void insert_value(
-        int value,
-        size_t position)
-    {
-
-    }
-
-    int remove_value(
-        size_t position)
-    {
-
-    }
-
-    int &get_value(
-        size_t position)
-    {
-        
-    }
-
-public:
-
-    double_linked_list &operator+=(
-        node_info const &value)
-    {
-
-    }
-
-    int operator-=(
-        node_info const &value)
-    {
-
-    }
-
-    int &operator[](
-        size_t position)
-    {
-
-    }
-
-public:
-
-    friend std::ostream &operator<<(
-        std::ostream& stream,
-        double_linked_list const &to_print)
-    {
-
-    }
-
-};
-
 #include <cstring>
 
 class another_sample
@@ -265,14 +155,56 @@ public:
 };
 
 #include <cstring>
+#include "double_linked_list.h"
 
 int main()
 {
-    another_sample obj("12345");
-    another_sample obj2 = obj; // another_sample obj2(obj);
-    obj = obj;
-    (obj = obj2);
-    obj.operator=(obj2);
+    int i = 0;
+    int **p = new int *[100000];
+    try
+    {
+        while (true)
+        {
+            p[i++] = new int[10000000];
+        }
+    }
+    catch (std::logic_error ex)
+    {
+        
+    }
+    catch (char *ex)
+    {
+
+    }
+    catch (std::bad_alloc ex)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            delete [] p[i];
+        }
+
+        delete[] p;
+        p = nullptr;
+        throw;
+    }
+    catch (...)
+    {
+
+    }
+
+    {
+        double_linked_list obj;
+        for (int i = 0; i < 10; i++)
+        {
+            obj.insert_value(i, 1);
+            obj.printf();
+        }
+    }
+    // another_sample obj("12345");
+    // another_sample obj2 = obj; // another_sample obj2(obj);
+    // obj = obj;
+    // (obj = obj2);
+    // obj.operator=(obj2);
 
 
     //another_sample *objj = new another_sample;
