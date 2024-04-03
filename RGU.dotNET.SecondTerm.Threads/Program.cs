@@ -10,6 +10,7 @@
 // System.Threading.Tasks.ValueTask<T>
 // System.Threading.CancellationToken
 // System.Threading.CancellationTokenSource
+// System.Collections.Concurrent
 
 namespace RGU.dotNET.SecondTerm.Threads
 {
@@ -31,20 +32,65 @@ namespace RGU.dotNET.SecondTerm.Threads
             Thread.Sleep(1000);
         }
 
+        class A
+        {
+            private readonly int _value;
+            public A(int value) { _value = value; }
+
+            public override string ToString() { return _value.ToString(); }
+        }
+
+        static void Bar(
+            ref string value)
+        {
+            value = "54321";
+        }
+        
+        
+
         public static void Main(
             string[] args)
         {
-            // WaitCallback
-            ThreadPool.QueueUserWorkItem(Foo2, 10, false);
-            var thr = new Thread(Foo1)
+            string str = "12345";
+            Bar(ref str);
+            Console.WriteLine(str);
+            //return;
+            Console.WriteLine(default(A));
+            List<A> objects = new List<A>(10);
+            //for (var i = 0; i < objects.Capacity; i++)
+            //{
+            //    objects[i] = new A(i);
+            //}
+            
+            //Parallel.For(0, 10, i =>
+            //{
+            //    objects[i] = new A(i);
+            //});
+
+            var values = new A[10];
+            for (var i = 0; i < values.Length; i++)
             {
-                IsBackground = false
-            };
-            thr.Start("\"12345\"");
-            Thread.Sleep(2000);
-            Console.WriteLine("Waiting...");
-            //thr.Join();
-            Console.WriteLine("Wait succeeded!");
+                values[i] = new A(i);
+            }
+
+            Parallel.ForEach(values, value =>
+            {
+                value = new A(100500);
+            });
+            
+            Parallel.Invoke();
+
+            // // WaitCallback
+            // ThreadPool.QueueUserWorkItem(Foo2, 10, false);
+            // var thr = new Thread(Foo1)
+            // {
+            //     IsBackground = false
+            // };
+            // thr.Start("\"12345\"");
+            // Thread.Sleep(2000);
+            // Console.WriteLine("Waiting...");
+            // //thr.Join();
+            // Console.WriteLine("Wait succeeded!");
         }
         
     }
