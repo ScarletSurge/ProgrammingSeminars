@@ -157,8 +157,34 @@ public:
 #include <cstring>
 #include "double_linked_list.h"
 
+void print_byte(
+    unsigned char byte_value)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        std::cout << ((byte_value >> (7 - i)) & 1);
+    }
+}
+
+void dump_int_value(
+    int value)
+{
+    unsigned char *p = (unsigned char *)&value;
+    // printf("0x%p, 0x%p\n", p, &value);
+    // printf("%d %d", sizeof(p), sizeof(&value));
+
+    for (int i = 0; i < sizeof(int); i++)
+    {
+        print_byte(*p++);
+        std::cout << ' ';
+    }
+}
+
 int main()
 {
+    dump_int_value(10);
+
+    return 0;
     int i = 0;
     int **p = new int *[100000];
     try
