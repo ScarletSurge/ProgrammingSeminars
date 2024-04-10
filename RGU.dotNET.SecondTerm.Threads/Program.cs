@@ -11,6 +11,9 @@
 // System.Threading.CancellationToken
 // System.Threading.CancellationTokenSource
 // System.Collections.Concurrent
+// Thread-safety, lock operator
+
+using System.Collections.Concurrent;
 
 namespace RGU.dotNET.SecondTerm.Threads
 {
@@ -51,6 +54,8 @@ namespace RGU.dotNET.SecondTerm.Threads
         public static void Main(
             string[] args)
         {
+            var q = new ConcurrentQueue<string>();
+            
             string str = "12345";
             Bar(ref str);
             Console.WriteLine(str);
@@ -62,10 +67,15 @@ namespace RGU.dotNET.SecondTerm.Threads
             //    objects[i] = new A(i);
             //}
             
-            //Parallel.For(0, 10, i =>
-            //{
-            //    objects[i] = new A(i);
-            //});
+            Parallel.For(0, 10, i =>
+            {
+                q.Enqueue(i.ToString());
+            });
+
+            foreach (var qItem in q)
+            {
+                Console.WriteLine(qItem);
+            }
 
             var values = new A[10];
             for (var i = 0; i < values.Length; i++)

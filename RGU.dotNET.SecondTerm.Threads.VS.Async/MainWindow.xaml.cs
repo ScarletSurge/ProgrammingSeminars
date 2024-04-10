@@ -38,8 +38,8 @@ namespace RGU.dotNET.SecondTerm.Threads.VS.Async
             var randomSource = new Random();
             Parallel.For(0, 10, i =>
             {
-                Thread.Sleep(1000);
-                MessageBox.Show($"Thread with i == {i} finished");
+                Thread.Sleep((i + 1) * 750);
+                //MessageBox.Show($"Thread with i == {i} finished");
             });
             MessageBox.Show("Thread button work finished");
         }
@@ -48,7 +48,12 @@ namespace RGU.dotNET.SecondTerm.Threads.VS.Async
             object sender,
             RoutedEventArgs e)
         {
-            await Task.Delay(5000);
+            await Task.WhenAll(
+                Enumerable.Range(0, 10).Select(i => Task.Factory.StartNew(() =>
+                    {
+                        Thread.Sleep((i + 1) * 750);
+                        //MessageBox.Show($"Task with i == {i} finished");
+                    })));
             MessageBox.Show("Async button work finished");
         }
 
