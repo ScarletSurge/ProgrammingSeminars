@@ -180,8 +180,37 @@ void dump_int_value(
     }
 }
 
+#include "big_integer.h"
+
 int main()
 {
+    int values[] = { 1, 2, 3 };
+    try
+    {
+        big_integer obj(nullptr, 3);
+    }
+    catch (std::logic_error const &ex)
+    {
+        std::cout << "OMG LOL: \"" << ex.what() << '\"' << std::endl;
+    }
+    catch (std::bad_alloc const &ex)
+    {
+        std::cout << "хозяин, память плохо :/";
+    }
+    catch (std::exception const &ex)
+    {
+
+    }
+    catch (int x)
+    {
+
+    }
+    catch (...)
+    {
+
+    }
+
+    return 0;
     dump_int_value(10);
 
     return 0;
