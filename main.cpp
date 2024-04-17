@@ -187,7 +187,12 @@ int main()
     int values[] = { 1, 2, 3 };
     try
     {
-        big_integer obj(nullptr, 3);
+        big_integer obj(values, 3);
+        std::cout << obj.sign() << std::endl;
+        big_integer obj2 = -obj;
+        std::cout << obj2.sign() << std::endl;
+        std::cout << (-obj2).sign() << std::endl;
+        int x = 5;
     }
     catch (std::logic_error const &ex)
     {
