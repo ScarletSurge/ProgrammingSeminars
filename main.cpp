@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <ctype.h>
 #include <malloc.h>
 #include "stack.h"
@@ -113,6 +113,32 @@ int main(
 
         fclose(input_file);
         destroy_stack(&variables_stack);
+    }
+
+    return 0;
+}*/
+
+#include <iostream>
+
+#include "trie.h"
+
+int main(
+    int argc,
+    char *argv[])
+{
+    trie t(std::set<char> { 'a', 'b', 'c', 'd', 'e' });
+    //t.insert("");
+    t.insert("aaa");
+    t.insert("aaaabc");
+    t.insert("aaaabcd");
+    t.insert("abcab");
+    t.insert("abc");
+    t.insert("bbdba");
+    t.insert("ceeee");
+
+    for (auto const &str: t.obtain_all())
+    {
+        std::cout << '\"' << str << '\"' << std::endl;
     }
 
     return 0;
