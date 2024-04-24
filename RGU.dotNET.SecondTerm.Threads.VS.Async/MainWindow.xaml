@@ -44,6 +44,7 @@
         <Button Grid.Row="3"
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
-                Content="Нажми" />
+                Content="Нажми"
+                Click="ButtonBase_OnClick" />
     </Grid>
 </Window>

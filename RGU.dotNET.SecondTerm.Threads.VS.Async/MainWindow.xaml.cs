@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -48,15 +49,42 @@ namespace RGU.dotNET.SecondTerm.Threads.VS.Async
             object sender,
             RoutedEventArgs e)
         {
-            await Task.WhenAll(
-                Enumerable.Range(0, 10).Select(i => Task.Factory.StartNew(() =>
-                    {
-                        Thread.Sleep((i + 1) * 750);
-                        //MessageBox.Show($"Task with i == {i} finished");
-                    })));
+            var thread = new Thread(() => { Thread.Sleep(10000); });
+            var task = new Task(() => { Thread.Sleep(3000); });
+            
+            thread.Start();
+            task.Start();
+
+            thread.Join();
+
+            // task.Wait();
+            int x = 10;
+            await task.ConfigureAwait(false); // <-- thread1
+
+            await new Task(() => { }).ConfigureAwait(false);
+            
+            var t = new Task(() => { });
+            
+            // protobuf
+            // gRPC
+            // IoC/DI DryIoC
+            
+            t.GetAwaiter().GetResult();
+            
+            // await Task.WhenAll(
+            //     Enumerable.Range(0, 10).Select(i => Task.Factory.StartNew(() =>
+            //         {
+            //             Thread.Sleep((i + 1) * 750);
+            //             //MessageBox.Show($"Task with i == {i} finished");
+            //         })));
             MessageBox.Show("Async button work finished");
+            thread.Join();
         }
 
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
     
 }
