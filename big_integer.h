@@ -11,28 +11,18 @@ class big_integer final
 
 private:
 
+    void clear();
+
+    void copy(
+        big_integer const &other);
+
+private:
+
     static void print_byte(
-        unsigned char byte_value)
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            std::cout << ((byte_value >> (7 - i)) & 1);
-        }
-    }
+        unsigned char byte_value);
 
     static void dump_int_value(
-        int value)
-    {
-        unsigned char *p = (unsigned char *)&value;
-        // printf("0x%p, 0x%p\n", p, &value);
-        // printf("%d %d", sizeof(p), sizeof(&value));
-
-        for (int i = 0; i < sizeof(int); i++)
-        {
-            print_byte(*p++);
-            std::cout << ' ';
-        }
-    }
+        int value);
 
 private:
 
@@ -45,9 +35,14 @@ private:
 
 public:
 
-    bool sign() const noexcept;
+    inline int get_digits_count() const noexcept;
 
-    bool is_equal_to_zero() const noexcept;
+    inline bool sign() const noexcept;
+
+    inline bool is_equal_to_zero() const noexcept;
+
+    inline unsigned int get_digit(
+        int position) const noexcept;
 
 public:
 
