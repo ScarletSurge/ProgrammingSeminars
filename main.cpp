@@ -122,6 +122,15 @@ int main(
 
 #include "trie.h"
 
+void print_trie(
+    trie const &t)
+{
+    for (auto const &str: t.obtain_all())
+    {
+        std::cout << '\"' << str << '\"' << std::endl;
+    }
+}
+
 int main(
     int argc,
     char *argv[])
@@ -129,17 +138,34 @@ int main(
     trie t(std::set<char> { 'a', 'b', 'c', 'd', 'e' });
     //t.insert("");
     t.insert("aaa");
-    t.insert("aaaabc");
-    t.insert("aaaabcd");
-    t.insert("abcab");
     t.insert("abc");
-    t.insert("bbdba");
-    t.insert("ceeee");
+    t.insert("abcde");
+    t.insert("bdec");
+    t.insert("");
+    t.insert("decd");
 
-    for (auto const &str: t.obtain_all())
-    {
-        std::cout << '\"' << str << '\"' << std::endl;
-    }
+    trie t1 = t;
+
+    std::cout << "t: " << std::endl; print_trie(t); std::cout << std::endl;
+    std::cout << "t1: " << std::endl; print_trie(t1); std::cout << std::endl;
+
+    t1.dispose("abc");
+    t1.dispose("decd");
+    t1.dispose("");
+
+    std::cout << "t: " << std::endl; print_trie(t); std::cout << std::endl;
+    std::cout << "t1: " << std::endl; print_trie(t1); std::cout << std::endl;
+
+    t = std::move(t1);
+
+    std::cout << "t: " << std::endl; print_trie(t); std::cout << std::endl;
+    std::cout << "t1: " << std::endl; print_trie(t1); std::cout << std::endl;
+
+    trie t2 = std::move(t);
+
+    std::cout << "t: " << std::endl; print_trie(t); std::cout << std::endl;
+    std::cout << "t1: " << std::endl; print_trie(t1); std::cout << std::endl;
+    std::cout << "t2: " << std::endl; print_trie(t2); std::cout << std::endl;
 
     return 0;
 }

@@ -16,6 +16,7 @@ private:
     public:
 
         std::vector<std::pair<node *, bool>> subtrees;
+        size_t active_subtrees;
 
     public:
 
@@ -59,6 +60,20 @@ public:
 
     void dispose(
         std::string const &value);
+
+private:
+
+    void clear();
+
+    static void clear_recursive(
+        node *to_clear,
+        size_t alphabet_size);
+
+    node *copy() const;
+
+    static node *copy_recursive(
+        node *to_copy,
+        size_t alphabet_size);
 
 public:
 
