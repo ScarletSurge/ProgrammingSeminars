@@ -13,16 +13,44 @@ private:
 
     void clear();
 
-    void copy(
+    void copy_from(
         big_integer const &other);
+
+    void initialize_from(
+        int const *digits,
+        size_t digits_count);
+
+    void initialize_from(
+        std::vector<int> const &digits,
+        size_t digits_count);
+
+    void initialize_from(
+        std::string const &value,
+        size_t base);
 
 private:
 
     static void print_byte(
+        std::ostream &stream,
         unsigned char byte_value);
 
     static void dump_int_value(
+        std::ostream &stream,
         int value);
+
+public:
+
+    void dump_value(
+        std::ostream &stream) const
+    {
+        for (auto i = 0; i < get_digits_count(); ++i)
+        {
+            auto digit = get_digit(i);
+            stream << digit;
+            //dump_int_value(stream, *reinterpret_cast<int *>(&digit));
+            stream << ' ';
+        }
+    }
 
 private:
 
@@ -37,7 +65,7 @@ public:
 
     inline int get_digits_count() const noexcept;
 
-    inline bool sign() const noexcept;
+    inline int sign() const noexcept;
 
     inline bool is_equal_to_zero() const noexcept;
 
@@ -47,7 +75,7 @@ public:
 public:
 
     big_integer(
-        int *digits,
+        int const *digits,
         size_t digits_count);
 
     big_integer(
@@ -121,17 +149,34 @@ public:
 
     big_integer operator~() const;
 
+public:
+
+    big_integer &operator&=(
+        big_integer const &other);
+
     big_integer operator&(
         big_integer const &other) const;
+
+    big_integer &operator|=(
+        big_integer const &other);
 
     big_integer operator|(
         big_integer const &other) const;
 
+    big_integer &operator^=(
+        big_integer const &other);
+
     big_integer operator^(
         big_integer const &other) const;
 
+    big_integer &operator<<=(
+        size_t shift_value);
+
     big_integer operator<<(
         size_t shift_value) const;
+
+    big_integer &operator>>=(
+        size_t shift_value);
 
     big_integer operator>>(
         size_t shift_value) const;

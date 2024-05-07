@@ -155,6 +155,7 @@ public:
 };
 
 #include <cstring>
+#include <iomanip>
 #include "double_linked_list.h"
 
 void print_byte(
@@ -181,9 +182,29 @@ void dump_int_value(
 }
 
 #include "big_integer.h"
+#include <fstream>
 
 int main()
 {
+    auto const iterations_count = 20;
+    int digits[1] = { 1 };
+    big_integer x(digits, 1);
+    std::ostream *stream;
+    std::ofstream out("logs.txt");
+    stream = &out;
+
+    for (auto i = 2; i <= 10000; ++i)
+    {
+        digits[0] = i;
+        x *= big_integer(digits, 1);
+        //(*stream) << i << "! == ";
+        x.dump_value(*stream);
+        //(*stream) << std::endl;
+    }
+
+    std::cout << x;
+
+    return 0;
     int values[] = { 1, 2, 3 };
     try
     {
@@ -325,6 +346,132 @@ int main1()
     //        return 1;
     //}
     //head = NULL;
+
+    return 0;
+}
+
+#include<iostream>
+#include<string>
+#include<vector>
+#include<fstream>
+#include<sstream>
+#include <cstdlib>
+#include <ctime>
+
+std::string getWord(const std::string& str, size_t index) {
+    std::istringstream iss(str);
+    std::string word;
+    for (auto i = 0; i < index + 1; ++i)
+    {
+        iss >> word;
+    }
+    return word;
+}
+
+int main3()
+{
+    std::fstream instr("instruction.txt");
+    std::string line;
+    std::string word;
+    std::vector<int> A;
+    try
+    {
+        if (instr.is_open())
+        {
+            while (std::getline(instr, line))
+            {
+                if (getWord(line, 0) == "Load")
+                {
+                    auto filePath = getWord(line, 2);
+                    filePath.pop_back();
+                    std::ifstream file(filePath);
+
+
+                    if (!file.is_open())
+                    {
+                        throw std::logic_error("File not open");
+                    }
+
+                    std::string num;
+                    while (file >> num)
+                    {
+                        try
+                        {
+                            size_t idx;
+                            auto value = std::stoi(num, &idx);
+                            if (idx != num.length())
+                            {
+                                throw std::invalid_argument("invalid value string representation");
+                            }
+                            A.push_back(value);
+                        }
+                        catch (std::invalid_argument const& ex)
+                        {
+                            throw std::logic_error("Invalid value of integer from input file!");
+                        }
+                    }
+                    file.close();
+
+                    for (int i = 0; i < A.size(); ++i)
+                    {
+                        std::cout << A[i] << " ";
+                    }
+                }
+
+                if (getWord(line, 0) == "Save")
+                {
+                    auto lexem = getWord(line, 2);
+                    lexem.pop_back();
+
+                    std::ofstream file_output(lexem);
+
+                    if (!file_output.is_open())
+                    {
+                        throw std::logic_error("File not open");
+                    }
+
+                    for (int i = 0; i < A.size(); ++i)
+                    {
+                        file_output << A[i] << " ";
+                    }
+                }
+
+                if (getWord(line, 0) == "Rand")
+                {
+                    A.clear();
+
+                    auto count = getWord(line, 2);
+                    auto lb = getWord(line, 3);
+                    auto rb = getWord(line, 4);
+
+                    count.pop_back();
+                    lb.pop_back();
+                    rb.pop_back();
+
+                    auto count_ = std::stoi(count);
+                    auto lb_ = std::stoi(lb);
+                    auto rb_ = std::stoi(rb);
+
+                    srand(static_cast<unsigned int>(time(nullptr)));
+
+                    for (int i = 0; i < count_; ++i)
+                    {
+                        A[i] = rand() % rb_ + lb_;
+                    }
+                    for (int i = 0; i < count_; ++i)
+                    {
+                        std::cout << A[i] << " ";
+                    }
+
+                }
+            }
+        }
+    }
+    catch (std::logic_error const& ex)
+    {
+        std::cout << ex.what();
+        return 1;
+    }
 
     return 0;
 }
