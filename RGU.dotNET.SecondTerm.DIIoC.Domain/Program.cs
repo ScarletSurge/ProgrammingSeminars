@@ -1,6 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using RGU.dotNET.SecondTerm.DelegatesAndEventsDemo;
+using DryIoc;
 
-Console.WriteLine(new EventDemo().Value);
+var cntnr = new Container();
+//cntnr.
+
 Console.WriteLine("Hello, World!");

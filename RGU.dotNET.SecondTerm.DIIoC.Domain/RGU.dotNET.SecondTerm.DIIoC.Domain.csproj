@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RGU.dotNET.SecondTerm.DelegatesAndEventsDemo\RGU.dotNET.SecondTerm.DelegatesAndEventsDemo.csproj" />
+      <PackageReference Include="DryIoc.dll" Version="5.4.3" />
     </ItemGroup>
 
 </Project>
