@@ -78,6 +78,14 @@ public:
         tkey const &key,
         tvalue &&value) = 0;
 
+    virtual void update(
+        tkey const &key,
+        tvalue const &value) = 0;
+
+    virtual void update(
+        tkey const &key,
+        tvalue &&value) = 0;
+
     virtual tvalue &obtain(
         tkey const &key) = 0;
 

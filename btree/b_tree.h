@@ -15,6 +15,9 @@ private:
     void insert_inner(
         typename associative_container<tkey, tvalue>::key_value_pair &&kvp);
 
+    void update_inner(
+        typename associative_container<tkey, tvalue>::key_value_pair &&kvp);
+
 public:
 
     void insert(
@@ -22,6 +25,14 @@ public:
         tvalue const &value) override;
 
     void insert(
+        tkey const &key,
+        tvalue &&value) override;
+
+    void update(
+        tkey const &key,
+        tvalue const &value) override;
+
+    void update(
         tkey const &key,
         tvalue &&value) override;
 
@@ -384,6 +395,21 @@ void b_tree<tkey, tvalue>::insert_inner(
 template<
     typename tkey,
     typename tvalue>
+void b_tree<tkey, tvalue>::update_inner(
+    typename associative_container<tkey, tvalue>::key_value_pair &&kvp)
+{
+    auto path = this->find_path(kvp.key);
+    if (path.top().second < 0)
+    {
+        throw std::logic_error("key not found");
+    }
+
+    (*path.top().first)->keys_and_values[path.top().second].value = std::move(kvp.value);
+}
+
+template<
+    typename tkey,
+    typename tvalue>
 void b_tree<tkey, tvalue>::insert(
     const tkey &key,
     const tvalue &value)
@@ -399,6 +425,26 @@ void b_tree<tkey, tvalue>::insert(
     tvalue &&value)
 {
     insert_inner(std::move(typename associative_container<tkey, tvalue>::key_value_pair(key, std::move(value))));
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+void b_tree<tkey, tvalue>::update(
+    const tkey &key,
+    tvalue const &value)
+{
+    update_inner(std::move(typename associative_container<tkey, tvalue>::key_value_pair(key, std::move(value))));
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+void b_tree<tkey, tvalue>::update(
+    const tkey &key,
+    tvalue &&value)
+{
+    update_inner(std::move(typename associative_container<tkey, tvalue>::key_value_pair(key, std::move(value))));
 }
 
 template<

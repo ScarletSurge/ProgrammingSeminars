@@ -252,10 +252,43 @@ public:
 
 };
 
+class tkey final {};
+
+class tvalue final
+{
+private:
+    std::string _1 = "12345";
+    std::string _2 = "kek";
+    int _3;
+};
+
+
+
+class tkey_comparer final
+{
+
+public:
+
+    int operator()(
+        tkey const &key1,
+        tkey const &key2) const
+    {
+        return rand() % 3 - 1;
+    }
+
+};
+
 class db_server final
 {
 
 public:
+
+    enum class mode
+    {
+        uninitialized,
+        in_memory_cache,
+        file_system
+    };
 
     enum class search_tree_variant
     {
@@ -276,8 +309,7 @@ private:
 
     private:
 
-        // std::variant
-        search_tree<std::string, search_tree<T*, std::tuple<T**, size_t, size_t>> *> *_data;
+        search_tree<tkey, tvalue> *_data;
         search_tree_variant _variant;
 
     public:
@@ -286,46 +318,46 @@ private:
             search_tree_variant variant,
             size_t t_for_b_trees = 8):
                 _variant(variant)
+        {
+            switch (variant)
             {
-                switch (variant)
-                {
-                    case search_tree_variant::AVL:
+                case search_tree_variant::AVL:
                     // _collections = new AVL_tree<std::string, schema>();
                     // break;
-                    case search_tree_variant::red_black:
+                case search_tree_variant::red_black:
                     // _collections = new red_black_tree<std::string, schema>();
                     // break;
-                    case search_tree_variant::splay:
+                case search_tree_variant::splay:
                     // _collections = new splay_tree<std::string, schema>();
                     // break;
-                    case search_tree_variant::scapegoat:
+                case search_tree_variant::scapegoat:
                     // _collections = new scapegoat_tree<std::string, schema>();
                     // break;
-                    case search_tree_variant::b_plus:
+                case search_tree_variant::b_plus:
                     // _collections = new b_plus<std::string, schema>();
                     // break;
-                    case search_tree_variant::b_star:
+                case search_tree_variant::b_star:
                     // _collections = new b_star_tree<std::string, schema>();
                     // break;
-                    case search_tree_variant::b_star_plus:
+                case search_tree_variant::b_star_plus:
                     // _collections = new b_star_plus_tree<std::string, schema>();
                     // break;
-                    case search_tree_variant::b:
-                        //_data = new b_tree<tkey, tvalue>(t_for_b_trees, stdstring_comparer());
+                case search_tree_variant::b:
+                    _data = new b_tree<tkey, tvalue>(t_for_b_trees, tkey_comparer());
                     break;
-                }
             }
+        }
 
     private:
 
         void clear()
         {
-            delete _collections;
-            _collections = nullptr;
+            delete _data;
+            _data = nullptr;
         }
 
         void copy_from(
-            schema const &other)
+            collection const &other)
         {
             switch (_variant = other._variant)
             {
@@ -351,13 +383,14 @@ private:
                     // _schemas = new b_star_plus_tree<std::string, schema>();
                     // break;
                 case search_tree_variant::b:
-                    _collections = new b_tree<std::string, collection>(*dynamic_cast<b_tree<std::string, collection> *>(other._collections));
+                    _data = new b_tree<tkey, tvalue>(
+                        *dynamic_cast<b_tree<tkey, tvalue> *>(other._data));
                     break;
             }
         }
 
         void move_from(
-            schema &&other)
+            collection &&other)
         {
             switch (_variant = other._variant)
             {
@@ -383,26 +416,27 @@ private:
                     // _schemas = new b_star_plus_tree<std::string, schema>();
                     // break;
                 case search_tree_variant::b:
-                    _collections = new b_tree<std::string, collection>(std::move(*dynamic_cast<b_tree<std::string, collection> *>(other._collections)));
+                    _data = new b_tree<tkey, tvalue>(
+                        std::move(*dynamic_cast<b_tree<tkey, tvalue> *>(other._data)));
                     break;
             }
         }
 
     public:
 
-        ~schema()
+        ~collection()
         {
             clear();
         }
 
-        schema(
-            schema const &other)
+        collection(
+            collection const &other)
         {
             copy_from(other);
         }
 
-        schema &operator=(
-            schema const &other)
+        collection &operator=(
+            collection const &other)
         {
             if (this != &other)
             {
@@ -413,14 +447,14 @@ private:
             return *this;
         }
 
-        schema(
-            schema &&other) noexcept
+        collection(
+            collection &&other) noexcept
         {
             move_from(std::move(other));
         }
 
-        schema &operator=(
-            schema &&other) noexcept
+        collection &operator=(
+            collection &&other) noexcept
         {
             if (this != &other)
             {
@@ -433,23 +467,53 @@ private:
 
     public:
 
-        void add(
-            std::string const &collection_name,
-            search_tree_variant variant)
+        void insert(
+            tkey const &key,
+            tvalue const &value)
         {
-            _collections->insert(collection_name, collection(variant));
+            _data->insert(key, value);
         }
 
-        collection &obtain(
-            std::string const &collection_name)
+        void insert(
+            tkey const &key,
+            tvalue &&value)
         {
-            return _collections->obtain(collection_name);
+            _data->insert(key, std::move(value));
         }
 
-        void dispose(
-            std::string const &collection_name)
+        void update(
+            tkey const &key,
+            tvalue const &value)
         {
-            _collections->dispose(collection_name);
+            _data->update(key, value);
+        }
+
+        void update(
+            tkey const &key,
+            tvalue &&value)
+        {
+            _data->update(key, std::move(value));
+        }
+
+        tvalue &obtain(
+            tkey const &key)
+        {
+            return _data->obtain(key);
+        }
+
+        tvalue dispose(
+            tkey const &key)
+        {
+            return _data->dispose(key);
+        }
+
+        std::vector<typename associative_container<tkey, tvalue>::key_value_pair> obtain_between(
+            tkey const &lower_bound,
+            tkey const &upper_bound,
+            bool lower_bound_inclusive,
+            bool upper_bound_inclusive)
+        {
+            return _data->obtain_between(lower_bound, upper_bound, lower_bound_inclusive, upper_bound_inclusive);
         }
 
     };
@@ -467,7 +531,7 @@ private:
         explicit schema(
             search_tree_variant variant,
             size_t t_for_b_trees = 8):
-            _variant(variant)
+                _variant(variant)
         {
             switch (variant)
             {
@@ -617,9 +681,10 @@ private:
 
         void add(
             std::string const &collection_name,
-            search_tree_variant variant)
+            search_tree_variant variant,
+            size_t t_for_b_trees = 8)
         {
-            _collections->insert(collection_name, collection(variant));
+            _collections->insert(collection_name, collection(variant, t_for_b_trees));
         }
 
         collection &obtain(
@@ -649,7 +714,7 @@ private:
         explicit pool(
             search_tree_variant variant,
             size_t t_for_b_trees = 8):
-            _variant(variant)
+                _variant(variant)
         {
             switch (variant)
             {
@@ -799,9 +864,10 @@ private:
 
         void add(
             std::string const &schema_name,
-            search_tree_variant variant)
+            search_tree_variant variant,
+            size_t t_for_b_trees = 8)
         {
-            _schemas->insert(schema_name, schema(variant));
+            _schemas->insert(schema_name, schema(variant, t_for_b_trees));
         }
 
         schema &obtain(
@@ -820,29 +886,38 @@ private:
 
 private:
 
-    static db_server *_instance;
-    static std::mutex _sync_object;
+    // static db_server *_instance;
+    // static std::mutex _sync_object;
+    b_tree<std::string, pool> _pools;
+    mode _mode;
 
 public:
 
     static db_server *get_instance()
     {
-        if (_instance == nullptr)
-        {
-            _sync_object.lock();
-            if (_instance == nullptr)
-            {
-                _instance = new db_server();
-            }
-            _sync_object.unlock();
-        }
+        // if (_instance == nullptr)
+        // {
+        //     std::lock_guard<std::mutex> lock(_sync_object);
+        //     if (_instance == nullptr)
+        //     {
+        //         _instance = new db_server();
+        //     }
+        // }
+        //
+        // return _instance;
 
-        return _instance;
+        static auto *instance = new db_server();
+        return instance;
     }
 
 private:
 
-    db_server() = default;
+    db_server():
+        _pools(8, stdstring_comparer()),
+        _mode(mode::uninitialized)
+    {
+
+    }
 
 public:
 
@@ -852,29 +927,294 @@ public:
     db_server(
         db_server &&) = delete;
 
-public:
+private:
 
-    void foo()
+    void add(
+        std::string const &pool_name,
+        search_tree_variant variant,
+        size_t t_for_b_trees = 8)
     {
-
+        _pools.insert(pool_name, pool(variant, t_for_b_trees));
     }
 
-    void bar()
+    pool &obtain(
+        std::string const &pool_name)
     {
+        if (_mode == mode::file_system)
+        {
+            fseek
+            // TODO: check existence of path
+        }
+        return _pools.obtain(pool_name);
+    }
 
+    void dispose(
+        std::string const &pool_name)
+    {
+        _pools.dispose(pool_name);
+    }
+
+public:
+
+    void add_pool(
+        std::string const &pool_name,
+        search_tree_variant variant,
+        size_t t_for_b_trees = 8)
+    {
+        throw_if_uninitialized_at_perform()
+            .add(pool_name, variant, t_for_b_trees);
+    }
+
+    void dispose_pool(
+        std::string const &pool_name)
+    {
+        throw_if_uninitialized_at_perform()
+            .dispose(pool_name);
+    }
+
+    void add_schema(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        search_tree_variant variant,
+        size_t t_for_b_trees = 8)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .add(schema_name, variant, t_for_b_trees);
+    }
+
+    void dispose_schema(
+        std::string const &pool_name,
+        std::string const &schema_name)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .dispose(schema_name);
+    }
+
+    void add_collection(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        search_tree_variant variant,
+        size_t t_for_b_trees = 8)
+    {
+        throw_if_uninitialized_at_perform()
+            .throw_if_invalid_path(pool_name)
+            .throw_if_invalid_path(schema_name)
+            .throw_if_invalid_file_name(collection_name)
+            .throw_if_path_is_too_long(pool_name, schema_name, collection_name)
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .add(collection_name, variant, t_for_b_trees);
+    }
+
+    void dispose_collection(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .dispose(collection_name);
+    }
+
+    void add(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        tkey const &key,
+        tvalue const &value)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .obtain(collection_name)
+            .insert(key, value);
+    }
+
+    void add(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        tkey const &key,
+        tvalue &&value)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .obtain(collection_name)
+            .insert(key, std::move(value));
+    }
+
+    void update(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        tkey const &key,
+        tvalue const &value)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .obtain(collection_name)
+            .update(key, value);
+    }
+
+    void update(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        tkey const &key,
+        tvalue &&value)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .obtain(collection_name)
+            .update(key, std::move(value));
+    }
+
+    tvalue &obtain(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        tkey const &key)
+    {
+        return throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .obtain(collection_name)
+            .obtain(key);
+    }
+
+    std::vector<typename associative_container<tkey, tvalue>::key_value_pair> obtain_between(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        tkey const &lower_bound,
+        tkey const &upper_bound,
+        bool lower_bound_inclusive,
+        bool upper_bound_inclusive)
+    {
+        return throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .obtain(collection_name)
+            .obtain_between(lower_bound, upper_bound, lower_bound_inclusive, upper_bound_inclusive);
+    }
+
+    void dispose(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name,
+        tkey const &key)
+    {
+        throw_if_uninitialized_at_perform()
+            .obtain(pool_name)
+            .obtain(schema_name)
+            .obtain(collection_name)
+            .dispose(key);
+    }
+
+private:
+
+    db_server &throw_if_uninutialized(
+        mode mode,
+        std::string const &exception_message)
+    {
+        if (mode != mode::uninitialized)
+        {
+            return *this;
+        }
+
+        throw std::logic_error(exception_message);
+    }
+
+    db_server &throw_if_uninitialized_at_setup(
+        mode mode)
+    {
+        return throw_if_uninutialized(mode, "invalid mode");
+    }
+
+    db_server &throw_if_initialized_at_setup()
+    {
+        if (_mode == mode::uninitialized)
+        {
+            return *this;
+        }
+
+        throw std::logic_error("attempt to change previously set up mode");
+    }
+
+    db_server &throw_if_uninitialized_at_perform()
+    {
+        return throw_if_uninutialized(_mode, "attempt to perform an operation while mode not initialized");
+    }
+
+public:
+
+    db_server *set_mode(
+        mode mode)
+    {
+        throw_if_initialized_at_setup()
+            .throw_if_uninitialized_at_setup(mode);
+
+        _mode = mode;
+
+        return this;
+    }
+
+private:
+
+    db_server &throw_if_invalid_path(
+        std::string const &subpath)
+    {
+        if (_mode == mode::file_system)
+        {
+            // TODO: you can do it O_o
+        }
+
+        return *this;
+    }
+
+    db_server &throw_if_invalid_file_name(
+        std::string const &file_name)
+    {
+        if (_mode == mode::file_system)
+        {
+            // TODO: you can do it O_o
+        }
+
+        return *this;
+    }
+
+    db_server &throw_if_path_is_too_long(
+        std::string const &pool_name,
+        std::string const &schema_name,
+        std::string const &collection_name)
+    {
+        if (_mode == mode::file_system)
+        {
+            // TODO: you can do it O_o
+        }
+
+        return *this;
     }
 
 };
 
-db_server *db_server::_instance = nullptr;
+// db_server *db_server::_instance = nullptr;
 
 int main(
     int argc,
     char *argv[])
 {
-
-    // test_trie();
-
+    db_server::get_instance()
+        ->set_mode(db_server::mode::in_memory_cache)
+        ->set_mode(db_server::mode::file_system)
+        ->add_pool("", db_server::search_tree_variant::b, 3);
 
     return 0;
 }
