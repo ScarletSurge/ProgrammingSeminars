@@ -119,6 +119,8 @@ int main(
 }*/
 
 #include <iostream>
+#include <optional>
+#include <variant>
 
 #include "trie.h"
 
@@ -262,7 +264,12 @@ private:
     int _3;
 };
 
-
+class tdata final
+{
+public:
+    tkey key;
+    tvalue value;
+};
 
 class tkey_comparer final
 {
@@ -304,12 +311,14 @@ public:
 
 private:
 
+    class chain_of_responsibility;
+
     class collection final
     {
 
     private:
 
-        search_tree<tkey, tvalue> *_data;
+        search_tree<std::string, search_tree<tdata *, std::vector<chain_of_responsibility>>> *_data;
         search_tree_variant _variant;
 
     public:
@@ -886,6 +895,289 @@ private:
 
 private:
 
+    class command
+    {
+
+    public:
+
+        virtual ~command() noexcept = default;
+
+    public:
+
+        virtual void execute(
+            bool &data_exists,
+            std::optional<tdata> &data_to_modify) const = 0;
+
+    };
+
+    class insert_command final:
+        public command
+    {
+
+    private:
+
+        tdata _initial_version;
+
+    public:
+
+        explicit insert_command(
+            tdata &&initial_version):
+                _initial_version(initial_version)
+        {
+
+        }
+
+    public:
+
+        void execute(
+            bool &data_exists,
+            std::optional<tdata> &data_to_modify) const override
+        {
+            if (data_exists)
+            {
+                throw std::logic_error("attempt to insert already existent data");
+            }
+
+            if (data_to_modify.has_value())
+            {
+                data_to_modify.value() = _initial_version;
+            }
+
+            data_exists = true;
+        }
+
+    };
+
+    class update_command final:
+        public command
+    {
+
+    private:
+
+        std::string _update_expression;
+
+    public:
+
+        explicit update_command(
+            std::string const &update_expression):
+                _update_expression(update_expression)
+        {
+
+        }
+
+    public:
+
+        void execute(
+            bool &data_exists,
+            std::optional<tdata> &data_to_modify) const override
+        {
+            if (!data_exists)
+            {
+                throw std::logic_error("attempt to modify non-existent data");
+            }
+
+            if (data_to_modify.has_value())
+            {
+                // TODO: interpreter for update expression
+            }
+        }
+
+    };
+
+    class dispose_command final:
+        public command
+    {
+
+    public:
+
+        void execute(
+            bool &data_exists,
+            std::optional<tdata> &data_to_modify) const override
+        {
+            if (!data_exists)
+            {
+                throw std::logic_error("attempt to dispose non-existent data");
+            }
+
+            data_exists = false;
+        }
+
+    };
+
+private:
+
+    class chain_of_responsibility_handler final
+    {
+
+        friend class chain_of_responsibility;
+
+    private:
+
+        command *_command;
+        std::int64_t _date_time_activity_started;
+        chain_of_responsibility_handler *_next_handler;
+
+    public:
+
+        chain_of_responsibility_handler(
+            command *command,
+            std::int64_t date_time_activity_started):
+                _command(command),
+                _date_time_activity_started(date_time_activity_started),
+                _next_handler(nullptr)
+        {
+
+        }
+
+    public:
+
+        void handle(
+            bool &data_exists,
+            std::optional<tdata> &data_to_modify,
+            std::int64_t date_time_target) const
+        {
+            if (date_time_target <= _date_time_activity_started)
+            {
+                return;
+            }
+
+            _command->execute(data_exists, data_to_modify);
+
+            if (_next_handler != nullptr)
+            {
+                _next_handler->handle(data_exists, data_to_modify, date_time_target);
+            }
+        }
+
+    };
+
+    class chain_of_responsibility final
+    {
+
+    private:
+
+        chain_of_responsibility_handler *_first_handler;
+        chain_of_responsibility_handler *_last_handler;
+
+    public:
+
+        chain_of_responsibility():
+            _first_handler(nullptr),
+            _last_handler(nullptr)
+        {
+
+        }
+
+    private:
+
+        void add_handler(
+            command *command)
+        {
+            // TODO: obtain date/time from OS
+            // TODO: convert date/time from OS to std::int64_t
+            std::int64_t date_time_activity_started = 0;
+
+            auto *added_handler = new chain_of_responsibility_handler(command, date_time_activity_started);
+
+            if (_last_handler == nullptr)
+            {
+                _first_handler = _last_handler = added_handler;
+            }
+            else
+            {
+                _last_handler->_next_handler = added_handler;
+                _last_handler = added_handler;
+            }
+        }
+
+        void handle(
+            bool &data_exists,
+            std::optional<tdata> &data_to_modify,
+            std::int64_t date_time_target)
+        {
+            if (_first_handler == nullptr)
+            {
+                return;
+            }
+
+            _first_handler->handle(data_exists, data_to_modify, date_time_target);
+        }
+
+    public:
+
+        void insert(
+            tdata &&data_to_insert)
+        {
+            bool data_exists = false;
+            std::optional<tdata> empty_optional;
+            // TODO: obtain date/time from OS
+            // TODO: convert date/time from OS to std::int64_t
+            std::int64_t current_date_time = 0;
+            handle(data_exists, empty_optional, current_date_time);
+
+            if (data_exists)
+            {
+                throw std::logic_error("attempt to add data insertion handler while data exists");
+            }
+
+            add_handler(new insert_command(std::move(data_to_insert)));
+        }
+
+        std::optional<tdata> obtain(
+            std::int64_t date_time_of_activity)
+        {
+            bool data_exists;
+            tdata data_to_modify;
+            auto data_to_modify_optional = std::make_optional(data_to_modify);
+
+            handle(data_exists, data_to_modify_optional, date_time_of_activity);
+
+            return data_exists
+                ? std::make_optional(std::move(data_to_modify))
+                : std::optional<tdata>();
+        }
+
+        void update(
+            tdata const &data,
+            std::string const &update_expression)
+        {
+            bool data_exists = false;
+            std::optional<tdata> empty_optional;
+            // TODO: obtain date/time from OS
+            // TODO: convert date/time from OS to std::int64_t
+            std::int64_t current_date_time = 0;
+            handle(data_exists, empty_optional, current_date_time);
+
+            if (!data_exists)
+            {
+                throw std::logic_error("attempt to add data update handler while data not exists");
+            }
+
+            add_handler(new update_command(update_expression));
+        }
+
+        void dispose(
+            tdata const &data)
+        {
+            bool data_exists = false;
+            std::optional<tdata> empty_optional;
+            // TODO: obtain date/time from OS
+            // TODO: convert date/time from OS to std::int64_t
+            std::int64_t current_date_time = 0;
+            handle(data_exists, empty_optional, current_date_time);
+
+            if (!data_exists)
+            {
+                throw std::logic_error("attempt to add data dispose handler while data not exists");
+            }
+
+            add_handler(new dispose_command);
+        }
+
+    };
+
+private:
+
     // static db_server *_instance;
     // static std::mutex _sync_object;
     b_tree<std::string, pool> _pools;
@@ -942,7 +1234,7 @@ private:
     {
         if (_mode == mode::file_system)
         {
-            fseek
+            // fseek
             // TODO: check existence of path
         }
         return _pools.obtain(pool_name);
@@ -956,23 +1248,27 @@ private:
 
 public:
 
-    void add_pool(
+    db_server *add_pool(
         std::string const &pool_name,
         search_tree_variant variant,
         size_t t_for_b_trees = 8)
     {
         throw_if_uninitialized_at_perform()
             .add(pool_name, variant, t_for_b_trees);
+
+        return this;
     }
 
-    void dispose_pool(
+    db_server *dispose_pool(
         std::string const &pool_name)
     {
         throw_if_uninitialized_at_perform()
             .dispose(pool_name);
+
+        return this;
     }
 
-    void add_schema(
+    db_server *add_schema(
         std::string const &pool_name,
         std::string const &schema_name,
         search_tree_variant variant,
@@ -981,18 +1277,22 @@ public:
         throw_if_uninitialized_at_perform()
             .obtain(pool_name)
             .add(schema_name, variant, t_for_b_trees);
+
+        return this;
     }
 
-    void dispose_schema(
+    db_server *dispose_schema(
         std::string const &pool_name,
         std::string const &schema_name)
     {
         throw_if_uninitialized_at_perform()
             .obtain(pool_name)
             .dispose(schema_name);
+
+        return this;
     }
 
-    void add_collection(
+    db_server *add_collection(
         std::string const &pool_name,
         std::string const &schema_name,
         std::string const &collection_name,
@@ -1007,9 +1307,11 @@ public:
             .obtain(pool_name)
             .obtain(schema_name)
             .add(collection_name, variant, t_for_b_trees);
+
+        return this;
     }
 
-    void dispose_collection(
+    db_server *dispose_collection(
         std::string const &pool_name,
         std::string const &schema_name,
         std::string const &collection_name)
@@ -1018,9 +1320,11 @@ public:
             .obtain(pool_name)
             .obtain(schema_name)
             .dispose(collection_name);
+
+        return this;
     }
 
-    void add(
+    db_server *add(
         std::string const &pool_name,
         std::string const &schema_name,
         std::string const &collection_name,
@@ -1032,9 +1336,11 @@ public:
             .obtain(schema_name)
             .obtain(collection_name)
             .insert(key, value);
+
+        return this;
     }
 
-    void add(
+    db_server *add(
         std::string const &pool_name,
         std::string const &schema_name,
         std::string const &collection_name,
@@ -1046,9 +1352,11 @@ public:
             .obtain(schema_name)
             .obtain(collection_name)
             .insert(key, std::move(value));
+
+        return this;
     }
 
-    void update(
+    db_server *update(
         std::string const &pool_name,
         std::string const &schema_name,
         std::string const &collection_name,
@@ -1060,9 +1368,11 @@ public:
             .obtain(schema_name)
             .obtain(collection_name)
             .update(key, value);
+
+        return this;
     }
 
-    void update(
+    db_server *update(
         std::string const &pool_name,
         std::string const &schema_name,
         std::string const &collection_name,
@@ -1074,6 +1384,8 @@ public:
             .obtain(schema_name)
             .obtain(collection_name)
             .update(key, std::move(value));
+
+        return this;
     }
 
     tvalue &obtain(
@@ -1105,7 +1417,7 @@ public:
             .obtain_between(lower_bound, upper_bound, lower_bound_inclusive, upper_bound_inclusive);
     }
 
-    void dispose(
+    db_server *dispose(
         std::string const &pool_name,
         std::string const &schema_name,
         std::string const &collection_name,
@@ -1116,6 +1428,8 @@ public:
             .obtain(schema_name)
             .obtain(collection_name)
             .dispose(key);
+
+        return this;
     }
 
 private:
@@ -1213,8 +1527,9 @@ int main(
 {
     db_server::get_instance()
         ->set_mode(db_server::mode::in_memory_cache)
-        ->set_mode(db_server::mode::file_system)
-        ->add_pool("", db_server::search_tree_variant::b, 3);
+        ->add_pool("pool", db_server::search_tree_variant::b, 3)
+        ->add_schema("pool", "schema", db_server::search_tree_variant::b, 5)
+        ->add_collection("pool", "schema", "collection", db_server::search_tree_variant::b, 6);
 
     return 0;
 }
