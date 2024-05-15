@@ -11,4 +11,8 @@
       <PackageReference Include="DryIoc.dll" Version="5.4.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RGU.dotNET.SecondTerm.DelegatesAndEventsDemo\RGU.dotNET.SecondTerm.DelegatesAndEventsDemo.csproj" />
+    </ItemGroup>
+
 </Project>
