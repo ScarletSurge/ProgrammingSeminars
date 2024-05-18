@@ -296,29 +296,53 @@ big_integer &big_integer::operator-=(
 
     if (is_equal_to_zero())
     {
-        return *this = other;
+        return (*this = other).change_sign();
+        // Fluent API
+        // return *this = -other;
     }
 
-    if (sign() == -1)
+    if (*this == other)
     {
-        change_sign();
-        *this -= -other;
-        return change_sign();
+        int const zero = 0;
+        return *this = big_integer(&zero, 1);
     }
 
-    if (other.sign() == -1)
+    if (sign() == -1 && other.sign() == -1)
+    {
+        return (this->change_sign() -= -other).change_sign();
+    }
+
+    if (sign() == -1 && other.sign() == 1)
+    {
+        return (this->change_sign() += other).change_sign();
+    }
+
+    if (sign() == 1 && other.sign() == -1)
     {
         return *this += -other;
     }
 
     if (*this < other)
     {
-        *this = other - *this;
-        change_sign();
-        return *this;
+        return (*this = other - *this).change_sign();
     }
 
-    throw std::logic_error("not implemented");
+    bool flag = false;
+    std::vector<unsigned int> digits(get_digits_count());
+    for(unsigned i = 0; i < this->get_digits_count(); i++)
+    {
+        auto temp1 = get_digit(i);
+        auto temp2 = other.get_digit(i);
+
+        if (flag)
+        {
+
+        }
+
+        flag = temp1 < temp2;
+
+        digits.push_back(temp1 - temp2);
+    }
 }
 
 big_integer big_integer::operator-(
@@ -491,9 +515,15 @@ bool big_integer::operator<(
         return other.sign() == 1;
     }
 
+    if (other.is_equal_to_zero())
+    {
+        return sign() == -1;
+    }
+
     if (sign() == -1 && other.sign() == -1)
     {
         return !(-*this < -other);
+        // return !((-*this)->operator<(-other));
     }
 
     if (sign() == -1 && other.sign() == 1)
