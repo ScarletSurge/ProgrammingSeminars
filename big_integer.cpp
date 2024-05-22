@@ -259,17 +259,20 @@ big_integer &big_integer::operator+=(
         }
     }
 
-    result_digits.back() += *reinterpret_cast<int *>(&operation_result);
-
-    auto *maybe_overflowed_digit_ptr = reinterpret_cast<unsigned int *>(&*(result_digits.end() - 2));
-    if (*maybe_overflowed_digit_ptr >> ((sizeof(unsigned int) << 3) - 1))
-    {
-        *maybe_overflowed_digit_ptr ^= (1 << ((sizeof(unsigned int) << 3) - 1));
-        ++result_digits.back();
-    }
-
     auto result_digits_count = result_digits.size();
-    if (result_digits.back() == 0)
+
+    if (operation_result == 1)
+    {
+        if ((*reinterpret_cast<unsigned int *>(&result_digits[digits_count - 1]) >> ((sizeof(unsigned int) << 3) - 1)) == 0)
+        {
+            *reinterpret_cast<unsigned int *>(&result_digits[digits_count - 1]) |= (1u << ((sizeof(unsigned int) << 3) - 1));
+        }
+        else
+        {
+            result_digits.back() = 1;
+        }
+    }
+    else if ((*reinterpret_cast<unsigned int *>(&result_digits[digits_count - 1]) >> ((sizeof(unsigned int) << 3) - 1)) == 0)
     {
         --result_digits_count;
     }

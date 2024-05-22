@@ -186,6 +186,15 @@ void dump_int_value(
 
 int main()
 {
+    big_integer first(std::vector<int> { 65536 });
+    big_integer second(std::vector<int> { 65535 });
+    (first *= second).dump_value(std::cout); std::cout << std::endl;
+    (first += big_integer(std::vector<int> { 65536 })).dump_value(std::cout);
+    return 0;
+}
+
+int main1337()
+{
     auto const iterations_count = 20;
     int digits[1] = { 1 };
     big_integer x(digits, 1);
