@@ -1,0 +1,16 @@
+syntax = "proto3";
+package rgu.web_programming.grpc;
+
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "RGU.WebProgramming.Grpc";
+
+message MyFirstModel {
+    int32 value = 1;
+    int32 abrakadabra = 2;
+}
+
+service MyFirstService {
+    // my first rpc docs
+    rpc MyFirstRPC(google.protobuf.Empty) returns (MyFirstModel);
+}
