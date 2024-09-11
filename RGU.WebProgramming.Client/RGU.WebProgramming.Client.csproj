@@ -15,7 +15,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\Protos\hello_grpc.proto" Link="Protos\kek.proto" GrpcServices="Client" />
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.Development.json">
+            <DependentUpon>appsettings.json</DependentUpon>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RGU.WebProgramming.Client.Grpc\RGU.WebProgramming.Client.Grpc.csproj" />
     </ItemGroup>
 
 </Project>
