@@ -1,0 +1,64 @@
+﻿<Window x:Class="RGU.DistibutedSystems.Launcher.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Привет мир"
+        Height="500"
+        Width="500"
+        FontSize="25"
+        >
+    <Grid ShowGridLines="True">
+        <!-- Arrange Measure -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Click="ButtonBase1_OnClick"
+                Margin="10"
+                Padding="5">
+            <Button Content="Inner button"
+                    Padding="5" />
+        </Button>
+        <WrapPanel Grid.Row="0"
+                   Grid.Column="2"
+                   Orientation="Horizontal">
+            <Button Content="123"
+                    Click="ButtonBase2_OnClick" />
+            <Button Content="456" />
+            <Button Content="123" />
+            <Button Content="456" />
+        </WrapPanel>
+        <DockPanel Grid.Row="2"
+                   Grid.Column="2"
+                   LastChildFill="False">
+            <Button DockPanel.Dock="Left"
+                    Content="123" />
+            <Button DockPanel.Dock="Top"
+                    Content="456" />
+            <TextBlock Text="Text"
+                       DockPanel.Dock="Right" />
+            <Button DockPanel.Dock="Right"
+                    Content="456" />
+        </DockPanel>
+        <Canvas Grid.Row="2"
+                Grid.Column="0">
+            <Button Canvas.Left="10"
+                    Canvas.Top="20"
+                    Content="Button :/"/>
+        </Canvas>
+    </Grid>
+</Window>

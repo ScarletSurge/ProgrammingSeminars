@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGU.DistibutedSystems.Launcher.App", "RGU.DistibutedSystems.Launcher.App\RGU.DistibutedSystems.Launcher.App.csproj", "{FFB79E8A-EC01-42A2-B79A-B9A6C3D4C63A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGU.DistributedSystems.WPF.MVVM", "RGU.DistributedSystems.WPF.MVVM\RGU.DistributedSystems.WPF.MVVM.csproj", "{0F88D38F-4D7E-40EC-84DC-BF22D4D378E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFB79E8A-EC01-42A2-B79A-B9A6C3D4C63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB79E8A-EC01-42A2-B79A-B9A6C3D4C63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB79E8A-EC01-42A2-B79A-B9A6C3D4C63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB79E8A-EC01-42A2-B79A-B9A6C3D4C63A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F88D38F-4D7E-40EC-84DC-BF22D4D378E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F88D38F-4D7E-40EC-84DC-BF22D4D378E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F88D38F-4D7E-40EC-84DC-BF22D4D378E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F88D38F-4D7E-40EC-84DC-BF22D4D378E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
