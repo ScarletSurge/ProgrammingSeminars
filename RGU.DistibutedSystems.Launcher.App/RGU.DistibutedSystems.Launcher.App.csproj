@@ -8,4 +8,16 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RGU.DistributedSystems.WPF.MVVM\RGU.DistributedSystems.WPF.MVVM.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="View\MainWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+    </ItemGroup>
+
 </Project>

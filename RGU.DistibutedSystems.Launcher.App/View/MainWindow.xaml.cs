@@ -1,24 +1,22 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
-namespace RGU.DistibutedSystems.Launcher.App;
+using RGU.DistibutedSystems.Launcher.App.ViewModel;
+
+namespace RGU.DistibutedSystems.Launcher.App.View;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
 {
+
+    private int _value = 0;
+    
     public MainWindow()
     {
         InitializeComponent();
+        DataContext = new MainWindowViewModel(TimeSpan.FromMilliseconds(150));
+        // DataContext = App.Container.Resolve<MainWindowViewModel>();
     }
 
     private void ButtonBase1_OnClick(
@@ -34,4 +32,5 @@ public partial class MainWindow : Window
     {
         MessageBox.Show("Hello!");
     }
+    
 }

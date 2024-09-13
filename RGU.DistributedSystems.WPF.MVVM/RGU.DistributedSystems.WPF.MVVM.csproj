@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="PresentationCore, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+        <HintPath>..\..\..\..\..\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.7\PresentationCore.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

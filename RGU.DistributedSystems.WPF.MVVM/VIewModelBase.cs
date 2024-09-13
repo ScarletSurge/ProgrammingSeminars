@@ -8,11 +8,33 @@ namespace RGU.DistributedSystems.WPF.MVVM;
 public abstract class ViewModelBase:
     INotifyPropertyChanged
 {
-
-    public void Foo()
+    
+    #region Methods
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="propertyName"></param>
+    protected void RaisePropertyChanged(
+        string propertyName)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("1234"));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="propertiesNames"></param>
+    protected void RaisePropertiesChanged(
+        params string[]? propertiesNames)
+    {
+        foreach (var propertyName in propertiesNames ?? Enumerable.Empty<string>())
+        {
+            RaisePropertyChanged(propertyName);
+        }
+    }
+    
+    #endregion
     
     #region System.ComponentModel.INotifyPropertyChanged implementation
     
