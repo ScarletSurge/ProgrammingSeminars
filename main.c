@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdarg.h>
+#include <locale.h>
 
 #define __DEBUG
 
@@ -29,6 +30,12 @@ int avg_call_sample()
     return 0;
 }
 
+void handle_read_char(
+    int read_char)
+{
+    putchar(read_char);
+}
+
 int files_interaction_demo(
     int argc,
     char const *argv[])
@@ -49,9 +56,20 @@ int files_interaction_demo(
     // file reading loop with EOF handling
     while (!feof(fin))
     {
-        c = fgetc(fin);
+        handle_read_char(c = fgetc(fin));
+    }
 
-        // TODO: handle read char from file
+    printf("\n\n\n");
+
+    fclose(fin);
+    if (!(fin = fopen(argv[1], "r")))
+    {
+        return -2;
+    }
+
+    while ((c = fgetc(fin)) != EOF)
+    {
+        handle_read_char(c);
     }
 
     fclose(fin);
@@ -63,6 +81,7 @@ int main(
     int argc,
     char const *argv[]) // char **argv
 {
+    setlocale(LC_ALL, "Russian");
     // return avg_call_sample();
     return files_interaction_demo(argc, argv);
 }
