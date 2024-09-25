@@ -33,7 +33,7 @@ public sealed class WebHostConfigurator:
                     listenOptions =>
                     {
                         listenOptions.Protocols = HttpProtocols.Http2;
-                        //listenOptions.UseHttps(serverSettings.CertPath, serverSettings.CertPassword);
+                        // listenOptions.UseHttps(serverSettings.CertPath, serverSettings.CertPassword);
                     });
             });
     }

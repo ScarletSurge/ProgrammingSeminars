@@ -73,7 +73,7 @@ public class Program
             .AddJsonFile($"appsettings.{environmentVar}.User.json", true)
             .Build();
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
