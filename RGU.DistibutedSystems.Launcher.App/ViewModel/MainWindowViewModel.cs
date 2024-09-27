@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Dynamic;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 using RGU.DistributedSystems.WPF.MVVM;
@@ -81,6 +82,11 @@ internal sealed class MainWindowViewModel:
 
         _incrementInt = new Lazy<ICommand>(() => new RelayCommand(_ => IncrementInt(), _ => Int != 2));
         _zhmakCommand = new Lazy<ICommand>(() => new RelayCommand(_ => Zhmak()));
+
+        ButtonsVisibilityState = 0;
+        
+        // Arrange
+        // Measure
     }
     
     #endregion
@@ -147,12 +153,12 @@ internal sealed class MainWindowViewModel:
         }
     }
 
-    private int ButtonsVisibilityState
+    public int ButtonsVisibilityState
     {
         get =>
             _buttonsVisibilityState;
         
-        set
+        private set
         {
             if (value < 0 || value > 3)
             {
@@ -161,10 +167,17 @@ internal sealed class MainWindowViewModel:
             }
 
             _buttonsVisibilityState = value;
+            RaisePropertyChanged(nameof(ButtonsVisibilityState));
             LeftButtonVisible = (value & 1) == 1;
             RightButtonVisible = ((value >> 1) & 1) == 1;
         }
     }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public string? NullValueContent =>
+        null;
     
     #region Command
     
@@ -194,6 +207,22 @@ internal sealed class MainWindowViewModel:
     private void IncrementInt()
     {
         ++Int;
+
+        dynamic y = new ExpandoObject();
+        y.Prop = 10;
+        y.Prop = "123";
+        y.Prop = new ExpandoObject();
+        y.Method = (Action<int>)delegate(int x) { };
+        y.Method(10);
+        y.Method(10);
+        y.Event = null;
+        y.Event += (Action<int>)(i => { });
+        y.Event(10);
+        
+        
+        dynamic x = new System.Text.StringBuilder();
+        var res = x.Append("123").Append("456").Append("789").ToString();
+        Value = res;
     }
     
     /// <summary>

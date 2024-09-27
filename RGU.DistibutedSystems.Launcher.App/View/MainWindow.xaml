@@ -34,6 +34,9 @@
             <RowDefinition />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Button Grid.Row="0"
+                Grid.Column="0"
+                Content="{Binding NullValueContent, Mode=OneWay, TargetNullValue=1234567}" />
         <DockPanel Grid.Row="0"
                    Grid.Column="1">
             <Button DockPanel.Dock="Left"
@@ -52,7 +55,8 @@
             <Button DockPanel.Dock="Right"
                     Content="Right">
                 <Button.Visibility>
-                    <MultiBinding Converter="{StaticResource FromBoolConverter}">
+                    <MultiBinding Converter="{converters:FromBoolConverter}"
+                                  Mode="OneWay">
                         <MultiBinding.Bindings>
                             <Binding Path="RightButtonVisible"
                                      Mode="OneWay" />
@@ -62,7 +66,19 @@
                     </MultiBinding>
                 </Button.Visibility>
             </Button>
-                <Button Command="{Binding ZhmakCommand, Mode=OneWay}" />
+            <Button Command="{Binding ZhmakCommand, Mode=OneWay}">
+                <Button.Content>
+                    <MultiBinding Converter="{converters:ArithmeticConverter}"
+                                  ConverterParameter="{x:Static converters:ArithmeticConverter+Operators.Plus}">
+                        <MultiBinding.Bindings>
+                            <Binding Path="ButtonsVisibilityState"
+                                     Mode="OneWay" />
+                            <Binding Path="ButtonsVisibilityState"
+                                     Mode="OneWay" />
+                        </MultiBinding.Bindings>
+                    </MultiBinding>
+                </Button.Content>
+            </Button>
         </DockPanel>
         <Button Grid.Row="1"
                 Grid.Column="1"

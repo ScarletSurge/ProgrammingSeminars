@@ -1,12 +1,19 @@
 ﻿using System.Globalization;
-using System.Windows.Data;
 
 namespace RGU.DistributedSystems.WPF.MVVM;
 
 public sealed class FromBoolConverter:
-    IMultiValueConverter
+    MultiValueConverterBase<FromBoolConverter>
 {
-    public object? Convert(object?[] values, Type targetType, object parameter, CultureInfo culture)
+    
+    #region RGU.DistributedSystems.WPF.MVVM.MultiValueConverterBase<FromBoolConverter> overrides
+    
+    /// <inheritdoc cref="MultiValueConverterBase{TMultiValueConverter}.Convert" />
+    public override object? Convert(
+        object?[] values,
+        Type targetType,
+        object? parameter,
+        CultureInfo culture)
     {
         if (values.Length != 3)
         {
@@ -17,10 +24,7 @@ public sealed class FromBoolConverter:
             ? values[1]
             : values[2];
     }
-
-    public object?[] ConvertBack(object? value, Type[] targetType, object parameter, CultureInfo culture)
-    {
-        throw new NotSupportedException();
-    }
+    
+    #endregion
     
 }
