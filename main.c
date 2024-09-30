@@ -1,13 +1,65 @@
 #include <stdio.h>
 #include <stdarg.h>
-#include <locale.h>
+#include <stdlib.h>
 
 #define __DEBUG
+
+#define MALLOC_PUK_SRENJK 1
+
+void free_all(
+    void *to_free,
+    ...)
+{
+    va_list p;
+
+    if (to_free == NULL)
+    {
+        return;
+    }
+
+    va_start(p, to_free);
+
+    do
+    {
+        free(to_free);
+
+        to_free = va_arg(p, void *);
+    }
+    while (to_free != NULL);
+}
 
 int avg(
     unsigned int,
     double *,
     ...);
+
+int dynamic_structures_intro(
+    int argc,
+    char *argv[])
+{
+    char *p2, *p3;
+    char *p = (char *)malloc(100 * sizeof(char));
+    if (!p)
+    {
+        return MALLOC_PUK_SRENJK;
+    }
+
+    if (!(p2 = (char *)malloc(100 * sizeof(char))))
+    {
+        free(p);
+
+        return MALLOC_PUK_SRENJK;
+    }
+
+    if (!(p3 = (char *)malloc(100 * sizeof(char))))
+    {
+        free_all(p, p2, NULL);
+
+        return MALLOC_PUK_SRENJK;
+    }
+
+    return 0;
+}
 
 int avg_call_sample()
 {
@@ -34,6 +86,17 @@ void handle_read_char(
     int read_char)
 {
     putchar(read_char);
+}
+
+int float_format_output(
+    int argc,
+    char *argv[])
+{
+    float f = -123.45;
+
+    printf("%08X", *(int *)&f);
+
+    return 0;
 }
 
 int files_interaction_demo(
@@ -81,9 +144,13 @@ int main(
     int argc,
     char const *argv[]) // char **argv
 {
-    setlocale(LC_ALL, "Russian");
     // return avg_call_sample();
-    return files_interaction_demo(argc, argv);
+    // return files_interaction_demo(argc, argv);
+    return float_format_output(argc, argv);
+    switch (dynamic_structures_intro(argc, argv))
+    {
+
+    }
 }
 
 int avg(
