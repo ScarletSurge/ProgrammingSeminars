@@ -1,6 +1,8 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RGU.WebProgramming.Domain.Converters;
 using RGU.WebProgramming.Grpc;
 using RGU.WebProgramming.Server.MyFirstServiceImplementation.Settings;
 
@@ -18,7 +20,12 @@ public sealed class MyFirstServiceImplementation:
     /// <summary>
     /// 
     /// </summary>
-    private IOptions<MyFirstServiceImplementationSettings> _options;
+    private readonly IOptions<MyFirstServiceImplementationSettings> _options;
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    private readonly ILogger<MyFirstServiceImplementation>? _logger;
 
     /// <summary>
     /// 
@@ -33,11 +40,14 @@ public sealed class MyFirstServiceImplementation:
     /// 
     /// </summary>
     /// <param name="options"></param>
+    /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"></exception>
     public MyFirstServiceImplementation(
-        IOptions<MyFirstServiceImplementationSettings> options)
+        IOptions<MyFirstServiceImplementationSettings> options,
+        ILogger<MyFirstServiceImplementation>? logger)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
+        _logger = logger;
     }
 
     #endregion
@@ -49,11 +59,30 @@ public sealed class MyFirstServiceImplementation:
         Empty request,
         ServerCallContext context)
     {
-        ++_value;
-        return Task.FromResult(new MyFirstModel
+        _logger?.LogDebug($"{nameof(MyFirstRPC)} request execution started");
+        
+        try
         {
-            Value = _value
-        });
+            ++_value;
+            
+            var responseTask = Task.FromResult(new MyFirstModel
+            {
+                Value = _value
+            });
+            
+            _logger?.LogDebug($"{nameof(MyFirstRPC)} request execution succeeded.");
+
+            return responseTask;
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError($"Failed to execute {nameof(MyFirstRPC)} request");
+            
+            return Task.FromResult(new MyFirstModel
+            {
+                Value = 0
+            });
+        }
     }
 
     #endregion
