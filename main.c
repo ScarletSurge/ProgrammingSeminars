@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -31,10 +32,66 @@ int demo7(
     int argc,
     char *argv[]);
 
+int demo8()
+{
+    int x = 1337;
+
+    printf("%d %d", 20);
+
+    return 0;
+}
+
+int files_demo(
+    int argc,
+    char *argv[])
+{
+    FILE *input_file;
+
+    int x, y;
+
+    y + x + 5;
+    y = x = 5; // TODO: Fluent API
+
+    if (!(input_file = fopen("input.txt", "r")))
+    {
+        // TODO: errno
+        // TODO: handle file opening error!
+    }
+
+    // TODO: file reading loops
+
+    fclose(input_file);
+
+    return 0;
+}
+
 int gorner(
     char const *str,
     int base,
     int *result_placement);
+
+int average(
+    double *result_placement,
+    int values_count,
+    ...)
+{
+    double result = 0.0;
+    va_list it;
+    int i;
+
+    va_start(it, values_count);
+
+    for (i = 0; i < values_count; ++i)
+    {
+        result += va_arg(it, double);
+    }
+
+    va_end(it);
+
+    *result_placement = result / values_count;
+
+    return 0;
+}
 
 int main(
     int argc,
@@ -47,7 +104,19 @@ int main(
     // return demo4();
     //return demo5();
     // return demo6(argc, argv);
-    return demo7(argc, argv);
+    // return demo7(argc, argv);
+    // return demo8();
+    // double result;
+    // switch (average(&result, 3, (double)1, (double)2, (double)3))
+    // {
+    //     case 0:
+    //         printf("Average value == %lf", result);
+    //         break;
+    // }
+
+    return files_demo(argc, argv);
+
+    return 0;
 }
 
 int sum(
@@ -178,7 +247,7 @@ int gorner(
     if (*str == '-')
     {
 #ifdef __DEBUG
-      printf("пук среньк))0)0");
+        printf("пук среньк))0)0");
 #endif
         ++str;
         is_negative = 1;
@@ -207,8 +276,8 @@ int gorner(
         }
 
         result = result * base + (isdigit(*str)
-            ? *str - '0'
-            : tolower(*str) - 'a' + 10);
+                                  ? *str - '0'
+                                  : tolower(*str) - 'a' + 10);
 
         ++str;
     }
@@ -249,13 +318,6 @@ int demo6(
             printf("Undefined behavior o__O");
             break;
     }
-}
-
-int foo(
-
-    ...)
-{
-
 }
 
 int demo7(
