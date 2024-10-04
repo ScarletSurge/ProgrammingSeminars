@@ -5,6 +5,8 @@
 
 #define INPUT_ERROR (10)
 
+#define __DEBUG1
+
 // TODO: enum
 // TODO: fork + exec
 
@@ -21,14 +23,31 @@ int demo4();
 
 int demo5();
 
-int main()
+int demo6(
+    int argc,
+    char *argv[]);
+
+int demo7(
+    int argc,
+    char *argv[]);
+
+int gorner(
+    char const *str,
+    int base,
+    int *result_placement);
+
+int main(
+    int argc,
+    char *argv[])
 {
     // printf("%d\n\n", sum('0', '0'));
     // return demo1();
     // return demo2();
     // return demo3();
     // return demo4();
-    return demo5();
+    //return demo5();
+    // return demo6(argc, argv);
+    return demo7(argc, argv);
 }
 
 int sum(
@@ -139,6 +158,128 @@ int demo5()
         printf("%d ", (int const)buf[i]);
     }
     printf("\n%s", buf);
+
+    return 0;
+}
+
+int gorner(
+    char const *str,
+    int base,
+    int *result_placement)
+{
+    int result = 0;
+    int is_negative = 0;
+
+    if (str == NULL || !*str)
+    {
+        return 1;
+    }
+
+    if (*str == '-')
+    {
+#ifdef __DEBUG
+      printf("пук среньк))0)0");
+#endif
+        ++str;
+        is_negative = 1;
+
+        if (!*str)
+        {
+            return 1;
+        }
+    }
+
+    if (base < 2 || base > 36)
+    {
+        return 2;
+    }
+
+    if (result_placement == NULL)
+    {
+        return 3;
+    }
+
+    while (*str)
+    {
+        if (!isalnum(*str)) // TODO: remake this!!1!1
+        {
+            return 1;
+        }
+
+        result = result * base + (isdigit(*str)
+            ? *str - '0'
+            : tolower(*str) - 'a' + 10);
+
+        ++str;
+    }
+
+    if (is_negative)
+    {
+        result = -result;
+    }
+
+    *result_placement = result;
+
+    return 0;
+}
+
+int demo6(
+    int argc,
+    char *argv[])
+{
+    char const *number_as_string = "102010";
+    int const base = 2;
+    int result;
+
+    switch (gorner(number_as_string, base, &result))
+    {
+        case 0:
+            printf("%s(%d) == %d(10)", number_as_string, base, result);
+            break;
+        case 1:
+            printf("Invalid input string value!");
+            break;
+        case 2:
+            printf("Invalid base value!");
+            break;
+        case 3:
+            printf("Invalid result placement value!");
+            break;
+        default:
+            printf("Undefined behavior o__O");
+            break;
+    }
+}
+
+int foo(
+
+    ...)
+{
+
+}
+
+int demo7(
+    int argc,
+    // char **argv
+    char *argv[])
+{
+    int i;
+    for (i = 0; i < argc; ++i)
+    {
+        printf("argv[%d] == \"%s\"\n", i, argv[i]);
+    }
+
+    if (argc < 8)
+    {
+        // TODO: add error handling
+    }
+
+    if (strlen(argv[7]) < 5)
+    {
+        // TODO: add error handling
+    }
+
+    printf("%c", argv[7][4]);
 
     return 0;
 }
