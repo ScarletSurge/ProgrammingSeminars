@@ -40,6 +40,14 @@ public:
     // a += b
     hex& operator+=(hex const &summand);
 
+    friend hex operator+(hex const &initial, int value);
+    friend hex operator+(int value, hex const &initial);
+
+
+
+// initial += value
+// initial.operator+=(value)
+// operator+=(initial, value)
     // a + b
     hex operator+(hex const &summand) const;
 
