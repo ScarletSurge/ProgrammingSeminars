@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace RGU.DistributedSystems.WPF.MVVM;
+namespace RGU.DistributedSystems.WPF.MVVM.Converter;
 
 // covariance
 // contravariance

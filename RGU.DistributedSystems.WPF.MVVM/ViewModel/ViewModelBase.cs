@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RGU.DistributedSystems.WPF.MVVM;
+namespace RGU.DistributedSystems.WPF.MVVM.ViewModel;
 
 /// <summary>
 /// 

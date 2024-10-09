@@ -1,7 +1,12 @@
 ﻿using System.Globalization;
 
-namespace RGU.DistributedSystems.WPF.MVVM;
+using RGU.DistributedSystems.WPF.MVVM.Converter;
 
+namespace RGU.DistributedSystems.Launcher.App.Converter;
+
+/// <summary>
+/// 
+/// </summary>
 public sealed class ArithmeticConverter:
     MultiValueConverterBase<ArithmeticConverter>
 {
