@@ -165,8 +165,10 @@ public partial class App:
     private App RegisterNavigation()
     {
         var navigationManager = new NavigationManager();
-        navigationManager.AddMapping<HelloWPFPage, HelloWPFPageViewModel>();
         Container.RegisterInstance(navigationManager);
+        
+        navigationManager
+            .AddMapping<HelloWPFPage, HelloWPFPageViewModel>();
 
         return this;
     }

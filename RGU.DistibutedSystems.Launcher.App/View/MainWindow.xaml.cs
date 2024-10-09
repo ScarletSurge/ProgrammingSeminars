@@ -1,5 +1,6 @@
 ﻿using DryIoc;
 using System.Windows;
+using RGU.DistibutedSystems.Launcher.App.Utils;
 using RGU.DistibutedSystems.Launcher.App.View.Pages;
 using RGU.DistibutedSystems.Launcher.App.ViewModel;
 
@@ -37,7 +38,8 @@ public partial class MainWindow:
         object sender,
         RoutedEventArgs e)
     {
-        //_mainWindowMainFrame.Navigate(App.Container.Resolve<HelloWPFPage>());
+        App.Container.Resolve<NavigationManager>().NavigationService = _mainWindowMainFrame.NavigationService;
+        _mainWindowMainFrame.Navigate(App.Container.Resolve<HelloWPFPage>());
     }
     
     #endregion

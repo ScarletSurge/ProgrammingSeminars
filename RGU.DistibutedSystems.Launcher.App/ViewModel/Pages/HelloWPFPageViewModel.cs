@@ -222,17 +222,16 @@ internal sealed class HelloWPFPageViewModel:
         y.Event += (Action<int>)(i => { });
         y.Event(10);
         
-        
         dynamic x = new System.Text.StringBuilder();
         var res = x.Append("123").Append("456").Append("789").ToString();
         Value = res;
         
-        NavigationManager.Navigate(NavigationContext.Builder
-            .Create()
-            .From<HelloWPFPageViewModel>()
-            .To<OtherPageViewModel>()
-            .WithParameter("123", new object())
-            .Build());
+        // NavigationManager.Navigate(NavigationContext.Builder
+        //     .Create()
+        //     .From<HelloWPFPageViewModel>()
+        //     .To<OtherPageViewModel>()
+        //     .WithParameter("123", new object())
+        //     .Build());
     }
     
     /// <summary>
