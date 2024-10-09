@@ -6,4 +6,18 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.26.1" />
+        <PackageReference Include="Grpc" Version="2.46.6" />
+        <PackageReference Include="Grpc.Tools" Version="2.63.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Protobuf Include="..\Protos\hello_grpc.proto" Link="Protos\kek.proto" GrpcServices="None" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\RGU.WebProgramming.Domain.Models\RGU.WebProgramming.Domain.Models.csproj" />
+    </ItemGroup>
+
 </Project>

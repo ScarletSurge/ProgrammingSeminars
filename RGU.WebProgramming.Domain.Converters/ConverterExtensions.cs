@@ -6,12 +6,42 @@
 public static class ConverterExtensions
 {
     
+    #region MyFirstModel
+    
     /// <summary>
     /// 
     /// </summary>
-    public static void Foo()
+    /// <param name="domainMyFirstModel"></param>
+    /// <returns></returns>
+    public static RGU.WebProgramming.Grpc.MyFirstModel Convert(
+        RGU.WebProgramming.Domain.Models.MyFirstModel domainMyFirstModel)
     {
+        ArgumentNullException.ThrowIfNull(domainMyFirstModel, nameof(domainMyFirstModel));
         
+        return new RGU.WebProgramming.Grpc.MyFirstModel
+        {
+            Value = domainMyFirstModel.Value,
+            Abrakadabra = domainMyFirstModel.Abrakadabra
+        };
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="protobufMyFirstModel"></param>
+    /// <returns></returns>
+    public static RGU.WebProgramming.Domain.Models.MyFirstModel ConvertBack(
+        RGU.WebProgramming.Grpc.MyFirstModel protobufMyFirstModel)
+    {
+        ArgumentNullException.ThrowIfNull(protobufMyFirstModel, nameof(protobufMyFirstModel));
+        
+        return new RGU.WebProgramming.Domain.Models.MyFirstModel
+        {
+            Value = protobufMyFirstModel.Value,
+            Abrakadabra = protobufMyFirstModel.Abrakadabra
+        };
+    }
+    
+    #endregion
     
 }

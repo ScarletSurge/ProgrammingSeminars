@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using RGU.WebProgramming.Client.Grpc;
@@ -66,8 +67,19 @@ internal sealed class HostMediator
     #endregion
     
     #region API
-    
-    
+
+    public async Task<Domain.Models.MyFirstModel> MyFirstRPCAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return (await CreateClient().MyFirstRPCAsync(new Empty(), cancellationToken: cancellationToken).ConfigureAwait(false)).ConvertBack();
+        }
+        catch (Exception ex)
+        {
+            // TODO: 
+        }
+    }
     
     #endregion
 

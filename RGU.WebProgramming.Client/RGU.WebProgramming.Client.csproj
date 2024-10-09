@@ -25,7 +25,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RGU.WebProgramming.Client.Grpc\RGU.WebProgramming.Client.Grpc.csproj" />
+        <ProjectReference Include="..\RGU.WebProgramming.Client.Grpc\RGU.WebProgramming.Client.Grpc.csproj" />
+        <ProjectReference Include="..\RGU.WebProgramming.Domain.Models\RGU.WebProgramming.Domain.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\RGU.WebProgramming.Domain.Converters\ConverterExtensions.cs" />
     </ItemGroup>
 
 </Project>

@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\RGU.WebProgramming.Domain.Models\RGU.WebProgramming.Domain.Models.csproj" />
       <ProjectReference Include="..\RGU.WebProgramming.Server.Core\RGU.WebProgramming.Server.Core.csproj" />
     </ItemGroup>
 
