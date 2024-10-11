@@ -45,7 +45,8 @@ int files_demo(
     int argc,
     char *argv[])
 {
-    FILE *input_file;
+    FILE *input_file, *output_file;
+    char c;
 
     int x, y;
 
@@ -58,9 +59,52 @@ int files_demo(
         // TODO: handle file opening error!
     }
 
-    // TODO: file reading loops
+    if (!(output_file = fopen("output.txt", "w")))
+    {
+        // TODO: errno
+        // TODO: handle file opening error!
+        fclose(input_file);
+        return 19;
+    }
+
+    // file reading loop with EOF handling
+    while (!feof(input_file))
+    {
+        c = fgetc(input_file);
+
+        // TODO: work with read symbol
+
+        if (isdigit(c))
+        {
+            // TODO: logic o_O
+        }
+        else if (isalpha(c))
+        {
+            // TODO: logic o___O
+        }
+        if (c == EOF)
+        {
+            printf("%c", c);
+        }
+
+    }
+
+    // file reading loop with EOF handling
+    while ((c = fgetc(input_file)) != EOF)
+    {
+
+    }
 
     fclose(input_file);
+
+    return 0;
+}
+
+int malloc_demo(
+    int argc,
+    char *argv[])
+{
+    
 
     return 0;
 }
@@ -114,7 +158,9 @@ int main(
     //         break;
     // }
 
-    return files_demo(argc, argv);
+    // return files_demo(argc, argv);
+
+    return malloc_demo(argc, argv);
 
     return 0;
 }
