@@ -209,7 +209,7 @@ internal sealed class HelloWPFPageViewModel:
     /// </summary>
     private void IncrementInt()
     {
-        ++Int;
+        //++Int;
 
         dynamic y = new ExpandoObject();
         y.Prop = 10;
@@ -226,12 +226,12 @@ internal sealed class HelloWPFPageViewModel:
         var res = x.Append("123").Append("456").Append("789").ToString();
         Value = res;
         
-        // NavigationManager.Navigate(NavigationContext.Builder
-        //     .Create()
-        //     .From<HelloWPFPageViewModel>()
-        //     .To<OtherPageViewModel>()
-        //     .WithParameter("123", new object())
-        //     .Build());
+        NavigationManager.Navigate(NavigationContext.Builder
+            .Create()
+            .From<HelloWPFPageViewModel>()
+            .To<TargetToNavigatePageViewModel>()
+            .WithParameter("123", new object())
+            .Build());
     }
     
     /// <summary>
