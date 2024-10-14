@@ -65,10 +65,10 @@ public sealed class MyFirstServiceImplementation:
         {
             ++_value;
             
-            var responseTask = Task.FromResult(new MyFirstModel
+            var responseTask = Task.FromResult(new Domain.Models.MyFirstModel
             {
                 Value = _value
-            });
+            }.Convert());
             
             _logger?.LogDebug($"{nameof(MyFirstRPC)} request execution succeeded.");
 

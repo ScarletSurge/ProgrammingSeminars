@@ -14,7 +14,7 @@ public static class ConverterExtensions
     /// <param name="domainMyFirstModel"></param>
     /// <returns></returns>
     public static RGU.WebProgramming.Grpc.MyFirstModel Convert(
-        RGU.WebProgramming.Domain.Models.MyFirstModel domainMyFirstModel)
+        this RGU.WebProgramming.Domain.Models.MyFirstModel domainMyFirstModel)
     {
         ArgumentNullException.ThrowIfNull(domainMyFirstModel, nameof(domainMyFirstModel));
         
@@ -31,7 +31,7 @@ public static class ConverterExtensions
     /// <param name="protobufMyFirstModel"></param>
     /// <returns></returns>
     public static RGU.WebProgramming.Domain.Models.MyFirstModel ConvertBack(
-        RGU.WebProgramming.Grpc.MyFirstModel protobufMyFirstModel)
+        this RGU.WebProgramming.Grpc.MyFirstModel protobufMyFirstModel)
     {
         ArgumentNullException.ThrowIfNull(protobufMyFirstModel, nameof(protobufMyFirstModel));
         

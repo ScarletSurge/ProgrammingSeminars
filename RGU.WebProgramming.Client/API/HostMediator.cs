@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using RGU.WebProgramming.Client.Grpc;
+using RGU.WebProgramming.Domain.Converters;
 using RGU.WebProgramming.Grpc;
 
 namespace RGU.WebProgramming.Client.API;
@@ -67,7 +68,12 @@ internal sealed class HostMediator
     #endregion
     
     #region API
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Domain.Models.MyFirstModel> MyFirstRPCAsync(
         CancellationToken cancellationToken = default)
     {
@@ -77,7 +83,8 @@ internal sealed class HostMediator
         }
         catch (Exception ex)
         {
-            // TODO: 
+            // TODO: handle exception
+            return new Domain.Models.MyFirstModel();
         }
     }
     
