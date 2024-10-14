@@ -20,7 +20,8 @@ int create_ul(
     p_unidirectional_list to_create);
 
 int ul_get_values_count(
-    unidirectional_list const *);
+    unidirectional_list const *,
+    size_t *size_placement);
 
 int ul_insert_value(
     p_unidirectional_list to_insert_into,
@@ -34,11 +35,19 @@ int ul_remove_value(
 
 int ul_traverse_datas(
     p_unidirectional_list to_traverse,
-    void (*callback)(T *value_to_traverse));
+    void (*callback)(
+        T *value_to_traverse,
+        size_t index));
 
 int ul_traverse_items(
     p_unidirectional_list to_traverse,
-    void (*callback)(p_unidirectional_list_item *value_to_traverse));
+    void (*callback)(
+        p_unidirectional_list_item *value_to_traverse,
+        size_t index));
+
+void clear_traverse_callback(
+    p_unidirectional_list_item *value_to_traverse,
+    size_t index);
 
 int clear_ul(
     p_unidirectional_list to_clear);

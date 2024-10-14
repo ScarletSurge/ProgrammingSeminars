@@ -2,6 +2,8 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#include "include\dump.h"
+
 #define __DEBUG
 
 #define MALLOC_PUK_SRENJK 1
@@ -140,17 +142,28 @@ int files_interaction_demo(
     return 0;
 }
 
+int dump_demo(
+    int argc,
+    char *argv)
+{
+    size_t value = -1;
+    dump_bytes((unsigned char const *)&value, sizeof(value), stdout);
+
+    printf(" %zu", value);
+
+    return 0;
+}
+
 int main(
     int argc,
-    char const *argv[]) // char **argv
+    char *argv[]) // char **argv
 {
     // return avg_call_sample();
     // return files_interaction_demo(argc, argv);
-    return float_format_output(argc, argv);
-    switch (dynamic_structures_intro(argc, argv))
-    {
+    // return float_format_output(argc, argv);
+    // switch (dynamic_structures_intro(argc, argv))
 
-    }
+    return dump_demo(argc, argv);
 }
 
 int avg(
