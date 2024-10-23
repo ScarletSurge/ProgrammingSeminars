@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using RGU.DistributedSystems.WPF.MVVM.ViewModel;
 
 namespace RGU.DistibutedSystems.Launcher.App.View.Controls;
 
@@ -9,6 +11,73 @@ namespace RGU.DistibutedSystems.Launcher.App.View.Controls;
 public partial class Spinner:
     UserControl
 {
+    
+    #region Nested
+
+    public sealed class SpinnerItemViewModel:
+        ViewModelBase
+    {
+        
+        #region Fields
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private double _radius;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        private double _phiInDegrees;
+
+        #endregion
+        
+        #region Properties
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Radius
+        {
+            get =>
+                _radius;
+
+            set
+            {
+                _radius = value;
+                RaisePropertiesChanged(nameof(Radius));
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Phi
+        {
+            get =>
+                _phiInDegrees;
+
+            set
+            {
+                _phiInDegrees = value;
+                RaisePropertyChanged(nameof(Phi));
+            }
+        }
+        
+        #endregion
+
+    }
+    
+    #endregion
+    
+    #region Fields
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    private SpinnerItemViewModel[] _items;
+    
+    #endregion
 
     #region Constructors
     
@@ -22,12 +91,22 @@ public partial class Spinner:
     
     #endregion
     
+    #region Properties
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public SpinnerItemViewModel[] Items =>
+        _items;
+    
+    #endregion
+    
     #region Dependency properties
     
     /// <summary>
     /// 
     /// </summary>
-    public int PukSrenjk
+    public int ItemsCount
     {
         get =>
             (int)GetValue(ItemsCountProperty);
@@ -39,7 +118,21 @@ public partial class Spinner:
     /// <summary>
     /// 
     /// </summary>
-    public static readonly DependencyProperty ItemsCountProperty = DependencyProperty.Register(nameof(PukSrenjk), typeof(int), typeof(Spinner));
+    public static readonly DependencyProperty ItemsCountProperty = DependencyProperty.Register(nameof(ItemsCount), typeof(int), typeof(Spinner));
+
+    public Brush ItemsBrush
+    {
+        get =>
+            (Brush)GetValue(ItemsBrushProperty);
+
+        set =>
+            SetValue(ItemsBrushProperty, value);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    public static readonly DependencyProperty ItemsBrushProperty = DependencyProperty.Register(nameof(ItemsBrush), typeof(Brush), typeof(Spinner));
     
     #endregion
     

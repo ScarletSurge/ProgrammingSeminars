@@ -3,9 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:RGU.DistributedSystems.Launcher.App.Converter"
+             xmlns:system="clr-namespace:System;;assembly=mscorlib"
              xmlns:viewControls="clr-namespace:RGU.DistibutedSystems.Launcher.App.View.Controls"
              mc:Ignorable="d">
-    <Grid>
-        <TextBlock Text="{Binding PukSrenjk, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type viewControls:Spinner}}}" />
-    </Grid>
+    <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type viewControls:Spinner}}}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Canvas />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Ellipse Fill="{Binding ItemsBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type viewControls:Spinner}}}">
+                    <Ellipse.Width>
+                        <MultiBinding Converter="{converters:ArithmeticConverter}"
+                                      ConverterParameter="{x:Static converters:ArithmeticConverter+Operators.Multiply}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="Radius" />
+                                <Binding>
+                                    <Binding.Source>
+                                        <system:Double>
+                                            2.0
+                                        </system:Double>
+                                    </Binding.Source>
+                                </Binding>
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </Ellipse.Width>
+                    <Ellipse.Height>
+                        <MultiBinding Converter="{converters:ArithmeticConverter}"
+                                      ConverterParameter="{x:Static converters:ArithmeticConverter+Operators.Multiply}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="Radius" />
+                                <Binding>
+                                    <Binding.Source>
+                                        <system:Double>
+                                            2.0
+                                        </system:Double>
+                                    </Binding.Source>
+                                </Binding>
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </Ellipse.Height>
+                </Ellipse>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

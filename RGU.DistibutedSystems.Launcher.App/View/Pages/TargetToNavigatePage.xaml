@@ -78,6 +78,6 @@
                 Command="{Binding NavigateBackCommand, Mode=OneWay}" />
         <viewsControls:Spinner Grid.Row="2"
                                Grid.Column="2"
-                               PukSrenjk="{Binding BindMePlease, Mode=OneWay}" />
+                               ItemsCount="{Binding BindMePlease, Mode=OneWay}" />
     </Grid>
 </Page>
