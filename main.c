@@ -11,6 +11,10 @@
 // TODO: enum
 // TODO: fork + exec
 
+int allocation_demo(
+    int argc,
+    char *argv[]);
+
 int sum(int, int);
 
 int demo1();
@@ -104,7 +108,7 @@ int malloc_demo(
     int argc,
     char *argv[])
 {
-    
+
 
     return 0;
 }
@@ -160,7 +164,8 @@ int main(
 
     // return files_demo(argc, argv);
 
-    return malloc_demo(argc, argv);
+    // return malloc_demo(argc, argv);
+    return allocation_demo(argc, argv);
 
     return 0;
 }
@@ -225,10 +230,10 @@ int demo3()
     int const immutable_value = 10;
     int const immutable_value2 = 20;
 
-    int *value_ptr = &immutable_value;
-    value_ptr = &immutable_value2;
+    //int *value_ptr = &immutable_value;
+    //value_ptr = &immutable_value2;
 
-    *value_ptr = 20;
+    //*value_ptr = 20;
 
     return 0;
 }
@@ -388,6 +393,51 @@ int demo7(
     }
 
     printf("%c", argv[7][4]);
+
+    return 0;
+}
+
+int allocation_demo(
+    int argc,
+    char *argv[],
+    int **result)
+{
+    int *int_array = NULL;
+    int *for_realloc;
+
+    double memory_size = -0.6;
+    printf("Memory size == %zu\n", memory_size);
+    // TODO: memset, memcpy
+    int_array = (int *)malloc(sizeof(int) * 20);
+    // free(calloc(20, sizeof(int)));
+
+    // for_realloc = (int *)realloc(int_array, 40 * sizeof(int));
+    // if (for_realloc == NULL)
+    // {
+    //     free(int_array);
+    // }
+
+    char *p = "12345";
+    char *dyn_str = (char *)malloc(sizeof(char) * (strlen(p) + 1));
+    if (dyn_str == NULL)
+    {
+        // TODO: handle memory allocation error
+    }
+    dyn_str = p;
+    strcpy(dyn_str, p);
+
+    for_realloc = int_array;
+    int_array = (int *)realloc(int_array, 40 * sizeof(int));
+    if (int_array == NULL)
+    {
+        free(for_realloc);
+    }
+
+    printf("I'm still alive! ptr == %p\n", int_array);
+
+    *result = int_array;
+
+    printf("I'm still alive!\n");
 
     return 0;
 }
