@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
+using System.Windows.Threading;
 using RGU.DistibutedSystems.Launcher.App.Utils;
 using RGU.DistributedSystems.WPF.MVVM.Command;
 using RGU.DistributedSystems.WPF.MVVM.Navigation;
@@ -111,6 +112,10 @@ internal sealed class TargetToNavigatePageViewModel:
     private ObservableCollection<StringWrapperViewModel> _stringsWrappers;
 
     private int _valueToAdd;
+
+    private int _bindMePlease;
+
+    private readonly DispatcherTimer _bindMePleaseUpdater;
     
     #endregion
 
@@ -137,6 +142,9 @@ internal sealed class TargetToNavigatePageViewModel:
         Strings = new ObservableCollection<string> { "16", "126", "1236", "12346", "123456" };
         
         StringsWrappers = new ObservableCollection<StringWrapperViewModel> { new StringWrapperViewModel("1"), new StringWrapperViewModel("12"), new StringWrapperViewModel("123"), new StringWrapperViewModel("1234"), new StringWrapperViewModel("12345") };
+
+        _bindMePleaseUpdater = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Normal,
+            (s, e) => ++BindMePlease, Dispatcher.CurrentDispatcher);
     }
     
     #endregion
@@ -197,6 +205,18 @@ internal sealed class TargetToNavigatePageViewModel:
         {
             _valuesToDisplay = value;
             RaisePropertyChanged(nameof(ValuesToDisplay));
+        }
+    }
+
+    public int BindMePlease
+    {
+        get =>
+            _bindMePlease;
+
+        set
+        {
+            _bindMePlease = value;
+            RaisePropertyChanged(nameof(BindMePlease));
         }
     }
 

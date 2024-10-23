@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:templateSelectors="clr-namespace:RGU.DistibutedSystems.Launcher.App.View.TemplateSelectors"
+      xmlns:viewsControls="clr-namespace:RGU.DistibutedSystems.Launcher.App.View.Controls"
       mc:Ignorable="d"
       FontSize="24">
     <Grid ShowGridLines="True">
@@ -17,9 +18,10 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <TextBlock />
         <ItemsControl Grid.Row="0"
-                    Grid.Column="1"
-                    ItemsSource="{Binding ValuesToDisplay, Mode=OneWay}">
+                      Grid.Column="1"
+                      ItemsSource="{Binding ValuesToDisplay, Mode=OneWay}">
             <ItemsControl.Resources>
                 <ResourceDictionary>
                     <DataTemplate x:Key="StringWrapperTemplate">
@@ -70,9 +72,12 @@
                     Content="Добавить NumericUpDown"
                     Command="{Binding AddModifiableIntCommand, Mode=OneWay}" />
         </Grid>
-            <Button Grid.Row="2"
-                    Grid.Column="1"
-                    Content="Вернуться назад о__О"
-                    Command="{Binding NavigateBackCommand, Mode=OneWay}" />
+        <Button Grid.Row="2"
+                Grid.Column="1"
+                Content="Вернуться назад о__О"
+                Command="{Binding NavigateBackCommand, Mode=OneWay}" />
+        <viewsControls:Spinner Grid.Row="2"
+                               Grid.Column="2"
+                               PukSrenjk="{Binding BindMePlease, Mode=OneWay}" />
     </Grid>
 </Page>
