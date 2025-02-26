@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <stack>
 #include <vector>
 
 template<
@@ -29,7 +30,7 @@ public:
 
 template<
     typename tvalue>
-class trie:
+class trie final:
     public associative_container<std::string, tvalue>
 {
 
@@ -45,7 +46,7 @@ private:
         tvalue *value;
 
         explicit node(
-            std::set<char> const &alphabet):
+            std::map<char, size_t> const &alphabet):
                 subtrees(alphabet.size()),
                 value(nullptr)
         {
@@ -59,8 +60,7 @@ private:
 
 private:
 
-    node *_root;
-    std::set<char> _alphabet;
+    trie::node *_root;
     std::map<char, size_t> _alphabet_mapping;
 
 public:
@@ -83,6 +83,11 @@ public:
         trie &&other) noexcept;
 
     ~trie() noexcept override;
+
+private:
+
+    std::stack<trie<tvalue>::node **> find_path(
+        std::string const &key);
 
 public:
 
@@ -119,13 +124,13 @@ trie<tvalue>::trie(
         throw std::out_of_range("similar elements found in alphabet");
     }
 
-    _root = new node(_alphabet = std::move(alphabet_items));
-
     size_t i = 0;
-    for (auto a: _alphabet)
+    for (auto a: alphabet_items)
     {
         _alphabet_mapping[a] = i++;
     }
+
+    _root = new node(_alphabet_mapping);
 }
 
 template<
@@ -169,6 +174,37 @@ trie<tvalue>::~trie() noexcept
 
 template<
     typename tvalue>
+std::stack<typename trie<tvalue>::node **> trie<tvalue>::find_path(
+    std::string const &key)
+{
+    std::stack<typename trie<tvalue>::node **> path;
+    auto *current = _root;
+
+    path.push(&_root);
+    for (auto k: key)
+    {
+        auto it = _alphabet_mapping.find(k);
+        if (it == _alphabet_mapping.end())
+        {
+            throw std::out_of_range("character is not contained in alphabet");
+        }
+
+        // TODO: this is BAD
+        // current = current->subtrees[it->second];
+        // path.push(&current);
+
+        path.push(&current->subtrees[it->second]);
+        if ((current = current->subtrees[it->second]) == nullptr)
+        {
+            return path;
+        }
+    }
+
+    return path;
+}
+
+template<
+    typename tvalue>
 void trie<tvalue>::upsert(
     std::string const &key,
     tvalue &&value)
@@ -177,14 +213,14 @@ void trie<tvalue>::upsert(
 
     for (auto k: key)
     {
-        if (_alphabet.find(k) == _alphabet.end())
+        if (_alphabet_mapping.find(k) == _alphabet_mapping.end())
         {
             throw std::out_of_range("character is not contained in alphabet");
         }
 
         if (current_node->subtrees[_alphabet_mapping[k]] == nullptr)
         {
-            current_node->subtrees[_alphabet_mapping[k]] = new node(_alphabet);
+            current_node->subtrees[_alphabet_mapping[k]] = new node(_alphabet_mapping);
         }
 
         current_node = current_node->subtrees[_alphabet_mapping[k]];
@@ -197,7 +233,7 @@ void trie<tvalue>::upsert(
     }
     else
     {
-        (*current_node->value) = std::forward(value);
+        *(current_node->value) = std::forward(value);
     }
 }
 
@@ -206,7 +242,36 @@ template<
 tvalue &trie<tvalue>::obtain(
     std::string const &key)
 {
+    /*auto *current_node = _root;
 
+    for (auto k: key)
+    {
+        if (_alphabet_mapping.find(k) == _alphabet_mapping.end())
+        {
+            throw std::out_of_range("character is not contained in alphabet");
+        }
+
+        if (current_node->subtrees[_alphabet_mapping[k]] == nullptr)
+        {
+            throw std::out_of_range("key is not contained in trie");
+        }
+
+        current_node = current_node->subtrees[_alphabet_mapping[k]];
+    }
+
+    if (current_node->value == nullptr)
+    {
+        throw std::out_of_range("key is not contained in trie");
+    }
+
+    return current_node->value;*/
+
+    auto path = find_path(key);
+    if (*path.top() == nullptr || (*path.top())->value == nullptr)
+    {
+        throw std::out_of_range("key is not contained in trie");
+    }
+    return *((*path.top())->value);
 }
 
 template<
@@ -214,7 +279,13 @@ template<
 tvalue trie<tvalue>::dispose(
     std::string const &key)
 {
+    auto path = find_path(key);
+    if (*path.top() == nullptr || (*path.top())->value == nullptr)
+    {
+        throw std::out_of_range("key is not contained in trie");
+    }
 
+    delete (*path.top())->value;
 }
 
 int main()
