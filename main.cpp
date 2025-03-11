@@ -288,9 +288,131 @@ tvalue trie<tvalue>::dispose(
     delete (*path.top())->value;
 }
 
-int main()
+int lexem_handler(
+    char const *lexem)
 {
+    std::cout << "Found lexem: " << lexem << std::endl;
+}
 
+int char_validator(
+    char c)
+{
+    return !(c == ' ' || c == '\t' || c == '\n' || c == '1' || c == '2');
+}
+
+int border_principle(
+    char const *stream,
+    int (*char_validator)(char),
+    int (*lexem_handler)(char const *))
+{
+    char const *is = stream;
+
+    char lexem_buf[BUFSIZ], *b = lexem_buf;
+
+    while (true)
+    {
+        if (*is && char_validator(*is))
+        {
+            *b++ = *is;
+        }
+        else if (b != lexem_buf)
+        {
+            *b = 0;
+            b = lexem_buf;
+            lexem_handler(lexem_buf);
+        }
+
+        if (!*is)
+        {
+            break;
+        }
+
+        ++is;
+    }
+}
+
+int border_principle_demo(
+    int argc,
+    char *argv[])
+{
+    border_principle("12345670 qnf2q3n2 3m,", char_validator, lexem_handler);
 
     return 0;
+}
+
+int comments_handling(
+    char const *stream,
+    int enclosure_max_level)
+{
+    // TODO: validate input arguments
+
+    int multiline_comment_enclosure_level = 0;
+    bool in_single_line_comment = false;
+
+    char const *s = stream;
+
+    while (*s)
+    {
+        if (*s == '#' && multiline_comment_enclosure_level == 0 && !in_single_line_comment)
+        {
+            in_single_line_comment = true;
+        }
+        else if ((*s == '\n' || !*s) && in_single_line_comment)
+        {
+            in_single_line_comment = false;
+        }
+        else if (*s == '[' && !in_single_line_comment)
+        {
+            if (++multiline_comment_enclosure_level > enclosure_max_level)
+            {
+                std::cout << "Multiline comment enclosure is too high!" << std::endl;
+
+                return 1;
+            }
+        }
+        else if (*s == ']' && !in_single_line_comment)
+        {
+            if (--multiline_comment_enclosure_level == -1)
+            {
+                std::cout << "Attempt to break multiline comment, which hasn't been opened" << std::endl;
+
+                return 2;
+            }
+        }
+        else if (!in_single_line_comment && multiline_comment_enclosure_level == 0)
+        {
+            std::cout << *s;
+        }
+
+        ++s;
+    }
+    if (multiline_comment_enclosure_level != 0)
+    {
+        std::cout << "Multiline comment, which has been opened before, hasn't been broken" << std::endl;
+
+        return 3;
+    }
+}
+
+int comments_handling_demo(
+    int argc,
+    char *argv[])
+{
+    switch (comments_handling("#[][][][[###\n#]]\npuk#\nsren[#]jk#", 1))
+    {
+        // TODO:
+    }
+
+    return 0;
+}
+
+int main(
+    int argc,
+    char *argv[])
+{
+    //return border_principle_demo(argc, argv);
+    return comments_handling_demo(argc, argv);
+
+
+    //return 0;
 }
