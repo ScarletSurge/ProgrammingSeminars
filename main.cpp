@@ -407,11 +407,28 @@ void operators_overloading_demo()
     //m1(i, j);
 }
 
+int &foo()
+{
+
+};
+
+class gde_labs
+{
+
+public:
+
+    gde_labs() = default;
+
+    gde_labs(int x) {}
+
+};
+
 int main(
     int argc,
     char *argv[])
 {
-
+    gde_labs x;
+    (*this)[10] = 5;
     // default_parameters_demo();
     // interaction_with_files_demo();
     // rule_of_3_demo();
