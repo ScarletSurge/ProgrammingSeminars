@@ -1,6 +1,9 @@
 #include <exception>
 #include <functional>
 #include <iostream>
+#include <map>
+#include <optional>
+#include <utility>
 #include <vector>
 
 template<
@@ -178,6 +181,104 @@ public:
 
 };
 
+class strings_flyweight_container final
+{
+
+private:
+
+    struct string_flyweight final
+    {
+
+        friend class strings_flyweight_container;
+
+    private:
+
+        std::string _value;
+
+    public:
+
+        string_flyweight(
+            std::string &&value):
+                _value(std::move(value))
+        {
+
+        }
+
+    public:
+
+        string_flyweight(
+            string_flyweight const &) = delete;
+
+        string_flyweight &operator=(
+            string_flyweight const &) = delete;
+
+        string_flyweight(
+            string_flyweight &&) = delete;
+
+        string_flyweight &operator=(
+            string_flyweight &&) = delete;
+
+    public:
+
+        [[nodiscard]] std::string const &get_string() const
+        {
+            return _value;
+        }
+
+    };
+
+public:
+
+    static strings_flyweight_container *get_instance()
+    {
+        auto *instance = new strings_flyweight_container();
+        return instance;
+    }
+
+private:
+
+    std::map<std::string const *, string_flyweight> _flyweights;
+
+private:
+
+    strings_flyweight_container() = default;
+
+public:
+
+    strings_flyweight_container(
+        strings_flyweight_container const &) = delete;
+
+    strings_flyweight_container &operator=(
+        strings_flyweight_container const &) = delete;
+
+    strings_flyweight_container(
+        strings_flyweight_container &&) = delete;
+
+    strings_flyweight_container &operator=(
+        strings_flyweight_container &&) = delete;
+
+public:
+
+    string_flyweight const &get(
+        std::string const &key)
+    {
+        auto it = _flyweights.find(&key);
+
+        if (it != _flyweights.end())
+        {
+            return it->second;
+        }
+
+        // extra parentheses, to provide constructor call instead of function declaration
+
+        string_flyweight v((std::string(key)));
+        auto k = &v._value;
+
+        _flyweights.emplace(std::make_pair(k, v));
+    }
+
+};
+
 class stdstring_comparer final
 {
 
@@ -325,7 +426,10 @@ private:
 
     private:
 
-        search_tree<std::string, search_tree<tdata *, std::vector<chain_of_responsibility>>> *_data;
+        // tdata { int, str, binary }
+        // 3. search_tree<std::string, search_tree<tdata, CoR> *> *
+
+        search_tree<std::string &, search_tree<tdata, chain_of_responsibility> *> *_data;
         search_tree_variant _variant;
 
     public:
