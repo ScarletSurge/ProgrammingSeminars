@@ -34,6 +34,10 @@ public:
 
 private:
 
+    inline int get_sign() const noexcept;
+
+    inline size_t get_digits_count() const noexcept;
+
     int &operator[](
         size_t index);
 
@@ -45,11 +49,21 @@ public:
     bigint operator+(
         bigint const &summand) const;
 
+    bigint &operator++();
+
+    bigint operator++(
+        int);
+
     bigint &operator-=(
         bigint const &minuend) &;
 
     bigint operator-(
         bigint const &minuend) const;
+
+    bigint &operator--();
+
+    bigint operator--(
+        int);
 
     bigint &operator*=(
         bigint const &multiplier) &;
@@ -72,14 +86,14 @@ public:
     struct division_result
     {
 
-        bigint tselaya_chastj;
+        bigint german;
         bigint remainder;
 
         division_result(
-            bigint const &tselaya_chastj,
+            bigint const &german,
             bigint const &remainder):
-                tselaya_chastj(tselaya_chastj),
-                remainder(remainder)
+            german(german),
+            remainder(remainder)
         {
 
         }

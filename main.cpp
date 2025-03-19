@@ -423,12 +423,17 @@ public:
 
 };
 
+#include "include/bigint.h"
+
 int main(
     int argc,
     char *argv[])
 {
+    int digits[100] = { 0 };
+    bigint value(digits, 100);
+
     gde_labs x;
-    (*this)[10] = 5;
+    //(*this)[10] = 5;
     // default_parameters_demo();
     // interaction_with_files_demo();
     // rule_of_3_demo();
