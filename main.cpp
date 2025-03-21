@@ -424,13 +424,14 @@ public:
 };
 
 #include "include/bigint.h"
+#include <limits>
 
 int main(
     int argc,
     char *argv[])
 {
-    int digits[100] = { 0 };
-    bigint value(digits, 100);
+    int digits[5] = { INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX };
+    bigint value(digits, 5);
 
     gde_labs x;
     //(*this)[10] = 5;

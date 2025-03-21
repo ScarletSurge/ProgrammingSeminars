@@ -7,6 +7,35 @@
 class bigint final
 {
 
+    static unsigned int get_max(
+        unsigned int first,
+        unsigned int second) noexcept
+    {
+        return first > second
+            ? first
+            : second;
+    }
+
+private:
+
+    static constexpr unsigned int SHIFT = (sizeof(int) << 2);
+
+    static constexpr unsigned int MASK = (1 << SHIFT) - 1;
+
+private:
+
+    static unsigned int get_loword(
+        unsigned int value)
+    {
+        return value & MASK;
+    }
+
+    static unsigned int get_hiword(
+        unsigned int value)
+    {
+        return value >> SHIFT;
+    }
+
 private:
 
     int _oldest_digit;
@@ -38,10 +67,14 @@ private:
 
     inline size_t get_digits_count() const noexcept;
 
-    int &operator[](
-        size_t index);
+    unsigned int operator[](
+        size_t index) const noexcept;
+
+    bigint &negate() &;
 
 public:
+
+    bigint operator-() const;
 
     bigint &operator+=(
         bigint const &summand) &;
@@ -51,7 +84,7 @@ public:
 
     bigint &operator++();
 
-    bigint operator++(
+    bigint const operator++(
         int);
 
     bigint &operator-=(
@@ -62,7 +95,7 @@ public:
 
     bigint &operator--();
 
-    bigint operator--(
+    bigint const operator--(
         int);
 
     bigint &operator*=(
