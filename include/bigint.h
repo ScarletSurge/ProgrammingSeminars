@@ -18,6 +18,8 @@ class bigint final
 
 private:
 
+    static constexpr unsigned int HALF_DIGIT_SHIFT = (sizeof(int) << 2);
+
     static constexpr unsigned int SHIFT = (sizeof(int) << 2);
 
     static constexpr unsigned int MASK = (1 << SHIFT) - 1;
@@ -38,6 +40,20 @@ private:
 
 private:
 
+    static void addition_for_multiplication(
+        bigint &summand,
+        int *words_multiplication_result_digits,
+        unsigned int this_half_digit,
+        unsigned int multiplier_half_digit,
+        unsigned int shift_in_half_digits)
+    {
+        unsigned int words_multiplication_result_digit = this_half_digit * multiplier_half_digit;
+        *words_multiplication_result_digits = *reinterpret_cast<int *>(&words_multiplication_result_digit);
+        summand += (bigint(words_multiplication_result_digits, 2) << (HALF_DIGIT_SHIFT * shift_in_half_digits));
+    }
+
+private:
+
     int _oldest_digit;
     int *_other_digits;
 
@@ -48,8 +64,14 @@ public:
     bigint(
         bigint const &other);
 
+    bigint(
+        bigint &&other);
+
     bigint &operator=(
         bigint const &other);
+
+    bigint &operator=(
+        bigint &&other);
 
 public:
 
@@ -119,17 +141,17 @@ public:
     struct division_result
     {
 
-        bigint german;
-        bigint remainder;
-
-        division_result(
-            bigint const &german,
-            bigint const &remainder):
-            german(german),
-            remainder(remainder)
-        {
-
-        }
+        //bigint german;
+        //bigint remainder;
+//
+        //division_result(
+        //    bigint const &german,
+        //    bigint const &remainder):
+        //    german(german),
+        //    remainder(remainder)
+        //{
+//
+        //}
 
     };
 
@@ -181,16 +203,16 @@ public:
         bigint const &other) const;
 
     bigint &operator<<=(
-        bigint const &other) &;
+        size_t shift) &;
 
     bigint operator<<(
-        bigint const &other) const;
+        size_t shift) const;
 
     bigint &operator>>=(
-        bigint const &other) &;
+        size_t shift) &;
 
     bigint operator>>(
-        bigint const &other) const;
+        size_t shift) const;
 
 public:
 

@@ -407,11 +407,6 @@ void operators_overloading_demo()
     //m1(i, j);
 }
 
-int &foo()
-{
-
-};
-
 class gde_labs
 {
 
@@ -426,10 +421,78 @@ public:
 #include "include/bigint.h"
 #include <limits>
 
+class associative_container
+{
+
+public:
+
+    virtual ~associative_container() = default;
+
+public:
+
+    virtual void add(
+        bigint const &key,
+        char const *value) = 0;
+
+    virtual char const *& find(
+        bigint const &key) = 0;
+
+    virtual bool dispose(
+        bigint const &key) = 0;
+
+};
+
+class hash_table final:
+    public associative_container
+{
+
+private:
+
+    char const *_moq = "12345";
+
+public:
+
+    void add(
+        bigint const &key,
+        char const *value) override
+    {
+        // TODO
+        // TODO: store this into inner structure
+       //auto *p = new list_item(key, value);
+       //p->data->key = key;
+    }
+
+    char const * &find(
+        bigint const &key) override
+    {
+        return _moq;
+    }
+
+    bool dispose(
+        bigint const &key) override
+    {
+        return false;
+    }
+
+};
+
 int main(
     int argc,
     char *argv[])
 {
+    hash_table ht;
+    {
+        bigint bg("12345", 10);
+
+        bigint bg1 = bg;
+        bigint bg2(bigint(bg));
+
+        //bg = std::move(bg2);
+
+        //std::forward<T &&>()
+
+        ht.add(bg, "12345");
+    }
     int digits[5] = { INT_MAX, INT_MAX, INT_MAX, INT_MAX, INT_MAX };
     bigint value(digits, 5);
 

@@ -201,13 +201,72 @@ bigint const bigint::operator--(
 bigint &bigint::operator*=(
     bigint const &multiplier) &
 {
+    if (get_sign() == 0)
+    {
+        return *this;
+    }
 
+    if (multiplier.get_sign() == 0)
+    {
+        return *this = multiplier;
+    }
+
+    // TODO: German should handle multiplication of two negative values o_O
+
+    if (multiplier.get_sign() == -1)
+    {
+        return (*this *= -multiplier).negate();
+    }
+
+    if (get_sign() == -1)
+    {
+        return (negate() *= multiplier).negate();
+    }
+
+    // TODO: Egor Letov should handle multiplying by 1/-1
+
+    int words_multiplication_result_digits[2] = { 0 };
+    int digit = 0;
+    unsigned int words_multiplication_result_digit = 0;
+    bigint const zero(&digit, 1);
+    bigint result = zero;
+
+    auto this_digits_count = get_digits_count();
+    auto multiplier_digits_count = multiplier.get_digits_count();
+
+    for (size_t i = 0; i < this_digits_count; ++i)
+    {
+        auto this_digit = (*this)[i];
+        auto this_digit_loword = get_loword(this_digit);
+        auto this_digit_hiword = get_hiword(this_digit);
+
+        for (size_t j = 0; j < multiplier_digits_count; ++j)
+        {
+            auto multiplier_digit = multiplier[j];
+            auto multiplier_digit_loword = get_loword(multiplier_digit);
+            auto multiplier_digit_hiword = get_hiword(multiplier_digit);
+
+            addition_for_multiplication(result, words_multiplication_result_digits, this_digit_loword, multiplier_digit_loword, (i + j) << 1);
+            addition_for_multiplication(result, words_multiplication_result_digits, this_digit_loword, multiplier_digit_hiword, (i + j + 1) << 1);
+            addition_for_multiplication(result, words_multiplication_result_digits, this_digit_hiword, multiplier_digit_loword, (i + j + 1) << 1);
+            addition_for_multiplication(result, words_multiplication_result_digits, this_digit_hiword, multiplier_digit_hiword, (i + j + 2) << 1);
+        }
+    }
+
+    delete[] _other_digits;
+    _other_digits = result._other_digits;
+    result._other_digits = nullptr;
+    _oldest_digit = result._oldest_digit;
+
+    return *this;
 }
 
 bigint bigint::operator*(
     bigint const &multiplier) const
 {
+    bigint result = *this;
 
+    return result *= multiplier;
 }
 
 bigint &bigint::operator/=(
@@ -318,25 +377,25 @@ bigint bigint::operator^(
 }
 
 bigint &bigint::operator<<=(
-    bigint const &other) &
+    size_t shift) &
 {
 
 }
 
 bigint bigint::operator<<(
-    bigint const &other) const
+    size_t shift) const
 {
 
 }
 
 bigint &bigint::operator>>=(
-    bigint const &other) &
+    size_t shift) &
 {
 
 }
 
 bigint bigint::operator>>(
-    bigint const &other) const
+    size_t shift) const
 {
 
 }
