@@ -17,6 +17,12 @@ bigint::bigint(
    }
 }
 
+bigint::bigint(
+    bigint &&other) noexcept
+{
+
+}
+
 bigint &bigint::operator=(
     bigint const &other)
 {
@@ -26,6 +32,12 @@ bigint &bigint::operator=(
     }
 
     return *this;
+}
+
+bigint &bigint::operator=(
+    bigint &&other) noexcept
+{
+
 }
 
 bigint::bigint(
@@ -98,13 +110,47 @@ unsigned int bigint::operator[](
         : _other_digits + 1 + index);
 }
 
-bigint &bigint::negate() &
+int &bigint::operator[](
+    size_t index)
 {
-    // TODO: logic
+    auto const digits_count = get_digits_count();
 
+    if (index >= digits_count)
+    {
+        throw std::out_of_range("out of range of digits array");
+    }
 
+    return index == digits_count - 1
+        ? _oldest_digit
+        : *(_other_digits + 1 + index);
+}
+
+bigint& bigint::invert() &
+{
+    _oldest_digit = ~_oldest_digit;
+    if (_other_digits == nullptr)
+    {
+        return *this;
+    }
+
+    for (int i = 1; i < *_other_digits - 1; ++i)
+    {
+        _other_digits[i] = ~_other_digits[i];
+    }
 
     return *this;
+}
+
+bigint &bigint::negate() &
+{
+    if (get_sign() == 0)
+    {
+        return *this;
+    }
+
+    return get_sign() == 1
+        ? ++invert()
+        : (--*this).invert();
 }
 
 bigint bigint::operator-() const
@@ -164,13 +210,53 @@ bigint bigint::operator+(
 
 bigint &bigint::operator++()
 {
+    if (get_sign() == -1)
+    {
+        return (--negate()).negate();
+    }
 
+    size_t digits_count = get_digits_count();
+    for (int i = 0; i < digits_count - 1; ++i)
+    {
+        if (++((*this)[i]) != 0)
+        {
+            return *this;
+        }
+    }
+
+    if (++_oldest_digit != INT_MIN)
+    {
+        return *this;
+    }
+
+    if (_other_digits == nullptr)
+    {
+        _other_digits = new int[2];
+        _other_digits[0] = 2;
+        _other_digits[1] = _oldest_digit;
+        _oldest_digit = 0;
+
+        return *this;
+    }
+
+    int *new_array = new int[digits_count + 1];
+    memcpy(new_array, _other_digits, sizeof(int) * digits_count);
+
+    delete [] _other_digits;
+    _other_digits = new_array;
+
+    (*this)[digits_count] = _oldest_digit;
+    _oldest_digit = 0;
+
+    return *this;
 }
 
 bigint const bigint::operator++(
     int)
 {
-
+    bigint curr(*this);
+    ++*this;
+    return curr;
 }
 
 bigint &bigint::operator-=(
@@ -189,13 +275,61 @@ bigint bigint::operator-(
 
 bigint &bigint::operator--()
 {
+   if (get_sign() == -1)
+   {
+       return (++negate()).negate();
+   }
 
+   if (get_sign() == 0)
+   {
+       _oldest_digit = -1;
+       return *this;
+   }
+
+    size_t digits_count = get_digits_count();
+    for (int i = 0; i < digits_count - 1; ++i)
+    {
+        if (--((*this)[i]) != -1)
+        {
+            return *this;
+        }
+    }
+
+    // TODO: update the code below for -- operator
+
+    if (--_oldest_digit != 0)
+    {
+        return *this;
+    }
+
+    if (_other_digits == nullptr)
+    {
+        _other_digits = new int[2];
+        _other_digits[0] = 2;
+        _other_digits[1] = _oldest_digit;
+        _oldest_digit = 0;
+
+        return *this;
+    }
+
+    int *new_array = new int[digits_count + 1];
+    memcpy(new_array, _other_digits, sizeof(int) * digits_count);
+
+    delete [] _other_digits;
+    _other_digits = new_array;
+
+    (*this)[digits_count] = _oldest_digit;
+    _oldest_digit = 0;
+
+    return *this;
 }
 
 bigint const bigint::operator--(
     int)
 {
-
+    bigint x = *this;
+    --*this;
+    return x;
 }
 
 bigint &bigint::operator*=(

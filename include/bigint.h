@@ -65,13 +65,13 @@ public:
         bigint const &other);
 
     bigint(
-        bigint &&other);
+        bigint &&other) noexcept;
 
     bigint &operator=(
         bigint const &other);
 
     bigint &operator=(
-        bigint &&other);
+        bigint &&other) noexcept;
 
 public:
 
@@ -92,7 +92,12 @@ private:
     unsigned int operator[](
         size_t index) const noexcept;
 
+    int &operator[](
+        size_t index);
+
     bigint &negate() &;
+
+    bigint& invert() &;
 
 public:
 
