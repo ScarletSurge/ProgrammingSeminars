@@ -1,10 +1,10 @@
-#ifndef COURSE1_CPP_RGU_BIGINT_H
-#define COURSE1_CPP_RGU_BIGINT_H
+#ifndef COURSE1_CPP_RGU_BUGINT_H
+#define COURSE1_CPP_RGU_BUGINT_H
 
 #include <corecrt.h>
 #include <iostream>
 
-class bigint final
+class bugint final
 {
 
     static unsigned int get_max(
@@ -41,7 +41,7 @@ private:
 private:
 
     static void addition_for_multiplication(
-        bigint &summand,
+        bugint &summand,
         int *words_multiplication_result_digits,
         unsigned int this_half_digit,
         unsigned int multiplier_half_digit,
@@ -49,7 +49,7 @@ private:
     {
         unsigned int words_multiplication_result_digit = this_half_digit * multiplier_half_digit;
         *words_multiplication_result_digits = *reinterpret_cast<int *>(&words_multiplication_result_digit);
-        summand += (bigint(words_multiplication_result_digits, 2) << (HALF_DIGIT_SHIFT * shift_in_half_digits));
+        summand += (bugint(words_multiplication_result_digits, 2) << (HALF_DIGIT_SHIFT * shift_in_half_digits));
     }
 
 private:
@@ -57,29 +57,45 @@ private:
     int _oldest_digit;
     int *_other_digits;
 
-public:
+private:
 
-    ~bigint() noexcept;
+    void dispose();
 
-    bigint(
-        bigint const &other);
+    void copy_from(
+        bugint const &other);
 
-    bigint(
-        bigint &&other) noexcept;
-
-    bigint &operator=(
-        bigint const &other);
-
-    bigint &operator=(
-        bigint &&other) noexcept;
+    void move_from(
+        bugint &&other);
 
 public:
 
-    bigint(
+    ~bugint() noexcept;
+
+    bugint(
+        bugint const &other);
+
+    bugint(
+        bugint &&other) noexcept;
+
+    bugint &operator=(
+        bugint const &other);
+
+    bugint &operator=(
+        bugint &&other) noexcept;
+
+private:
+
+    bugint &init_with(
+        int const *digits_array,
+        size_t digits_count);
+
+public:
+
+    bugint(
         int const *digits,
         size_t digits_count);
 
-    bigint(
+    bugint(
         char const *string_representation,
         size_t base);
 
@@ -95,53 +111,53 @@ private:
     int &operator[](
         size_t index);
 
-    bigint &negate() &;
+    bugint &negate() &;
 
-    bigint& invert() &;
+    bugint& invert() &;
 
 public:
 
-    bigint operator-() const;
+    bugint operator-() const;
 
-    bigint &operator+=(
-        bigint const &summand) &;
+    bugint &operator+=(
+        bugint const &summand) &;
 
-    bigint operator+(
-        bigint const &summand) const;
+    bugint operator+(
+        bugint const &summand) const;
 
-    bigint &operator++();
+    bugint &operator++();
 
-    bigint const operator++(
+    bugint const operator++(
         int);
 
-    bigint &operator-=(
-        bigint const &minuend) &;
+    bugint &operator-=(
+        bugint const &minuend) &;
 
-    bigint operator-(
-        bigint const &minuend) const;
+    bugint operator-(
+        bugint const &minuend) const;
 
-    bigint &operator--();
+    bugint &operator--();
 
-    bigint const operator--(
+    bugint const operator--(
         int);
 
-    bigint &operator*=(
-        bigint const &multiplier) &;
+    bugint &operator*=(
+        bugint const &multiplier) &;
 
-    bigint operator*(
-        bigint const &multiplier) const;
+    bugint operator*(
+        bugint const &multiplier) const;
 
-    bigint &operator/=(
-        bigint const &divisor) &;
+    bugint &operator/=(
+        bugint const &divisor) &;
 
-    bigint operator/(
-        bigint const &divisor) const;
+    bugint operator/(
+        bugint const &divisor) const;
 
-    bigint &operator%=(
-        bigint const &divisor) &;
+    bugint &operator%=(
+        bugint const &divisor) &;
 
-    bigint operator%(
-        bigint const &divisor) const;
+    bugint operator%(
+        bugint const &divisor) const;
 
     struct division_result
     {
@@ -161,73 +177,73 @@ public:
     };
 
     division_result division(
-        bigint const &divisor) const;
+        bugint const &divisor) const;
 
 public:
 
     bool operator==(
-        bigint const &other) const;
+        bugint const &other) const;
 
     bool operator!=(
-        bigint const &other) const;
+        bugint const &other) const;
 
 public:
 
     bool operator<(
-        bigint const &other) const;
+        bugint const &other) const;
 
     bool operator<=(
-        bigint const &other) const;
+        bugint const &other) const;
 
     bool operator>(
-        bigint const &other) const;
+        bugint const &other) const;
 
     bool operator>=(
-        bigint const &other) const;
+        bugint const &other) const;
 
 public:
 
-    bigint operator~() const;
+    bugint operator~() const;
 
-    bigint &operator&=(
-        bigint const &other) &;
+    bugint &operator&=(
+        bugint const &other) &;
 
-    bigint operator&(
-        bigint const &other) const;
+    bugint operator&(
+        bugint const &other) const;
 
-    bigint &operator|=(
-        bigint const &other) &;
+    bugint &operator|=(
+        bugint const &other) &;
 
-    bigint operator|(
-        bigint const &other) const;
+    bugint operator|(
+        bugint const &other) const;
 
-    bigint &operator^=(
-        bigint const &other) &;
+    bugint &operator^=(
+        bugint const &other) &;
 
-    bigint operator^(
-        bigint const &other) const;
+    bugint operator^(
+        bugint const &other) const;
 
-    bigint &operator<<=(
+    bugint &operator<<=(
         size_t shift) &;
 
-    bigint operator<<(
+    bugint operator<<(
         size_t shift) const;
 
-    bigint &operator>>=(
+    bugint &operator>>=(
         size_t shift) &;
 
-    bigint operator>>(
+    bugint operator>>(
         size_t shift) const;
 
 public:
 
     friend std::ostream &operator<<(
         std::ostream &stream,
-        bigint const &value);
+        bugint const &value);
 
     friend std::istream &operator>>(
         std::istream &stream,
-        bigint &value);
+        bugint &value);
 
 };
 
@@ -237,4 +253,4 @@ public:
 // std::cout << x;
 // x[2] = 10;
 
-#endif //COURSE1_CPP_RGU_BIGINT_H
+#endif //COURSE1_CPP_RGU_BUGINT_H

@@ -1,50 +1,82 @@
-#include "../include/bigint.h"
+#include "../include/bugint.h"
 
-bigint::~bigint() noexcept
+void bugint::dispose()
 {
     delete[] _other_digits;
+    _other_digits = nullptr;
 }
 
-bigint::bigint(
-    bigint const &other):
-        _oldest_digit(other._oldest_digit),
+void bugint::copy_from(
+    bugint const &other)
+{
+    _oldest_digit = other._oldest_digit;
+    _other_digits = nullptr;
+
+    if (other._other_digits != nullptr)
+    {
+        _other_digits = new int[*other._other_digits];
+        memcpy(_other_digits, other._other_digits, *other._other_digits * sizeof(int));
+    }
+}
+
+void bugint::move_from(
+    bugint &&other)
+{
+    _oldest_digit = other._oldest_digit;
+    other._oldest_digit = 0;
+
+    _other_digits = other._other_digits;
+    other._other_digits = nullptr;
+}
+
+bugint::~bugint() noexcept
+{
+    dispose();
+}
+
+bugint::bugint(
+    bugint const &other):
         _other_digits(nullptr)
 {
-   if(other._other_digits != nullptr)
-   {
-       _other_digits = new int[*other._other_digits];
-       memcpy(_other_digits, other._other_digits, *other._other_digits * sizeof(int));
-   }
+    copy_from(other);
 }
 
-bigint::bigint(
-    bigint &&other) noexcept
+bugint::bugint(
+    bugint &&other) noexcept:
+        _other_digits(nullptr)
 {
-
+    move_from(std::move(other));
 }
 
-bigint &bigint::operator=(
-    bigint const &other)
+bugint &bugint::operator=(
+    bugint const &other)
 {
     if (this != &other)
     {
-
+        dispose();
+        copy_from(other);
     }
 
     return *this;
 }
 
-bigint &bigint::operator=(
-    bigint &&other) noexcept
+bugint &bugint::operator=(
+    bugint &&other) noexcept
 {
+    if (this != &other)
+    {
+        dispose();
+        move_from(std::move(other));
+    }
 
+    return *this;
 }
 
-bigint::bigint(
-    int const *digits,
+bugint &bugint::init_with(
+    int const *digits_array,
     size_t digits_count)
 {
-    if (digits == nullptr)
+    if (digits_array == nullptr)
     {
         throw std::invalid_argument("Pointer to digits array can't be EQ to nullptr");
     }
@@ -54,48 +86,64 @@ bigint::bigint(
         throw std::invalid_argument("Digits count can't be EQ to 0");
     }
 
+    dispose();
+
     if (digits_count == 1)
     {
-        _other_digits = nullptr;
-        _oldest_digit = *digits;
+        _oldest_digit = *digits_array;
 
-        return;
+        return *this;
+    }
+
+    while (digits_count != 1 && ((digits_array[digits_count - 1] == 0 && digits_array[digits_count - 2] >= 0) || (digits_array[digits_count - 1] == -1 && digits_array[digits_count - 2] < 0)))
+    {
+        --digits_count;
     }
 
     *(_other_digits = new int[digits_count]) = static_cast<int>(digits_count);
-    memcpy(_other_digits + 1, digits, (digits_count - 1) * sizeof(int));
-    _oldest_digit = digits[digits_count - 1];
+    memcpy(_other_digits + 1, digits_array, (digits_count - 1) * sizeof(int));
+    _oldest_digit = digits_array[digits_count - 1];
 
-    // TODO: Ernest must remove extra non-valuable digits
+    return *this;
 }
 
-bigint::bigint(
+bugint::bugint(
+    int const *digits,
+    size_t digits_count):
+        _other_digits(nullptr)
+{
+    init_with(digits, digits_count);
+}
+
+bugint::bugint(
     char const *string_representation,
-    size_t base)
+    size_t base):
+        _other_digits(nullptr)
 {
     // TODO: this requires implemented operator+= and operator*=
 }
 
-int bigint::get_sign() const noexcept
+int bugint::get_sign() const noexcept
 {
     if (_oldest_digit == 0 && _other_digits == nullptr)
     {
         return 0;
     }
 
+    // return _oldest_digit > 0
     return (_oldest_digit >> ((sizeof(int) << 3) - 1)) == 0
         ? 1
         : -1;
 }
 
-size_t bigint::get_digits_count() const noexcept
+size_t bugint::get_digits_count() const noexcept
 {
     return _other_digits == nullptr
         ? 1
         : *_other_digits;
 }
 
-unsigned int bigint::operator[](
+unsigned int bugint::operator[](
     size_t index) const noexcept
 {
     auto const digits_count = get_digits_count();
@@ -110,7 +158,7 @@ unsigned int bigint::operator[](
         : _other_digits + 1 + index);
 }
 
-int &bigint::operator[](
+int &bugint::operator[](
     size_t index)
 {
     auto const digits_count = get_digits_count();
@@ -125,7 +173,7 @@ int &bigint::operator[](
         : *(_other_digits + 1 + index);
 }
 
-bigint& bigint::invert() &
+bugint& bugint::invert() &
 {
     _oldest_digit = ~_oldest_digit;
     if (_other_digits == nullptr)
@@ -141,27 +189,30 @@ bigint& bigint::invert() &
     return *this;
 }
 
-bigint &bigint::negate() &
+bugint &bugint::negate() &
 {
     if (get_sign() == 0)
     {
         return *this;
     }
 
+    int one_int = 1;
+    bugint one(&one_int, 1);
+
     return get_sign() == 1
-        ? ++invert()
-        : (--*this).invert();
+        ? invert() += one
+        : (*this -= one).invert();
 }
 
-bigint bigint::operator-() const
+bugint bugint::operator-() const
 {
-    bigint negative(*this);
+    bugint negative(*this);
 
     return negative.negate();
 }
 
-bigint &bigint::operator+=(
-    bigint const &summand) &
+bugint &bugint::operator+=(
+    bugint const &summand) &
 {
     unsigned int max_digits_count = get_max(get_digits_count(), summand.get_digits_count()) + 1;
 
@@ -172,10 +223,8 @@ bigint &bigint::operator+=(
     {
         result_space[i] = 0;
 
-        auto this_digit = this->operator[](i);
+        auto this_digit = static_cast<bugint const *>(this)->operator[](i);
         auto other_digit = summand[i];
-
-        // TODO: make functional refactoring
 
         for (size_t j = 0; j < 2; ++j)
         {
@@ -195,20 +244,22 @@ bigint &bigint::operator+=(
         }
     }
 
-    // TODO: set calculeted state to current object
+    init_with(result_space, max_digits_count);
+
+    delete[] result_space;
 
     return *this;
 }
 
-bigint bigint::operator+(
-    bigint const &summand) const
+bugint bugint::operator+(
+    bugint const &summand) const
 {
-    bigint result(*this);
+    bugint result(*this);
 
     return result += summand;
 }
 
-bigint &bigint::operator++()
+bugint &bugint::operator++()
 {
     if (get_sign() == -1)
     {
@@ -241,99 +292,107 @@ bigint &bigint::operator++()
 
     int *new_array = new int[digits_count + 1];
     memcpy(new_array, _other_digits, sizeof(int) * digits_count);
+    ++*new_array;
 
     delete [] _other_digits;
     _other_digits = new_array;
 
-    (*this)[digits_count] = _oldest_digit;
+    (*this)[digits_count - 1] = _oldest_digit;
     _oldest_digit = 0;
 
     return *this;
 }
 
-bigint const bigint::operator++(
+bugint const bugint::operator++(
     int)
 {
-    bigint curr(*this);
+    bugint curr(*this);
     ++*this;
     return curr;
 }
 
-bigint &bigint::operator-=(
-    bigint const &minuend) &
+bugint &bugint::operator-=(
+    bugint const &minuend) &
 {
     return *this += -minuend;
 }
 
-bigint bigint::operator-(
-    bigint const &minuend) const
+bugint bugint::operator-(
+    bugint const &minuend) const
 {
-    bigint result(*this);
+    bugint result(*this);
 
     return result -= minuend;
 }
 
-bigint &bigint::operator--()
+bugint &bugint::operator--()
 {
-   if (get_sign() == -1)
-   {
-       return (++negate()).negate();
-   }
+    if (get_sign() == -1)
+    {
+        return (++negate()).negate();
+    }
 
-   if (get_sign() == 0)
-   {
-       _oldest_digit = -1;
-       return *this;
-   }
+    if (get_sign() == 0)
+    {
+        _oldest_digit = -1;
+        return *this;
+    }
 
     size_t digits_count = get_digits_count();
-    for (int i = 0; i < digits_count - 1; ++i)
+    for (int i = 0; i < digits_count; ++i)
     {
         if (--((*this)[i]) != -1)
         {
-            return *this;
+            break;
         }
     }
 
-    // TODO: update the code below for -- operator
-
-    if (--_oldest_digit != 0)
+    if (_oldest_digit != 0)
     {
         return *this;
     }
 
-    if (_other_digits == nullptr)
+    if (get_sign() == 0)
     {
-        _other_digits = new int[2];
-        _other_digits[0] = 2;
-        _other_digits[1] = _oldest_digit;
-        _oldest_digit = 0;
+        return *this;
+    }
+
+    if (_other_digits[digits_count - 1] != INT_MAX)
+    {
+        return *this;
+    }
+
+    if (get_digits_count() == 2)
+    {
+        _oldest_digit = _other_digits[1];
+        delete[] _other_digits;
+        _other_digits = nullptr;
 
         return *this;
     }
 
-    int *new_array = new int[digits_count + 1];
-    memcpy(new_array, _other_digits, sizeof(int) * digits_count);
+    int *new_array = new int[digits_count - 1];
+    memcpy(new_array, _other_digits, sizeof(int) * get_digits_count() - 1);
+    --*new_array;
 
-    delete [] _other_digits;
+    _oldest_digit = _other_digits[digits_count - 1];
+
+    delete[] _other_digits;
     _other_digits = new_array;
-
-    (*this)[digits_count] = _oldest_digit;
-    _oldest_digit = 0;
 
     return *this;
 }
 
-bigint const bigint::operator--(
+bugint const bugint::operator--(
     int)
 {
-    bigint x = *this;
+    bugint x = *this;
     --*this;
     return x;
 }
 
-bigint &bigint::operator*=(
-    bigint const &multiplier) &
+bugint &bugint::operator*=(
+    bugint const &multiplier) &
 {
     if (get_sign() == 0)
     {
@@ -362,8 +421,8 @@ bigint &bigint::operator*=(
     int words_multiplication_result_digits[2] = { 0 };
     int digit = 0;
     unsigned int words_multiplication_result_digit = 0;
-    bigint const zero(&digit, 1);
-    bigint result = zero;
+    bugint const zero(&digit, 1);
+    bugint result = zero;
 
     auto this_digits_count = get_digits_count();
     auto multiplier_digits_count = multiplier.get_digits_count();
@@ -395,140 +454,140 @@ bigint &bigint::operator*=(
     return *this;
 }
 
-bigint bigint::operator*(
-    bigint const &multiplier) const
+bugint bugint::operator*(
+    bugint const &multiplier) const
 {
-    bigint result = *this;
+    bugint result = *this;
 
     return result *= multiplier;
 }
 
-bigint &bigint::operator/=(
-    bigint const &divisor) &
+bugint &bugint::operator/=(
+    bugint const &divisor) &
 {
 
 }
 
-bigint bigint::operator/(
-    bigint const &divisor) const
+bugint bugint::operator/(
+    bugint const &divisor) const
 {
 
 }
 
-bigint &bigint::operator%=(
-    bigint const &divisor) &
+bugint &bugint::operator%=(
+    bugint const &divisor) &
 {
 
 }
 
-bigint bigint::operator%(
-    bigint const &divisor) const
+bugint bugint::operator%(
+    bugint const &divisor) const
 {
 
 }
 
-bigint::division_result bigint::division(
-    bigint const &divisor) const
+bugint::division_result bugint::division(
+    bugint const &divisor) const
 {
 
 }
 
-bool bigint::operator==(
-    bigint const &other) const
+bool bugint::operator==(
+    bugint const &other) const
 {
 
 }
 
-bool bigint::operator!=(
-    bigint const &other) const
+bool bugint::operator!=(
+    bugint const &other) const
 {
 
 }
 
-bool bigint::operator<(
-    bigint const &other) const
+bool bugint::operator<(
+    bugint const &other) const
 {
 
 }
 
-bool bigint::operator<=(
-    bigint const &other) const
+bool bugint::operator<=(
+    bugint const &other) const
 {
 
 }
 
-bool bigint::operator>(
-    bigint const &other) const
+bool bugint::operator>(
+    bugint const &other) const
 {
 
 }
 
-bool bigint::operator>=(
-    bigint const &other) const
+bool bugint::operator>=(
+    bugint const &other) const
 {
 
 }
 
-bigint bigint::operator~() const
+bugint bugint::operator~() const
 {
 
 }
 
-bigint &bigint::operator&=(
-    bigint const &other) &
+bugint &bugint::operator&=(
+    bugint const &other) &
 {
 
 }
 
-bigint bigint::operator&(
-    bigint const &other) const
+bugint bugint::operator&(
+    bugint const &other) const
 {
 
 }
 
-bigint &bigint::operator|=(
-    bigint const &other) &
+bugint &bugint::operator|=(
+    bugint const &other) &
 {
 
 }
 
-bigint bigint::operator|(
-    bigint const &other) const
+bugint bugint::operator|(
+    bugint const &other) const
 {
 
 }
 
-bigint &bigint::operator^=(
-    bigint const &other) &
+bugint &bugint::operator^=(
+    bugint const &other) &
 {
 
 }
 
-bigint bigint::operator^(
-    bigint const &other) const
+bugint bugint::operator^(
+    bugint const &other) const
 {
 
 }
 
-bigint &bigint::operator<<=(
+bugint &bugint::operator<<=(
     size_t shift) &
 {
 
 }
 
-bigint bigint::operator<<(
+bugint bugint::operator<<(
     size_t shift) const
 {
 
 }
 
-bigint &bigint::operator>>=(
+bugint &bugint::operator>>=(
     size_t shift) &
 {
 
 }
 
-bigint bigint::operator>>(
+bugint bugint::operator>>(
     size_t shift) const
 {
 
@@ -536,14 +595,22 @@ bigint bigint::operator>>(
 
 std::ostream &operator<<(
     std::ostream &stream,
-    bigint const &value)
+    bugint const &value)
 {
+    auto digits_count = value.get_digits_count();
+    for (auto i = 0; i < digits_count; ++i)
+    {
+        stream << const_cast<bugint &>(value)[i] << ' ';
+    }
 
+    return stream;
 }
 
 std::istream &operator>>(
     std::istream &stream,
-    bigint &value)
+    bugint &value)
 {
 
+
+    return stream;
 }

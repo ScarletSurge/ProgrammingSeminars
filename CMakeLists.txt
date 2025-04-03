@@ -3,4 +3,4 @@ project(course1_cpp_rgu)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(course1_cpp_rgu main.cpp include/bigint.h src/bigint.cpp)
+add_executable(course1_cpp_rgu main.cpp include/bugint.h src/bugint.cpp)
