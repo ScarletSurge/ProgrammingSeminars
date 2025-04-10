@@ -7,6 +7,22 @@
 class bugint final
 {
 
+public:
+
+    class mathematical_uncertainty_exception:
+        std::exception
+    {
+
+    };
+
+    class division_by_zero_exception:
+        std::exception
+    {
+
+    };
+
+private:
+
     static unsigned int get_max(
         unsigned int first,
         unsigned int second) noexcept
@@ -50,6 +66,20 @@ private:
         unsigned int words_multiplication_result_digit = this_half_digit * multiplier_half_digit;
         *words_multiplication_result_digits = *reinterpret_cast<int *>(&words_multiplication_result_digit);
         summand += (bugint(words_multiplication_result_digits, 2) << (HALF_DIGIT_SHIFT * shift_in_half_digits));
+    }
+
+    int get_oldest_positive_value_bit_index() const noexcept
+    {
+        auto digits_count = get_digits_count();
+
+        auto oldest_digit = _oldest_digit;
+        int oldest_digit_oldest_bit_index = 0;
+        while (oldest_digit != 0)
+        {
+            oldest_digit >>= 1;
+            ++oldest_digit_oldest_bit_index;
+        }
+        return oldest_digit_oldest_bit_index + ((int)digits_count - 1) * (int)(sizeof(int) << 3) - 1;
     }
 
 private:
@@ -159,20 +189,46 @@ public:
     bugint operator%(
         bugint const &divisor) const;
 
-    struct division_result
+    class division_result final
     {
 
-        //bigint german;
-        //bigint remainder;
-//
-        //division_result(
-        //    bigint const &german,
-        //    bigint const &remainder):
-        //    german(german),
-        //    remainder(remainder)
-        //{
-//
-        //}
+    private:
+
+        bugint *_german;
+        bugint *_remainder;
+
+    public:
+
+        division_result(
+            bugint const &german,
+            bugint const &remainder):
+                _german(new bugint(german)),
+                _remainder(new bugint(remainder))
+        {
+
+        }
+
+    public:
+
+        // TODO: implement rule of 5
+
+        ~division_result()
+        {
+            delete _german; _german = nullptr;
+            delete _remainder; _remainder = nullptr;
+        }
+
+    public:
+
+        bugint get_german() const
+        {
+            return *_german;
+        }
+
+        bugint get_remainder() const
+        {
+            return *_remainder;
+        }
 
     };
 
@@ -246,11 +302,5 @@ public:
         bugint &value);
 
 };
-
-// big_integer("1234", 10) += 10;
-
-// big_integer x;
-// std::cout << x;
-// x[2] = 10;
 
 #endif //COURSE1_CPP_RGU_BUGINT_H

@@ -175,15 +175,9 @@ int &bugint::operator[](
 
 bugint& bugint::invert() &
 {
-    _oldest_digit = ~_oldest_digit;
-    if (_other_digits == nullptr)
+    for (int i = 0; i < get_digits_count(); ++i)
     {
-        return *this;
-    }
-
-    for (int i = 1; i < *_other_digits - 1; ++i)
-    {
-        _other_digits[i] = ~_other_digits[i];
+        (*this)[i] = ~(*this)[i];
     }
 
     return *this;
@@ -191,15 +185,17 @@ bugint& bugint::invert() &
 
 bugint &bugint::negate() &
 {
-    if (get_sign() == 0)
+    auto sign = get_sign();
+
+    if (sign == 0)
     {
         return *this;
     }
 
     int one_int = 1;
-    bugint one(&one_int, 1);
+    static bugint one(&one_int, 1);
 
-    return get_sign() == 1
+    return sign == 1
         ? invert() += one
         : (*this -= one).invert();
 }
@@ -465,31 +461,96 @@ bugint bugint::operator*(
 bugint &bugint::operator/=(
     bugint const &divisor) &
 {
+    auto result = this->division(divisor);
 
+    return *this = std::move(result.get_german());
 }
 
 bugint bugint::operator/(
     bugint const &divisor) const
 {
-
+    return this->division(divisor).get_german();
 }
 
 bugint &bugint::operator%=(
     bugint const &divisor) &
 {
+    auto result = this->division(divisor);
 
+    return *this = std::move(result.get_remainder());
 }
 
 bugint bugint::operator%(
     bugint const &divisor) const
 {
-
+    return this->division(divisor).get_remainder();
 }
 
 bugint::division_result bugint::division(
     bugint const &divisor) const
 {
+    auto this_sign = get_sign();
+    auto divisor_sign = divisor.get_sign();
 
+    if (this_sign == 0 && divisor_sign == 0)
+    {
+        throw mathematical_uncertainty_exception();
+    }
+
+    if (divisor_sign == 0)
+    {
+        throw division_by_zero_exception();
+    }
+
+    if (this_sign == 0)
+    {
+        int value = 0;
+        bugint zero(&value, 1);
+
+        return { zero, zero };
+    }
+
+    if (this_sign == -1 && divisor_sign == -1)
+    {
+        return (-*this).division(-divisor);
+    }
+
+    if (this_sign == -1)
+    {
+        // TODO: return
+    }
+
+    if (divisor_sign == -1)
+    {
+        // TODO: return
+    }
+
+    int value = 0;
+    bugint german(&value, 1);
+
+    value = 1;
+    bugint one(&value, 1);
+
+    auto divisor_oldest_value_bit_index = divisor.get_oldest_positive_value_bit_index();
+    auto this_copy = *this;
+
+    while (this_copy >= divisor)
+    {
+        auto this_oldest_value_bit_index = get_oldest_positive_value_bit_index();
+        auto divisor_shift = this_oldest_value_bit_index - divisor_oldest_value_bit_index;
+        auto shifted_divisor = divisor << divisor_shift;
+
+        if (shifted_divisor > this_copy)
+        {
+            shifted_divisor >>= 1;
+        }
+
+        this_copy -= shifted_divisor;
+        // TODO: use |= or set_bit function
+        german += (one << divisor_shift);
+    }
+
+    return { german, this_copy };
 }
 
 bool bugint::operator==(
@@ -572,13 +633,37 @@ bugint bugint::operator^(
 bugint &bugint::operator<<=(
     size_t shift) &
 {
+    if (shift == 0)
+    {
+        return *this;
+    }
 
+    // TODO: bitwise impl
+    int const count_of_zeros_to_add = shift / (sizeof(int) << 3);
+    shift &= ((sizeof(int) << 3) - 1);
+
+    if (shift != 0)
+    {
+        int bits_from_previous_digit = 0;
+        int bits_for_next_digit = 0;
+
+        for (int i = 0; i != get_digits_count(); ++i)
+        {
+            bits_for_next_digit = (*this)[i] >> ((sizeof(int) << 3) - shift) /* TODO: & MASK */;
+            ((*this)[i] <<= shift) |= bits_from_previous_digit;
+            bits_from_previous_digit = bits_for_next_digit;
+        }
+    }
+
+    // TODO: dObaViT cIfRi V KoNeZ =)
 }
 
 bugint bugint::operator<<(
     size_t shift) const
 {
+    bugint temp = *this;
 
+    return temp <<= shift;
 }
 
 bugint &bugint::operator>>=(
@@ -590,7 +675,9 @@ bugint &bugint::operator>>=(
 bugint bugint::operator>>(
     size_t shift) const
 {
+    bugint temp = *this;
 
+    return temp >>= shift;
 }
 
 std::ostream &operator<<(
