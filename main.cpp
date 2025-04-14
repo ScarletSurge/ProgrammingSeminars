@@ -1,10 +1,29 @@
 #include <exception>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <map>
 #include <optional>
+#include <stack>
 #include <utility>
 #include <vector>
+
+class serializable
+{
+
+public:
+
+    virtual ~serializable() noexcept = default;
+
+public:
+
+    virtual void serialize(
+        std::ostream &stream) const = 0;
+
+    virtual void deserialize(
+        std::istream &stream) = 0;
+
+};
 
 template<
     typename tkey,
@@ -71,6 +90,10 @@ public:
 
 public:
 
+    virtual size_t elements_count() const = 0;
+
+public:
+
     virtual void insert(
         tkey const &key,
         tvalue const &value) = 0;
@@ -121,9 +144,123 @@ class b_tree final:
 
 public:
 
+    class node final
+    {
+        // TODO: здесь могла бы быть Ваша реклама =)
+    };
+
+    class iterator final
+    {
+
+    private:
+
+        std::stack<node *> _path;
+
+    public:
+
+        explicit iterator(
+            std::stack<node *> const &path):
+                _path(path)
+        {
+            // TODO: ?!
+        }
+
+        iterator &operator++()
+        {
+            // TODO: impl
+
+            return *this;
+        }
+
+        iterator operator++(
+            int)
+        {
+            auto this_copy = *this;
+            ++*this;
+            return this_copy;
+        }
+
+        bool operator==(
+            iterator const &other) const
+        {
+            return !(*this != other);
+        }
+
+        bool operator!=(
+            iterator const &other) const
+        {
+            return !(*this == other);
+        }
+
+        std::tuple<tkey, tvalue &, size_t, size_t> operator*()
+        {
+            // TODO: unmock
+            return std::make_tuple(tkey(), tvalue(), 0, 0);
+        }
+
+    };
+
+    class iterator_const final
+    {
+
+    private:
+
+        iterator _inner;
+
+    public:
+
+        explicit iterator_const(
+            std::stack<node *> const &path):
+                _inner(path)
+        {
+            // TODO: ?!
+        }
+
+        iterator_const &operator++()
+        {
+            ++_inner;
+
+            return *this;
+        }
+
+        iterator_const operator++(
+            int)
+        {
+            auto this_copy = *this;
+            ++*this;
+            return this_copy;
+        }
+
+        bool operator==(
+            iterator_const const &other) const
+        {
+            return !(*this != other);
+        }
+
+        bool operator!=(
+            iterator_const const &other) const
+        {
+            return !(*this == other);
+        }
+
+        std::tuple<tkey, tvalue const &, size_t, size_t> operator*()
+        {
+            // TODO: unmock
+            return std::make_tuple(tkey(), tvalue(), 0, 0);
+        }
+
+    };
+
+private:
+
+    size_t _elements_count;
+
+public:
+
     b_tree(
         size_t t,
-        std::function<int(tkey const &, tkey const &)> comparer)
+        std::function<int(tkey const &, tkey const &)> comparer):
+            _elements_count(0)
     {
         throw std::exception(); // "not_implemented"
     }
@@ -135,6 +272,8 @@ public:
         tvalue const &value) override
     {
         throw std::exception();
+
+        ++_elements_count;
     }
 
     void insert(
@@ -142,6 +281,8 @@ public:
         tvalue &&value) override
     {
         throw std::exception();
+
+        ++_elements_count;
     }
 
     void update(
@@ -168,6 +309,8 @@ public:
         tkey const &key) override
     {
         throw std::exception();
+
+        --_elements_count;
     }
 
     std::vector<typename associative_container<tkey, tvalue>::key_value_pair> obtain_between(
@@ -177,6 +320,41 @@ public:
         bool upper_bound_inclusive) override
     {
         throw std::exception();
+    }
+
+public:
+
+    size_t elements_count() const override
+    {
+        return _elements_count;
+    }
+
+public:
+
+    iterator begin() const
+    {
+        std::stack<node *> path;
+        // TODO: initialize stack
+
+        return iterator(path);
+    }
+
+    iterator end() const
+    {
+        return iterator(std::stack<node *>());
+    }
+
+    iterator_const cbegin() const
+    {
+        std::stack<node *> path;
+        // TODO: initialize stack
+
+        return iterator_const(path);
+    }
+
+    iterator_const cend() const
+    {
+        return iterator_const(std::stack<node *>());
     }
 
 };
@@ -274,7 +452,9 @@ public:
         string_flyweight v((std::string(key)));
         auto k = &v._value;
 
-        _flyweights.emplace(std::make_pair(k, v));
+        // TODO: fix this
+        //_flyweights.emplace(std::make_pair(k, v));
+        return v;
     }
 
 };
@@ -362,21 +542,79 @@ public:
 
 };
 
-class tkey final {};
-
-class tvalue final
+class tkey final:
+    serializable
 {
-private:
+
+public:
+
+    void serialize(
+        std::ostream &stream) const override
+    {
+        stream << "key serialize mock" << std::endl;
+    }
+
+    void deserialize(
+        std::istream &stream) override
+    {
+        std::string str;
+        stream >> str;
+    }
+
+};
+
+class tvalue final:
+    serializable
+{
+
+public:
+
     std::string _1 = "12345";
     std::string _2 = "kek";
     int _3;
+
+public:
+
+    void serialize(
+        std::ostream &stream) const override
+    {
+        stream << "value serialize mock" << std::endl;
+    }
+
+    void deserialize(
+        std::istream &stream) override
+    {
+        std::string str;
+        stream >> str;
+    }
+
 };
 
-class tdata final
+class tdata final:
+    serializable
 {
+
 public:
+
     tkey key;
     tvalue value;
+
+public:
+
+    void serialize(
+        std::ostream &stream) const override
+    {
+        key.serialize(stream);
+        value.serialize(stream);
+    }
+
+    void deserialize(
+        std::istream &stream) override
+    {
+        key.deserialize(stream);
+        value.deserialize(stream);
+    }
+
 };
 
 class tkey_comparer final
@@ -393,7 +631,8 @@ public:
 
 };
 
-class db_server final
+class db_server final:
+    serializable
 {
 
 public:
@@ -424,12 +663,44 @@ private:
     class collection final
     {
 
+    public:
+
+        enum class iterator_initial_state
+        {
+            begin,
+            end
+        };
+
+        class input_iterator final
+        {
+
+        public:
+
+            //input_iterator(
+
+
+        };
+
+        class output_iterator final
+        {
+
+        public:
+
+            output_iterator(
+                search_tree<std::string &, search_tree<tdata, std::vector<chain_of_responsibility>> *> *data,
+                iterator_initial_state initial_state)
+            {
+
+            }
+
+        };
+
     private:
 
         // tdata { int, str, binary }
         // 3. search_tree<std::string, search_tree<tdata, CoR> *> *
 
-        search_tree<std::string &, search_tree<tdata, chain_of_responsibility> *> *_data;
+        search_tree<std::string &, search_tree<tdata, std::vector<chain_of_responsibility>> *> *_data;
         search_tree_variant _variant;
 
     public:
@@ -463,7 +734,7 @@ private:
                     // _collections = new b_star_plus_tree<std::string, schema>();
                     // break;
                 case search_tree_variant::b:
-                    _data = new b_tree<tkey, tvalue>(t_for_b_trees, tkey_comparer());
+                    //_data = new b_tree<tkey, tvalue>(t_for_b_trees, tkey_comparer());
                     break;
             }
         }
@@ -503,8 +774,8 @@ private:
                     // _schemas = new b_star_plus_tree<std::string, schema>();
                     // break;
                 case search_tree_variant::b:
-                    _data = new b_tree<tkey, tvalue>(
-                        *dynamic_cast<b_tree<tkey, tvalue> *>(other._data));
+                    //_data = new b_tree<tkey, tvalue>(
+                       // *dynamic_cast<b_tree<tkey, tvalue> *>(other._data));
                     break;
             }
         }
@@ -536,8 +807,8 @@ private:
                     // _schemas = new b_star_plus_tree<std::string, schema>();
                     // break;
                 case search_tree_variant::b:
-                    _data = new b_tree<tkey, tvalue>(
-                        std::move(*dynamic_cast<b_tree<tkey, tvalue> *>(other._data)));
+                   // _data = new b_tree<tkey, tvalue>(
+                     //   std::move(*dynamic_cast<b_tree<tkey, tvalue> *>(other._data)));
                     break;
             }
         }
@@ -591,40 +862,40 @@ private:
             tkey const &key,
             tvalue const &value)
         {
-            _data->insert(key, value);
+            //_data->insert(key, value);
         }
 
         void insert(
             tkey const &key,
             tvalue &&value)
         {
-            _data->insert(key, std::move(value));
+            //_data->insert(key, std::move(value));
         }
 
         void update(
             tkey const &key,
             tvalue const &value)
         {
-            _data->update(key, value);
+            //_data->update(key, value);
         }
 
         void update(
             tkey const &key,
             tvalue &&value)
         {
-            _data->update(key, std::move(value));
+            //_data->update(key, std::move(value));
         }
 
         tvalue &obtain(
             tkey const &key)
         {
-            return _data->obtain(key);
+            //return _data->obtain(key);
         }
 
         tvalue dispose(
             tkey const &key)
         {
-            return _data->dispose(key);
+            //return _data->dispose(key);
         }
 
         std::vector<typename associative_container<tkey, tvalue>::key_value_pair> obtain_between(
@@ -633,7 +904,29 @@ private:
             bool lower_bound_inclusive,
             bool upper_bound_inclusive)
         {
-            return _data->obtain_between(lower_bound, upper_bound, lower_bound_inclusive, upper_bound_inclusive);
+            //return _data->obtain_between(lower_bound, upper_bound, lower_bound_inclusive, upper_bound_inclusive);
+        }
+
+    public:
+
+        [[nodiscard]] input_iterator ibegin() const
+        {
+            return input_iterator(/**/);
+        }
+
+        [[nodiscard]] input_iterator iend() const
+        {
+            return input_iterator(/**/);
+        }
+
+        [[nodiscard]] output_iterator obegin() const
+        {
+            return output_iterator(_data, iterator_initial_state::begin);
+        }
+
+        [[nodiscard]] output_iterator oend() const
+        {
+            return output_iterator(_data, iterator_initial_state::end);
         }
 
     };
@@ -821,7 +1114,8 @@ private:
 
     };
 
-    class pool final
+    class pool final:
+        serializable
     {
 
     private:
@@ -1002,11 +1296,37 @@ private:
             _schemas->dispose(schema_name);
         }
 
+    public:
+
+        void serialize(
+            std::ostream &stream) const override
+        {
+            auto elements_count = _schemas->elements_count();
+            stream << elements_count;
+            for (auto it = _schemas.cbegin(); it != _schemas.cend(); ++it)
+            {
+                auto const key_value_pair_state = *it;
+                stream << std::get<0>(key_value_pair_state)
+                       << std::get<2>(key_value_pair_state)
+                       << std::get<3>(key_value_pair_state);
+                std::get<1>(key_value_pair_state).serialize(stream);
+            }
+
+            // TODO: implement this using scheme from db_server::serialize implementation
+        }
+
+        void deserialize(
+            std::istream &stream) override
+        {
+            // TODO: implement this using scheme from db_server::deserialize implementation
+        }
+
     };
 
 private:
 
-    class command
+    class command:
+        public serializable
     {
 
     public:
@@ -1057,6 +1377,27 @@ private:
             data_exists = true;
         }
 
+    public:
+
+        void serialize(
+            std::ostream &stream) const override
+        {
+            stream << 'i';
+            _initial_version.serialize(stream);
+        }
+
+        void deserialize(
+            std::istream &stream) override
+        {
+            char c;
+            stream >> c;
+            if (c != 'i')
+            {
+                // TODO: throw an exception (deserialization error)
+            }
+            _initial_version.deserialize(stream);
+        }
+
     };
 
     class update_command final:
@@ -1093,6 +1434,26 @@ private:
             }
         }
 
+    public:
+
+        void serialize(
+            std::ostream &stream) const override
+        {
+            stream << 'u' << _update_expression;
+        }
+
+        void deserialize(
+            std::istream &stream) override
+        {
+            char c;
+            stream >> c;
+            if (c != 'u')
+            {
+                // TODO: throw an exception (deserialization error)
+            }
+            stream >> _update_expression;
+        }
+
     };
 
     class dispose_command final:
@@ -1113,11 +1474,31 @@ private:
             data_exists = false;
         }
 
+    public:
+
+        void serialize(
+            std::ostream &stream) const override
+        {
+            stream << 'd';
+        }
+
+        void deserialize(
+            std::istream &stream) override
+        {
+            char c;
+            stream >> c;
+            if (c != 'd')
+            {
+                // TODO: throw an exception (deserialization error)
+            }
+        }
+
     };
 
 private:
 
-    class chain_of_responsibility_handler final
+    class chain_of_responsibility_handler final:
+        serializable
     {
 
         friend class chain_of_responsibility;
@@ -1160,9 +1541,27 @@ private:
             }
         }
 
+    public:
+
+        void serialize(
+            std::ostream &stream) const override
+        {
+            _command->serialize(stream);
+            stream << _date_time_activity_started;
+        }
+
+        void deserialize(
+            std::istream &stream) override
+        {
+            // TODO: are there any already allocated resources;
+            _command->deserialize(stream);
+            stream >> _date_time_activity_started;
+        }
+
     };
 
-    class chain_of_responsibility final
+    class chain_of_responsibility final:
+        serializable
     {
 
     private:
@@ -1283,6 +1682,54 @@ private:
             }
 
             add_handler(new dispose_command);
+        }
+
+    public:
+
+        void serialize(
+            std::ostream &stream) const override
+        {
+            // TODO: this is not good ._.
+            size_t chain_size = 0;
+            auto *current = _first_handler;
+            while (current != nullptr)
+            {
+                ++chain_size;
+                current = current->_next_handler;
+            }
+            stream << chain_size;
+
+            current = _first_handler;
+            while (current != nullptr)
+            {
+                current->serialize(stream);
+                current = current->_next_handler;
+            }
+        }
+
+        void deserialize(
+            std::istream &stream) override
+        {
+            // TODO: dispose old state
+            _first_handler = _last_handler = nullptr;
+
+            size_t chain_size;
+            stream >> chain_size;
+
+            for (auto i = 0; i != chain_size; ++i)
+            {
+                if (_first_handler == nullptr)
+                {
+                    _first_handler = _last_handler = new chain_of_responsibility_handler(nullptr, 0);
+                    _first_handler->deserialize(stream);
+                }
+                else
+                {
+                    _last_handler->_next_handler = new chain_of_responsibility_handler(nullptr, 0);
+                    _last_handler = _last_handler->_next_handler;
+                    _last_handler->deserialize(stream);
+                }
+            }
         }
 
     };
@@ -1539,6 +1986,55 @@ public:
             .obtain(schema_name)
             .obtain(collection_name)
             .dispose(key);
+
+        return this;
+    }
+
+public:
+
+    void serialize(
+        std::ostream &stream) const override
+    {
+        auto elements_count = _pools.elements_count();
+        stream << elements_count;
+        for (auto it = _pools.cbegin(); it != _pools.cend(); ++it)
+        {
+            auto const key_value_pair_state = *it;
+            stream << std::get<0>(key_value_pair_state)
+                   << std::get<2>(key_value_pair_state)
+                   << std::get<3>(key_value_pair_state);
+            std::get<1>(key_value_pair_state).serialize(stream);
+        }
+    }
+
+    db_server const *serialize(
+        std::string const &file_path) const
+    {
+        std::ofstream stream(file_path);
+        if (!stream.is_open())
+        {
+            // TODO: throw an exception
+        }
+
+        serialize(stream);
+
+        return this;
+    }
+
+    void deserialize(
+        std::istream &stream) override
+    {
+
+    }
+
+    db_server *deserialize(
+        std::string const &file_path)
+    {
+        std::ifstream stream(file_path);
+        if (!stream.is_open())
+        {
+            // TODO: throw an exception
+        }
 
         return this;
     }
