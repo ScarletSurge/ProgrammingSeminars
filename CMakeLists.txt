@@ -3,4 +3,4 @@ project(puksrenjk)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(puksrenjk main.cpp)
+add_executable(puksrenjk main.cpp include/int_wrapper.h src/int_wrapper.cpp)
