@@ -62,6 +62,8 @@ int stack_template_demo(
 
 #include <vector>
 
+#include "include/allocator_sorted_list.h"
+
 int main(
     int argc,
     char *argv[])
