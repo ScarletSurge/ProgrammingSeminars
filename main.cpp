@@ -123,7 +123,7 @@ public:
         std::cout << "A::A()" << std::endl;
     }
 
-    virtual ~A()
+    ~A()
     {
         std::cout << "A::~A()" << std::endl;
         delete[] _a;
@@ -266,6 +266,12 @@ int &bar()
 
 int main()
 {
+    A *obj = new C();
+    //
+    delete obj;
+
+    return 0;
+
     // x = x;
     // x = 10;
     // 10 = x;
@@ -294,11 +300,11 @@ int main()
 
     return 0;
 
-    X obj;
-    Y yObj = obj;
-    X obj2 = obj;
-    obj2 = obj;
-    obj = obj2;
+    //X obj;
+    //Y yObj = obj;
+    //X obj2 = obj;
+    //obj2 = obj;
+    //obj = obj2;
 
     int arr[10] = { 1, 2, 3, 7, 14, 23, -5, 6, 14, 23 };
 
