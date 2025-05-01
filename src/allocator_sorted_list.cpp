@@ -102,16 +102,55 @@ allocator_sorted_list::allocator_sorted_list(
         throw std::bad_alloc();
     }
 
-    // TODO:
-    // 1. requested size overriding
-    // 2. reevaluate (allocator meta first block address || previous block next pointer block
-    // 3. асеевские приколы))0)0
+    void *new_avail_block;
+    auto block_remaining = get_block_size(target_current_block) - requested_size;
+
+    if (block_remaining < get_available_block_meta_size())
+    {
+        requested_size += block_remaining;
+        // requested_size = get_block_size(target_current_block);
+        // TODO: logs
+
+        (target_previous_block == nullptr
+            ? get_first_block_address()
+            : get_next_available_block(target_previous_block)) = get_next_available_block(target_current_block);
+    }
+    else
+    {
+        new_avail_block = (reinterpret_cast<unsigned char *>(target_current_block) + (get_block_size(target_current_block) - block_remaining));
+
+        get_block_size(new_avail_block) = block_remaining;
+
+        get_next_available_block(new_avail_block) = get_next_available_block(target_current_block);
+
+        (target_previous_block == nullptr
+         ? get_first_block_address()
+         : get_next_available_block(target_previous_block)) = new_avail_block;
+    }
+
+    get_block_size(target_current_block) = requested_size;
+    get_trusted_memory(target_current_block) = _trusted_memory;
+
+    return reinterpret_cast<void *>(reinterpret_cast<unsigned char *>(target_current_block) + get_ancillary_block_meta_size());
 }
 
 void allocator_sorted_list::deallocate(
     void *at)
 {
-    throw not_implemented("void allocator_sorted_list::deallocate(void *)", "your code should be here...");
+    auto left_bound = reinterpret_cast<void *>(reinterpret_cast<unsigned char *>(_trusted_memory) + get_metadata_size() + get_ancillary_block_meta_size());
+    auto right_bound = reinterpret_cast<void *>(reinterpret_cast<unsigned char *>(_trusted_memory) + get_metadata_size() + get_memory_size());
+
+    if (at == nullptr || at < left_bound || at > right_bound)
+    {
+        throw std::out_of_range("invalid block to deallocate address");
+    }
+
+    if (get_trusted_memory(at = reinterpret_cast<void *>(reinterpret_cast<unsigned char *>(at) - get_ancillary_block_meta_size())) != _trusted_memory)
+    {
+        throw std::logic_error("block to deallocate is not registered inside allocator instance");
+    }
+
+
 }
 
 inline void allocator_sorted_list::set_fit_mode(
