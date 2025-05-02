@@ -8,7 +8,7 @@ class binomial_priority_queue final:
     public priority_queue
 {
 
-private:
+public:
 
     struct node final
     {
@@ -25,6 +25,10 @@ private:
 private:
 
     node *_root;
+
+public:
+
+    binomial_priority_queue();
 
 public:
 
@@ -47,6 +51,16 @@ public:
 private:
 
     size_t nodes_count() const;
+
+    static size_t get_rank(
+        binomial_priority_queue::node const *binomial_tree_root);
+
+    void traverse_root_list(
+        node **for_merge);
+
+    static node *merge_binomial_trees(
+        node *first_to_merge,
+        node *second_to_merge);
 
 };
 
