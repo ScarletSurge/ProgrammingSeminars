@@ -29,7 +29,7 @@ public sealed class Product
     }
     
     /// <summary>
-    /// 
+    /// напиши меня плиз
     /// </summary>
     public string PackageSize
     {

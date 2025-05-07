@@ -15,9 +15,11 @@ public static class ProductSerializer
     public static MemoryStream Serialize(
         this Product product)
     {
-        // TODO: implement me
+        var stream = new MemoryStream();
+        
+        // TODO: препад не смог в погромирование((9(9
 
-        throw new NotImplementedException();
+        return stream;
     }
     
     /// <summary>
@@ -28,9 +30,11 @@ public static class ProductSerializer
     public static Product Deserialize(
         this MemoryStream stream)
     {
-        // TODO: implement me
-
-        throw new NotImplementedException();
+        var reader = new StreamReader(stream);
+        
+        // TODO: препад не смог в погромирование((9(9
+        
+        return new Product();
     }
     
 }

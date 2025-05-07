@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using DB.Client.Backend.DBInteraction.Redis;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -34,6 +35,11 @@ public sealed class GrpcServiceSample:
     /// </summary>
     private readonly IRepository<Domain.Product> _productsRepository;
     
+    /// <summary>
+    /// 
+    /// </summary>
+    private readonly RedisProvider _hotProductsRepository;
+    
     #endregion
 
     #region Constructors
@@ -43,15 +49,19 @@ public sealed class GrpcServiceSample:
     /// </summary>
     /// <param name="options"></param>
     /// <param name="logger"></param>
+    /// <param name="hotProductsRepository"></param>
     /// <param name="productsRepository"></param>
     /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentException"></exception>
     public GrpcServiceSample(
         IOptions<GrpcServiceSampleSettings> options,
         ILogger<GrpcServiceSample>? logger,
+        RedisProvider hotProductsRepository,
         IRepository<Domain.Product> productsRepository)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
         _logger = logger;
+        _hotProductsRepository = hotProductsRepository ?? throw new ArgumentNullException(nameof(hotProductsRepository));
         _productsRepository = productsRepository ?? throw new ArgumentException(nameof(productsRepository));
     }
 
@@ -60,13 +70,15 @@ public sealed class GrpcServiceSample:
     #region DB.Client.Grpc.ProductService.ProductServiceBase overrides
     
     /// <inheritdoc cref="ProductService.ProductServiceBase.GetProducts" />
-    public async override Task<Products> GetProducts(
+    public override async Task<Products> GetProducts(
         Empty request,
         ServerCallContext context)
     {
         try
         {
             var result = new Products();
+            var hotResult = new Domain.Product();
+            await _hotProductsRepository.FooAsync("key", hotResult, context.CancellationToken).ConfigureAwait(false);
             result.Products_.AddRange((await _productsRepository.SelectEntitiesAsync(context.CancellationToken)).Select(ConverterExtensions.Convert));
             return result;
         }

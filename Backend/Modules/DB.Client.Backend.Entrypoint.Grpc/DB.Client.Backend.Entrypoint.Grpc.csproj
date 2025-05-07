@@ -19,9 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\DB.Client.Backend.Host.Core\DB.Client.Backend.Host.Core.csproj" />
-      <ProjectReference Include="..\..\..\Domain\DB.Client.Domain.Infrastructure\DB.Client.Domain.Infrastructure.csproj" />
-      <ProjectReference Include="..\..\..\Domain\DB.Client.Domain\DB.Client.Domain.csproj" />
+        <ProjectReference Include="..\..\DB.Client.Backend.Host.Core\DB.Client.Backend.Host.Core.csproj" />
+        <ProjectReference Include="..\..\..\Domain\DB.Client.Domain.Infrastructure\DB.Client.Domain.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Domain\DB.Client.Domain\DB.Client.Domain.csproj" />
+        <ProjectReference Include="..\DB.Client.Backend.DBInteraction.Redis\DB.Client.Backend.DBInteraction.Redis.csproj" />
     </ItemGroup>
 
     <ItemGroup>

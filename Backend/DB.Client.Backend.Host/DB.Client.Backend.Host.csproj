@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DB.Client.Backend.Host.Core\DB.Client.Backend.Host.Core.csproj" />
+        <ProjectReference Include="..\Modules\DB.Client.Backend.DBInteraction.MongoDB\DB.Client.Backend.DBInteraction.MongoDB.csproj" />
         <ProjectReference Include="..\Modules\DB.Client.Backend.Grpc\DB.Client.Backend.Grpc.csproj" />
         <ProjectReference Include="..\Modules\DB.Client.Backend.Entrypoint.Grpc\DB.Client.Backend.Entrypoint.Grpc.csproj" />
         <ProjectReference Include="..\Modules\DB.Client.Backend.DBInteraction.PostgreSQL\DB.Client.Backend.DBInteraction.PostgreSQL.csproj" />

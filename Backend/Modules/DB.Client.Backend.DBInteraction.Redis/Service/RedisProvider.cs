@@ -15,7 +15,7 @@ namespace DB.Client.Backend.DBInteraction.Redis;
 /// <summary>
 /// 
 /// </summary>
-public sealed class RedisInteractionExample
+public sealed class RedisProvider
 {
     
     #region Fields
@@ -23,7 +23,7 @@ public sealed class RedisInteractionExample
     /// <summary>
     /// 
     /// </summary>
-    private readonly IOptions<RedisInteractionExampleSettings> _options;
+    private readonly IOptions<RedisProviderSettings> _options;
     
     #endregion
     
@@ -33,8 +33,8 @@ public sealed class RedisInteractionExample
     /// 
     /// </summary>
     /// <param name="options"></param>
-    public RedisInteractionExample(
-        IOptions<RedisInteractionExampleSettings> options)
+    public RedisProvider(
+        IOptions<RedisProviderSettings> options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
@@ -42,6 +42,12 @@ public sealed class RedisInteractionExample
     #endregion
     
     #region Methods
+    
+    // T obj; // class T  { public IEnumerator GetEnumerator() {  } }
+    // foreach (var item in obj)
+    // {
+    //     
+    // }
 
     /// <summary>
     /// 
@@ -57,9 +63,12 @@ public sealed class RedisInteractionExample
             await ConnectionMultiplexer.ConnectAsync($"{_options.Value.Address}:{_options.Value.Port}");
 
         var db = redisConnection.GetDatabase(0);
+        
         await using var stream = toStore.Serialize();
         var objectBinaryState = stream.GetBuffer().ToHexString();
         await db.StringGetSetAsync(new RedisKey(key), new RedisValue(objectBinaryState));
     }
+    
+    #endregion
 
 }

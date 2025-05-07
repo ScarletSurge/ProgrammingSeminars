@@ -3,7 +3,7 @@
 /// <summary>
 /// 
 /// </summary>
-public sealed class RedisInteractionExampleSettings
+public sealed class RedisProviderSettings
 {
     
     /// <summary>
