@@ -1,5 +1,7 @@
 //#include "include/bugint.h"
 #include "include/template_demo.h"
+#include "include/allocator.h"
+#include "include/allocator_sorted_list.h"
 
 /*int bugint_demo(
     int argc,
@@ -64,10 +66,26 @@ int stack_template_demo(
 
 #include "include/allocator_sorted_list.h"
 
+void sorted_list_allocator_demo()
+{
+    allocator *alloc = new allocator_sorted_list(10000, nullptr, allocator_with_fit_mode::fit_mode::the_worst_fit);
+
+    int *arr = reinterpret_cast<int *>(alloc->allocate(sizeof(int), 15));
+
+    allocator_sorted_list moved(std::move(*dynamic_cast<allocator_sorted_list *>(alloc)));
+
+    moved.deallocate(arr);
+
+    delete alloc;
+}
+
 int main(
     int argc,
     char *argv[])
 {
+    sorted_list_allocator_demo();
+    return 0;
+
     int_wrapper *obj_ptr = new int_wrapper(10);
 
     // 1. memory allocation

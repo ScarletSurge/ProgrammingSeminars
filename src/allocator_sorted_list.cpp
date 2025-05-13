@@ -63,6 +63,8 @@ allocator_sorted_list::allocator_sorted_list(
     size_t value_size,
     size_t values_count)
 {
+    std::lock_guard<std::mutex> guard(get_sync_object());
+
     auto requested_size = value_size * values_count;
 
     void *target_previous_block = nullptr;
@@ -103,7 +105,7 @@ allocator_sorted_list::allocator_sorted_list(
     }
 
     void *new_avail_block;
-    auto block_remaining = get_block_size(target_current_block) - requested_size;
+    auto const block_remaining = get_block_size(target_current_block) - requested_size;
 
     if (block_remaining < get_available_block_meta_size())
     {
@@ -117,9 +119,9 @@ allocator_sorted_list::allocator_sorted_list(
     }
     else
     {
-        new_avail_block = (reinterpret_cast<unsigned char *>(target_current_block) + (get_block_size(target_current_block) - block_remaining));
+        new_avail_block = (reinterpret_cast<unsigned char *>(target_current_block) + (get_block_size(target_current_block) - block_remaining + get_ancillary_block_meta_size()));
 
-        get_block_size(new_avail_block) = block_remaining;
+        get_block_size(new_avail_block) = block_remaining - get_ancillary_block_meta_size();
 
         get_next_available_block(new_avail_block) = get_next_available_block(target_current_block);
 
@@ -137,6 +139,8 @@ allocator_sorted_list::allocator_sorted_list(
 void allocator_sorted_list::deallocate(
     void *at)
 {
+    std::lock_guard<std::mutex> guard(get_sync_object());
+
     auto left_bound = reinterpret_cast<void *>(reinterpret_cast<unsigned char *>(_trusted_memory) + get_metadata_size() + get_ancillary_block_meta_size());
     auto right_bound = reinterpret_cast<void *>(reinterpret_cast<unsigned char *>(_trusted_memory) + get_metadata_size() + get_memory_size());
 
@@ -150,7 +154,34 @@ void allocator_sorted_list::deallocate(
         throw std::logic_error("block to deallocate is not registered inside allocator instance");
     }
 
+    void* current = get_first_block_address();
+    void* previous = nullptr;
 
+    while (current != nullptr && current < at)
+    {
+        previous = current;
+        current = get_next_available_block(current);
+    }
+
+    get_next_available_block(at) = current;
+
+    *(previous == nullptr
+        ? &get_first_block_address()
+        : &get_next_available_block(previous)) = at;
+
+    if (current != nullptr && current == reinterpret_cast<unsigned char *>(at) + get_available_block_meta_size() + get_block_size(at))
+    {
+        get_block_size(at) += get_available_block_meta_size() + get_block_size(current);
+
+        get_next_available_block(at) = get_next_available_block(current);
+    }
+
+    if (previous != nullptr && at == reinterpret_cast<unsigned char *>(previous) + get_available_block_meta_size() + get_block_size(previous))
+    {
+        get_block_size(previous) += get_available_block_meta_size() + get_block_size(at);
+
+        get_next_available_block(previous) = get_next_available_block(at);
+    }
 }
 
 inline void allocator_sorted_list::set_fit_mode(
