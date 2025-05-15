@@ -2,6 +2,9 @@
 #include "include/template_demo.h"
 #include "include/allocator.h"
 #include "include/allocator_sorted_list.h"
+#include "include/logger_builder.h"
+#include "include/client_logger_builder.h"
+#include "include/logger.h"
 
 /*int bugint_demo(
     int argc,
@@ -79,11 +82,37 @@ void sorted_list_allocator_demo()
     delete alloc;
 }
 
+int logger_demo(
+    int argc,
+    char *argv[])
+{
+    logger *log = client_logger_builder()
+        .add_file_stream("file1.txt", logger::severity::information)
+        ->add_file_stream("file2.txt", logger::severity::warning)
+        ->add_console_stream(logger::severity::information)
+        ->add_console_stream(logger::severity::critical)
+        ->build();
+
+    log
+        ->trace("trace log")
+        ->debug("debug log")
+        ->information("information log")
+        ->warning("warning log")
+        ->error("error log")
+        ->critical("where are labs?!")
+        ->critical("smoking?");
+
+    delete log;
+
+    return 0;
+}
+
 int main(
     int argc,
     char *argv[])
 {
-    sorted_list_allocator_demo();
+    // sorted_list_allocator_demo();
+    return logger_demo(argc, argv);
     return 0;
 
     int_wrapper *obj_ptr = new int_wrapper(10);

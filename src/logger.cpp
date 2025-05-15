@@ -59,6 +59,7 @@ std::string logger::severity_to_string(
     throw std::out_of_range("Invalid severity value");
 }
 
+// TODO: pass datetime as parameter
 std::string logger::current_datetime_to_string() noexcept
 {
     auto time = std::time(nullptr);
