@@ -26,7 +26,7 @@ private:
 private:
 
     explicit client_logger(
-        std::map<logger::severity, std::set<std::string>> const &streams,
+        std::map<logger::severity, std::pair<std::set<std::string>, std::string>> const &streams,
         std::string log_format);
 
 public:

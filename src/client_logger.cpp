@@ -6,7 +6,7 @@
 std::map<std::string, std::pair<std::ostream *, size_t>> client_logger::_all_streams = std::map<std::string, std::pair<std::ostream *, size_t>>();
 
 client_logger::client_logger(
-    std::map<logger::severity, std::set<std::string>> const &streams,
+    std::map<logger::severity, std::pair<std::set<std::string>, std::string>> const &streams,
     std::string log_format):
         _log_format(std::move(log_format))
 {
@@ -14,10 +14,10 @@ client_logger::client_logger(
 
     for (auto const &severity_path: streams)
     {
-        _streams[severity_path.first] = std::vector<std::pair<std::ostream *, std::string>>(severity_path.second.size());
+        _streams[severity_path.first] = std::vector<std::pair<std::ostream *, std::string>>(severity_path.second.first.size());
         int i = 0;
 
-        for (auto const &path: severity_path.second)
+        for (auto const &path: severity_path.second.first)
         {
             auto it = _all_streams.find(path);
 

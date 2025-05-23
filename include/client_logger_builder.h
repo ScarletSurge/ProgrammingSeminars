@@ -13,7 +13,7 @@ class client_logger_builder final:
 
 private:
 
-    std::map<logger::severity, std::set<std::string>> _streams_info;
+    std::map<logger::severity, std::pair<std::set<std::string>, std::string>> _streams_info;
     std::string _log_format;
 
 public:

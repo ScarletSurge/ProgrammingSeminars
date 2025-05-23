@@ -1,0 +1,40 @@
+{
+  "externalAPIAddress": "puksrenjk.com",
+  "config":
+  {
+    "gde": "pukpuk",
+    "pukpuk":
+    {
+      "format": "[%d %t][%s]: %m",
+      "streams": [
+        {
+          "path": "pukpuk.txt",
+          "severities": [
+            "warning"
+          ]
+        },
+        {
+          "path": "pukpuk.txt",
+          "severities": [
+            "debug"
+          ]
+        },
+        {
+          "path": "puksrenjk.txt",
+          "severities": [
+            "information",
+            "warning",
+            "critical"
+          ]
+        },
+        {
+          "path": "moi homjak.txt",
+          "severities": [
+            "error",
+            "critical"
+          ]
+        }
+      ]
+    }
+  }
+}

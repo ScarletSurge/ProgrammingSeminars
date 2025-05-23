@@ -7,10 +7,13 @@
 #include "allocator.h"
 #include "allocator_guardant.h"
 #include "allocator_with_fit_mode.h"
+#include "logger.h"
+#include "logger_guardant.h"
 
 class allocator_sorted_list final:
     private allocator_guardant,
-    public allocator_with_fit_mode
+    public allocator_with_fit_mode,
+    private logger_guardant
 {
 
 private:
@@ -38,7 +41,7 @@ public:
     explicit allocator_sorted_list(
         size_t space_size,
         allocator *parent_allocator = nullptr,
-        //logger *logger = nullptr,
+        logger *logger = nullptr,
         allocator_with_fit_mode::fit_mode allocate_fit_mode = allocator_with_fit_mode::fit_mode::first_fit);
 
 public:
@@ -61,11 +64,17 @@ private:
 
 private:
 
+    inline logger *get_logger() const override;
+
+private:
+
     inline static constexpr size_t get_metadata_size() noexcept;
 
     inline size_t &get_memory_size() const;
 
     inline allocator *&get_parent_allocator() const;
+
+    inline logger *& get_log() const;
 
     inline allocator_with_fit_mode::fit_mode &get_fit_mode() const;
 

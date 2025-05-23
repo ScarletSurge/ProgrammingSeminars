@@ -71,7 +71,7 @@ int stack_template_demo(
 
 void sorted_list_allocator_demo()
 {
-    allocator *alloc = new allocator_sorted_list(10000, nullptr, allocator_with_fit_mode::fit_mode::the_worst_fit);
+    allocator *alloc = new allocator_sorted_list(10000, nullptr, nullptr, allocator_with_fit_mode::fit_mode::the_worst_fit);
 
     int *arr = reinterpret_cast<int *>(alloc->allocate(sizeof(int), 15));
 
@@ -86,8 +86,10 @@ int logger_demo(
     int argc,
     char *argv[])
 {
+    // /config/pukpuk/streams[0]/severities[1]
     logger *log = client_logger_builder()
-        .add_file_stream("file1.txt", logger::severity::information)
+        .transform_with_configuration("config.json", "config:pukpuk")
+        ->add_file_stream("file1.txt", logger::severity::information)
         ->add_file_stream("file2.txt", logger::severity::warning)
         ->add_console_stream(logger::severity::information)
         ->add_console_stream(logger::severity::critical)

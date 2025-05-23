@@ -31,7 +31,7 @@ allocator_sorted_list &allocator_sorted_list::operator=(
 allocator_sorted_list::allocator_sorted_list(
     size_t space_size,
     allocator *parent_allocator,
-    //logger *logger,
+    logger *logger,
     allocator_with_fit_mode::fit_mode allocate_fit_mode)
 {
     auto const target_size = get_metadata_size() + space_size;
@@ -44,12 +44,20 @@ allocator_sorted_list::allocator_sorted_list(
     }
     catch (std::bad_alloc const &ex)
     {
-        // TODO: logs
+        auto *log = get_log();
+        if (log != nullptr)
+        {
+            log->error("Something went wrong");
+        }
+
+        error_with_guard("Something went wrong");
+
         throw;
     }
 
     get_memory_size() = space_size;
     get_parent_allocator() = parent_allocator;
+    get_log() = logger;
     get_fit_mode() = allocate_fit_mode;
     // new (get_sync_object_ptr()) std::mutex;
     allocator::construct(get_sync_object_ptr());
@@ -195,9 +203,14 @@ inline allocator *allocator_sorted_list::get_allocator() const
     return get_parent_allocator();
 }
 
+inline logger *allocator_sorted_list::get_logger() const
+{
+    return get_log();
+}
+
 inline constexpr size_t allocator_sorted_list::get_metadata_size() noexcept
 {
-    return sizeof(size_t) + sizeof(allocator *) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(std::mutex) + sizeof(void *);
+    return sizeof(size_t) + sizeof(allocator *) + sizeof(logger *) + sizeof(allocator_with_fit_mode::fit_mode) + sizeof(std::mutex) + sizeof(void *);
 }
 
 inline size_t &allocator_sorted_list::get_memory_size() const
@@ -210,9 +223,14 @@ inline allocator *&allocator_sorted_list::get_parent_allocator() const
     return *reinterpret_cast<allocator **>(&get_memory_size() + 1);
 }
 
+inline logger *&allocator_sorted_list::get_log() const
+{
+    return *reinterpret_cast<logger **>(&get_parent_allocator() + 1);
+}
+
 inline allocator_with_fit_mode::fit_mode &allocator_sorted_list::get_fit_mode() const
 {
-    return *reinterpret_cast<allocator_with_fit_mode::fit_mode*>(&get_parent_allocator() + 1);
+    return *reinterpret_cast<allocator_with_fit_mode::fit_mode*>(&get_log() + 1);
 }
 
 inline std::mutex *allocator_sorted_list::get_sync_object_ptr() const
