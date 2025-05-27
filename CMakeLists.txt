@@ -3,4 +3,4 @@ project(puksrenjk)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(puksrenjk main.cpp include/int_wrapper.h src/int_wrapper.cpp include/priority_queue.h include/binomial_priority_queue.h src/binomial_priority_queue.cpp)
+add_executable(puksrenjk main.cpp include/int_wrapper.h src/int_wrapper.cpp include/priority_queue.h include/binomial_priority_queue.h src/binomial_priority_queue.cpp include/allocator.h include/allocator_buddies_system.h)

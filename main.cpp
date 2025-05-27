@@ -264,11 +264,130 @@ int &bar()
     return x;
 }
 
+class default_constructible
+{
+
+public:
+
+    void *operator new(size_t mem_size)
+    {
+
+    }
+
+    void operator delete(void *mem_addr)
+    {
+
+    }
+
+    //std::allocator<default_constructible>
+    //std::pmr::
+
+public:
+
+    default_constructible(int x) {}
+
+};
+
+#include <vector>
+
+class это_не_коллекция final
+{
+
+public:
+
+    class это_не_итератор final
+    {
+
+    private:
+
+        int _index;
+
+    public:
+
+        это_не_итератор(
+            int index)
+        {
+            _index = index;
+        }
+
+    public:
+        bool operator==(
+            это_не_итератор const &other) const
+        {
+            return _index == other._index;
+        }
+
+        bool operator!=(
+            это_не_итератор const &other) const
+        {
+            return !(*this == other);
+        }
+
+        int operator*() const
+        {
+            return _index;
+        }
+
+        это_не_итератор &operator++()
+        {
+            _index = rand() % 11;
+
+            return *this;
+        }
+
+        это_не_итератор &operator++(
+            int)
+        {
+            auto result = *this;
+            ++*this;
+            return result;
+        }
+
+    };
+
+public:
+
+    это_не_итератор begin() const
+    {
+        return это_не_итератор(0);
+    }
+
+    это_не_итератор end() const
+    {
+        return это_не_итератор(10);
+    }
+
+};
+
+// TODO: read about variadic template parameters
+// TODO: read about SOLID principles
+// for (auto const &obj: collection)
+// {
+//
+// }
+
 int main()
 {
-    A *obj = new C();
+    srand((unsigned)time(NULL));
+        это_не_коллекция collection;
+    for (auto value: collection)
+    {
+        std::cout << value << std::endl;
+    }
+    return 0;
+
+    std::vector<T> obj;
+
+    default_constructible **arr = new default_constructible*[10];
+    // obfuscation
+    // malloc calloc realloc free
+    // new delete
+    // placement new: new (addr) T(...);
+    // new T[10] / delete [];
+
+    //A *obj = new C();
     //
-    delete obj;
+    //delete obj;
 
     return 0;
 
@@ -306,15 +425,15 @@ int main()
     //obj2 = obj;
     //obj = obj2;
 
-    int arr[10] = { 1, 2, 3, 7, 14, 23, -5, 6, 14, 23 };
-
-    T x(arr + 4, 5);
-
-    {
-        T y = x;
-    }
-
-    x.foo();
+    //int arr[10] = { 1, 2, 3, 7, 14, 23, -5, 6, 14, 23 };
+//
+    //T x(arr + 4, 5);
+//
+    //{
+    //    T y = x;
+    //}
+//
+    //x.foo();
 
     std::cout << "Hello, World!" << std::endl;
     return 0;
