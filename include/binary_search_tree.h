@@ -1574,29 +1574,27 @@ template<
 std::stack<typename binary_search_tree<tkey, tvalue>::node **> binary_search_tree<tkey, tvalue>::template_method_basics::obtain_path(
     tkey const &key_to_obtain_path_to)
 {
-    std::stack<typename binary_search_tree<tkey, tvalue>::node **> obtained_path;
+    std::stack<typename binary_search_tree<tkey, tvalue>::node **> path;
 
-    //typename binary_search_tree<tkey, tvalue>::node **iterator = &_tree->_root;
-    auto **iterator = &_tree->_root;
+    typename binary_search_tree<tkey, tvalue>::node **current = &(_tree->_root);
 
-    obtained_path.push(iterator);
+    path.push(current);
 
-    while (*iterator != nullptr)
+    while (*current != nullptr)
     {
-        auto comparison_result = _tree->_keys_comparer(key_to_obtain_path_to, (*iterator)->key);
+        auto keys_comparison_result = _tree->_keys_comparer(key_to_obtain_path_to, (*current)->key);
 
-        if (comparison_result == 0)
+        if (keys_comparison_result == 0)
         {
             break;
         }
 
-        iterator = comparison_result < 0
-                   ? &(*iterator)->left_subtree
-                   : &(*iterator)->right_subtree;
-        obtained_path.push(iterator);
+        path.push(current = keys_comparison_result > 0
+            ? &(*current)->right_subtree
+            : &(*current)->left_subtree);
     }
 
-    return obtained_path;
+    return path;
 }
 
 template<

@@ -52,7 +52,7 @@ public:
     virtual tvalue const &obtain(
         tkey const &key) = 0;
 
-    virtual tvalue dispose(
+    virtual tvalue dispose( // RVO/NRVO
         tkey const &key) = 0;
 
 };
