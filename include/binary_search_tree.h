@@ -1628,28 +1628,28 @@ void binary_search_tree<tkey, tvalue>::insertion_template_method::insert(
     tkey const &key,
     tvalue &&value)
 {
-    std::stack<typename binary_search_tree<tkey, tvalue>::node **> path_to_node_with_key = this->obtain_path(key);
+    auto path = this->obtain_path(key);
 
-    auto **top = path_to_node_with_key->top();
+    auto top = path.top();
 
     if (*top != nullptr)
     {
         switch (_insertion_strategy)
         {
             case binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy::update_value:
-                (*top)->value = std::forward<tvalue &&>(value);
-                break;
+                (*top)->value = std::forward<tvalue>(value);
+                // TODO: maybe logging here would be good idea
+                return;
             case binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_strategy::throw_an_exception:
-                // TODO: throw an exception
-                break;
+                throw binary_search_tree<tkey, tvalue>::insertion_of_existent_key_attempt_exception(key);
         }
 
         return;
     }
 
-    construct_node(reinterpret_cast<typename binary_search_tree<tkey, tvalue>::node *>(allocate_with_guard(obtain_node_size())), key, std::forward<tvalue &&>(value));
+    construct_node(*top = reinterpret_cast<typename binary_search_tree<tkey, tvalue>::node *>(allocate_with_guard(obtain_node_size(), 1)), key, std::forward<tvalue>(value));
 
-    balance(path_to_node_with_key);
+    balance(path);
 }
 
 template<
@@ -1677,7 +1677,7 @@ inline void binary_search_tree<tkey, tvalue>::insertion_template_method::constru
     tkey const &key,
     tvalue &&value) const noexcept
 {
-    allocator::construct(at, key, std::forward<tvalue &&>(value));
+    allocator::construct(at, key, std::forward<tvalue>(value));
 }
 
 template<
@@ -1686,7 +1686,7 @@ template<
 void binary_search_tree<tkey, tvalue>::insertion_template_method::balance(
     std::stack<typename binary_search_tree<tkey, tvalue>::node **> &path)
 {
-    this->debug_with_guard("пук среньк, я не буду делать балансировку))0)0");
+    
 }
 
 template<
@@ -1695,7 +1695,6 @@ template<
 allocator *binary_search_tree<tkey, tvalue>::insertion_template_method::get_allocator() const noexcept
 {
     return this->_tree->get_allocator();
-    //return (binary_search_tree<tkey, tvalue>::template_method_basics::_tree)->get_allocator();
 }
 
 // endregion search_tree<tkey, tvalue>::insertion_template_method implementation
