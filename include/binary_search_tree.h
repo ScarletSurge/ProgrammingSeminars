@@ -1686,7 +1686,7 @@ template<
 void binary_search_tree<tkey, tvalue>::insertion_template_method::balance(
     std::stack<typename binary_search_tree<tkey, tvalue>::node **> &path)
 {
-    
+
 }
 
 template<
@@ -1717,20 +1717,7 @@ template<
 tvalue const &binary_search_tree<tkey, tvalue>::obtaining_template_method::obtain(
     tkey const &key)
 {
-    std::stack<typename binary_search_tree<tkey, tvalue>::node **> path_to_node_with_key = this->obtain_path(key);
 
-    auto **top = path_to_node_with_key->top();
-
-    if (*top == nullptr)
-    {
-        // TODO: throw an exception
-    }
-
-    tvalue const &to_return = (*top)->value;
-
-    balance();
-
-    return to_return;
 }
 
 template<
@@ -1739,7 +1726,7 @@ template<
 void binary_search_tree<tkey, tvalue>::obtaining_template_method::balance(
     std::stack<typename binary_search_tree<tkey, tvalue>::node **> &path)
 {
-    this->debug_with_guard("пук среньк, я не буду делать балансировку))0)0");
+
 }
 
 // endregion search_tree<tkey, tvalue>::obtaining_template_method implementation
@@ -1763,42 +1750,7 @@ template<
 tvalue binary_search_tree<tkey, tvalue>::disposal_template_method::dispose(
     tkey const &key)
 {
-    std::stack<typename binary_search_tree<tkey, tvalue>::node **> path_to_node_with_key = this->obtain_path(key);
-
-    auto **top = path_to_node_with_key.top();
-
-    if (*top == nullptr)
-    {
-        // TODO: throw an exception
-    }
-
-    if ((*top)->left_subtree != nullptr &&
-        (*top)->right_subtree != nullptr)
-    {
-        node **max_from_left_subtree = &(*top)->left_subtree;
-
-        do
-        {
-            path_to_node_with_key.push(max_from_left_subtree);
-            max_from_left_subtree = &(*max_from_left_subtree)->right_subtree;
-        } while (*max_from_left_subtree != nullptr);
-
-        auto **new_top = path_to_node_with_key.top();
-
-        std::swap(std::move((*top)->key), std::move((*new_top)->key));
-        std::swap(std::move((*top)->value), std::move((*new_top)->value));
-
-        top = new_top;
-    }
-
-    auto *subtree_new_root = (*top)->right_subtree != nullptr
-                             ? (*top)->right_subtree
-                             : (*top)->left_subtree;
-    allocator::destruct(*top);
-    deallocate_with_guard(*top);
-    *top = subtree_new_root;
-
-    balance(path_to_node_with_key);
+    
 }
 
 template<
