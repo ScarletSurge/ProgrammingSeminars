@@ -5,6 +5,7 @@
 #include "include/logger_builder.h"
 #include "include/client_logger_builder.h"
 #include "include/logger.h"
+#include "include/binary_search_tree.h"
 
 /*int bugint_demo(
     int argc,
@@ -109,12 +110,29 @@ int logger_demo(
     return 0;
 }
 
+int binary_search_tree_demo(
+    int argc,
+    char *argv[])
+{
+    associative_container<int, int> *tree = new binary_search_tree<int, int>((std::less<>()));
+
+    tree->insert(1, 2);
+
+    auto moved_tree = std::move(*dynamic_cast<binary_search_tree<int, int> *>(tree));
+
+    delete tree;
+
+    return 0;
+}
+
 int main(
     int argc,
     char *argv[])
 {
     // sorted_list_allocator_demo();
-    return logger_demo(argc, argv);
+    //return logger_demo(argc, argv);
+    return binary_search_tree_demo(argc, argv);
+
     return 0;
 
     int_wrapper *obj_ptr = new int_wrapper(10);
