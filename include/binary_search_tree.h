@@ -201,7 +201,7 @@ public:
         infix_iterator const operator++(
             int not_used);
 
-        iterator_data *operator*() const;
+        std::tuple<tkey const &, tvalue &, unsigned int> operator*() const;
 
     };
 
@@ -603,7 +603,21 @@ protected:
         void set_disposal_strategy(
             typename binary_search_tree<tkey, tvalue>::disposal_of_nonexistent_key_attempt_strategy disposal_strategy) noexcept;
 
-        void clear(node *to_clear);
+        void clear(
+            node *&to_clear)
+        {
+            if (to_clear == nullptr)
+            {
+                return;
+            }
+
+            clear(to_clear->left_subtree);
+            clear(to_clear->right_subtree);
+
+            allocator::destruct(to_clear);
+            deallocate_with_guard(to_clear);
+            to_clear = nullptr;
+        }
 
     protected:
 
@@ -1115,9 +1129,9 @@ typename binary_search_tree<tkey, tvalue>::infix_iterator const binary_search_tr
 template<
     typename tkey,
     typename tvalue>
-typename binary_search_tree<tkey, tvalue>::iterator_data *binary_search_tree<tkey, tvalue>::infix_iterator::operator*() const
+std::tuple<tkey const &, tvalue &, unsigned int> binary_search_tree<tkey, tvalue>::infix_iterator::operator*() const
 {
-    throw not_implemented("template<typename tkey, typename tvalue> typename binary_search_tree<tkey, tvalue>::iterator_data *binary_search_tree<tkey, tvalue>::infix_iterator::operator*() const", "your code should be here...");
+
 }
 
 // endregion infix_iterator implementation
@@ -1900,12 +1914,16 @@ binary_search_tree<tkey, tvalue> &binary_search_tree<tkey, tvalue>::operator=(
         return *this;
     }
 
+    _disposal_template->clear(_root);
 
+    this->_keys_comparer = other._keys_comparer;
+    this->_logger = other._logger;
+    this->_allocator = other._allocator;
 
-    return *this
+    _root = _insertion_template->copy(other._root);
+
+    return *this;
 }
-
-
 
 template<
     typename tkey,

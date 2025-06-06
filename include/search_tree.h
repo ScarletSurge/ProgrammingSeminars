@@ -26,7 +26,7 @@ protected:
 
     std::function<int(tkey const &, tkey const &)> _keys_comparer;
 
-private:
+protected:
 
     logger *_logger;
 
