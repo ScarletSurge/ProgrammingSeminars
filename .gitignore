@@ -77,3 +77,6 @@ packages/
 # Others
 Thumbs.db
 Desktop.ini
+
+# Temporary cache files (hand made)
+.vs
