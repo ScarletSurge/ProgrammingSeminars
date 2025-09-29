@@ -2,7 +2,10 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
+#include <limits.h>
 
+/*На языке программирования C (стандарт C99 и выше) реализовать приложение, запрашивающее со стандартного потока ввода у пользователя три целых числа, и сообщающее пользователю при помощи печати в стандартный поток вывода: а) являются ли считанные числа таковыми, что любое из них является суммой двух остальных; произведением двух остальных; б) являются ли введённые числа длинами сторон треугольника; в) является ли сумма введённых чисел некоторой степенью двойки.*/
 void letuchka220925()
 {
     int value1, value2, value3;
@@ -49,6 +52,52 @@ void letuchka220925()
     // 2^0 + 2^1 + 2^2 == 2^3 - 1
     // 2^13 - 1 = 
 
+}
+
+/*На языке программирования C (стандарт C99 и выше) реализовать приложение, запрашивающее у пользователя из стандартного потока ввода значения для переменных first_value и epsilon типа double; значение epsilon при этом должно быть строго положительным (после трёх неуспешных попыток ввода значения переменной epsilon необходимо завершить приложение аварийно). Далее, приложение запрашивает со стандартного потока ввода значение second_value до тех пор, пока значения переменных first_value и second_value не станут равны с точностью epsilon; по достижении вышеописанного условия приложение должно напечатать в стандартный поток вывода результат произведения значений first_value и second_value.*/
+int letuchka290925()
+{
+    double difference;
+    int attempts_counter = 0;
+    double first_value, second_value;
+    double epsilon = 0.0;
+    // while (epsilon == 0.0) - ЭТО БАН!!1!1
+    // while (epsilon != 0.0) - ЭТО БАН!!1!1
+
+    // TODO: printf
+    if (scanf("%lf", &first_value) != 1)
+    {
+        // TODO: validate
+    }
+
+    while (epsilon <= 0.0)
+    {
+        // TODO: printf
+        if (scanf("%lf", &epsilon) != 1)
+        {
+            // TODO: validate
+        }
+
+        if (++attempts_counter == 3 && epsilon <= 0.0)
+        {
+            // exit(1); - ЭТО БАН
+            return 1;
+        }
+    }
+
+    do
+    {
+        // TODO: printf
+        if (scanf("%lf", &second_value) != 1)
+        {
+            // TODO: validate
+        }
+    }
+    while (fabsl(first_value - second_value) >= epsilon);
+
+    printf("v1 * v2 == %lf", first_value * second_value);
+
+    return 0;
 }
 
 int main(void)
@@ -99,7 +148,7 @@ int main(void)
 
     // obsolete/deprecated
 
-    unsigned int value1 = 0, value2, value3;
+    /*unsigned int value1 = 0, value2, value3;
     int i;
 
     printf("Enter 3 decimal values: ");
@@ -132,7 +181,7 @@ int main(void)
     // TODO: while, do/while
 
     // 22.09.2025
-    //for (/*initialization block*/;/*conditional expression checking block*/;/*modification block*/)
+    //for (initialization block;conditional expression checking block;modification block)
 
     int maybe_prime;
     printf("input value: ");
@@ -190,7 +239,6 @@ int main(void)
                     {
                         is_prime = 0;
                         break;
-
                     }
 
                 }
@@ -202,7 +250,51 @@ int main(void)
                 printf("inputed value is not prime\n");
             }
         }
+    }*/
+
+    // code from 29.09.25
+    // malloc, calloc, realloc, free - read about it
+    // lvalue, rvalue
+
+    int x = 5, y = 10;
+    x = y;
+    printf("%p\n\n", &x);
+
+    // definition
+    int *ptr_to_x = &x;
+
+    int *p = ptr_to_x + 3;
+    printf("sizeof(int) == %d\n", sizeof(int)); // expression-or-type
+    printf("INT_MAX + 1 == INT_MIN - %s\n",
+        INT_MAX + 1 == INT_MIN
+            ? "true"
+            : "false");
+
+    x;
+    y;
+    ptr_to_x = &y;
+    *ptr_to_x = 7;
+
+    printf("%d\n\n", y);
+
+    int i = 0;
+    int arr[10] = { 0 };
+    arr[0] = 10;
+    printf("arr[%d] == %d\n\n", 1, *arr);
+
+    // arr[i]
+    // *(arr + i)
+    // i[arr]
+
+    for (i = 0; i < 10; ++i)
+    {
+        arr[i] = i + 1;
     }
- 
+
+    for (i = 0; i < 10; ++i)
+    {
+        printf("%d at 0x%p\n", arr[i], arr + i);
+    }
+
     return 0;
 }
