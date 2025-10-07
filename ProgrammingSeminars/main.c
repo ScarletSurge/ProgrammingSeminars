@@ -4,6 +4,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <time.h>
+#include <ctype.h>
+#include <locale.h>
 
 /*На языке программирования C (стандарт C99 и выше) реализовать приложение, запрашивающее со стандартного потока ввода у пользователя три целых числа, и сообщающее пользователю при помощи печати в стандартный поток вывода: а) являются ли считанные числа таковыми, что любое из них является суммой двух остальных; произведением двух остальных; б) являются ли введённые числа длинами сторон треугольника; в) является ли сумма введённых чисел некоторой степенью двойки.*/
 void letuchka220925()
@@ -100,8 +103,37 @@ int letuchka290925()
     return 0;
 }
 
+/*На языке программирования C (стандарт C99 и выше) реализовать приложение, заполняющее массив размера 512 целыми псевдослучайными числами из диапазона [-500..500], причём события выпадения каждого отдельного значения из диапазона равновероятны. Необходимо вывести сгенерированный массив в стандартный поток вывода, а далее вычислить среднее арифметическое (типа double) элементов массива, используя указатель для прохода по элементам массива. Значение среднего арифметического необходимо вывести в стандартный поток вывода с точностью 6 знаков после десятичной точки.*/
+int letuchka061025()
+{
+    int values[512], i;
+    int* p_value = values;
+    double average = 0.0;
+    // rand() % (b - a + 1) + a
+    // rand() % 7 - 0, 1, 2, 3, 4, 5, 6
+    // [a..b] -> [0...b-a] + a
+
+    srand((unsigned int)time(NULL));
+    for (i = 0; i < 512; ++i)
+    {
+        values[i] = rand() % 1001 - 500;
+        printf("%d ", values[i] /*use assignment operator*/);
+    }
+
+    for (i = 0; i < 512; ++i)
+    {
+        average += *p_value;
+        p_value++;
+    }
+
+    printf("%.6lf", average /= 512);
+
+    return 0;
+}
+
 int main(void)
 {
+    setlocale(LC_ALL, "Russian");
     // code from 08.09.25
     // variables & types
     int summand1, summand2; // integral
@@ -256,7 +288,7 @@ int main(void)
     // malloc, calloc, realloc, free - read about it
     // lvalue, rvalue
 
-    int x = 5, y = 10;
+    /*int x = 5, y = 10;
     x = y;
     printf("%p\n\n", &x);
 
@@ -294,7 +326,50 @@ int main(void)
     for (i = 0; i < 10; ++i)
     {
         printf("%d at 0x%p\n", arr[i], arr + i);
+    }*/
+
+    // code from 06.10.25
+    FILE *input_file; // FILE is typedef for struct _iobuf
+    // variable of type `FILE *` is called file variable
+
+    //1 2 + 
+    // (123 + 7) * (9 - (1 - 2)) / (5 - 5)
+    //const int const * const * const* const** const;
+
+    char const * const filePath = "C:\\Users\\Ilya\\Desktop\\pukipuki.txt";
+    input_file = fopen(filePath, "r");
+    if (input_file == NULL)
+    {
+        // File not opened!
+        // TODO: handle fopen retval
+        return -1;
     }
+
+    // loop of reading file with EOF handling
+    while (!feof(input_file))
+    {
+        char readChar = fgetc(input_file);
+        putc(readChar, stdout);
+        //printf("%c", readChar);
+    }
+    // if (!(input_file = fopen("path", "mode"))) { // File not opened! }
+    // fgetc, fscanf, fprintf, fputs
+    // fread, fwrite, open, close
+    // rewind
+    fclose(input_file);
+    input_file = fopen(filePath, "r");
+    if (input_file == NULL)
+    {
+        return -2;
+    }
+
+    char c;
+    while ((c = fgetc(input_file)) != EOF)
+    {
+        // TODO: handle read character
+    }
+
+    fclose(input_file);
 
     return 0;
 }
