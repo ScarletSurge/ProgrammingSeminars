@@ -7,6 +7,11 @@
 #include <time.h>
 #include <ctype.h>
 #include <locale.h>
+#include <stdarg.h>
+
+#define MACRO_KEY хы
+#define MUL(x, y) ((x) *\
+ (y))
 
 /*На языке программирования C (стандарт C99 и выше) реализовать приложение, запрашивающее со стандартного потока ввода у пользователя три целых числа, и сообщающее пользователю при помощи печати в стандартный поток вывода: а) являются ли считанные числа таковыми, что любое из них является суммой двух остальных; произведением двух остальных; б) являются ли введённые числа длинами сторон треугольника; в) является ли сумма введённых чисел некоторой степенью двойки.*/
 void letuchka220925()
@@ -131,9 +136,120 @@ int letuchka061025()
     return 0;
 }
 
-int main(void)
+/*
+ * На языке программирования C реализовать приложение, открывающее текстовый файл с именем "inputFile.txt" уровня директории exe-файла, связанного с приложением. Из открытого файла необходимо выделить все непустые подстроки, являющиеся корректным представлением целого неотрицательного числа в системе счисления с основанием 16; разделителем между такими подстроками являются символы пробела, табуляции и переноса строки. Выделенные подстроки представлений и эквивалентные им значения чисел в системе счисления с основанием 10 необходимо построчно записать в текстовый файл с именем "outputFile.txt" уровня директории exe-файла, связанного с приложением.
+*/
+int letuchka131025(
+    int argc,
+    char *argv[])
 {
-    setlocale(LC_ALL, "Russian");
+    if (argc != 3)
+    {
+        printf("Invalid command arguments count!");
+        return -3;
+    }
+
+    FILE* inputFile = fopen(argv[1], "r");
+    if (!inputFile)
+    {
+        // TODO: handle file opening error
+        printf("Input file not exists!");
+        return -1;
+    }
+
+    FILE* outputFile = fopen(argv[2], "w");
+    if (!outputFile)
+    {
+        printf("Output file can't be created!");
+        fclose(inputFile);
+        return -2;
+    }
+
+    char buf[BUFSIZ], *b = buf, c, c_ = ' ';
+    int convertedValue;
+
+    while (!feof(inputFile))
+    {
+        c = toupper(fgetc(inputFile));
+
+        if (!(c == ' ' || c == '\t' || c == '\n' || c == EOF))
+        {
+            // x = ++*b, *++b, x = *b++, x = (*b)++
+            *b = c;
+            b++;
+        }
+        else if (b != buf) // lexem found!
+        {
+            *b = '\0'; // b - buf == strlen(buf)
+            b = buf;
+            convertedValue = 0;
+
+            while (*b /*!= 0*/)
+            {
+                if (isdigit(*b) || (*b >= 'A' && *b <= 'F'))
+                {
+                    convertedValue = convertedValue * 16 + (isdigit(*b)
+                        ? *b - '0' // *b - 48 - the same
+                        : *b - 'A' + 10); // *b - 55
+                }
+                else
+                {
+                    break;
+                }
+
+                ++b;
+            }
+
+            if (!*b)
+            {
+                fprintf(outputFile, "%s(16) == %d(10)\n", buf, convertedValue);
+            }
+
+            b = buf;
+        }
+
+        c_ = c;
+    }
+
+    fclose(inputFile);
+    fclose(outputFile);
+
+    return 0;
+}
+
+int avg(
+    size_t values_count,
+    double *target,
+    ...)
+{
+    if (values_count == 0)
+    {
+        return 1;
+    }
+
+    if (target == NULL)
+    {
+        return 2;
+    }
+
+    int result = 0, i;
+    va_list args;
+    va_start(args, target); // args = &values_count + 0
+    for (i = 0; i < values_count; ++i)
+    {
+        result += va_arg(args, int);
+    }
+
+    *target = (double)result / values_count;
+    return 0;
+}
+
+int main(
+    int argc,
+    char *argv[])
+{
+    //printf("%s", 1.85);
+    // setlocale(LC_ALL, "Russian");
     // code from 08.09.25
     // variables & types
     int summand1, summand2; // integral
@@ -337,7 +453,7 @@ int main(void)
     //const int const * const * const* const** const;
 
     char const * const filePath = "C:\\Users\\Ilya\\Desktop\\pukipuki.txt";
-    input_file = fopen(filePath, "r");
+    /*input_file = fopen(filePath, "r");
     if (input_file == NULL)
     {
         // File not opened!
@@ -369,7 +485,38 @@ int main(void)
         // TODO: handle read character
     }
 
-    fclose(input_file);
+    fclose(input_file);*/
+
+    int Arsenya = -2;
+    printf("%d\n", ++Arsenya);
+    printf("%d\n\n", Arsenya);
+
+    int i;
+    for (i = 0; i < argc; ++i)
+    {
+        printf("argv[%d] == \"%s\"\n", i, argv[i]);
+    }
+
+    //letuchka131025(argc, argv);
+
+    //int хы = 53;
+    //printf("%d", MUL(1 + 2, 3 + 4));
+    //printf("%d", (1 + 2) * (3 + 4));
+    //printf("%d", хы);
+    double result = 0.0;
+
+    switch (avg(5, NULL, 1, 2, 3, 7, 13))
+    {
+    case 0:
+        printf("%.6lf", result);
+        break;
+    case 1:
+        printf("Puk-puk, values count can't be EQ to 0!");
+        break;
+    case 2:
+        printf("Puk-srenjk, can't store result!");
+        break;
+    }
 
     return 0;
 }
