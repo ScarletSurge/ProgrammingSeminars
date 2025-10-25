@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <stdarg.h>
+#include <string.h>
 
 #define MACRO_KEY хы
 #define MUL(x, y) ((x) *\
@@ -217,6 +218,18 @@ int letuchka131025(
     return 0;
 }
 
+/*
+ * На языке программирования C (стандарт C99 и выше) реализовать приложение, принимающее в качестве аргументов командной строки путь к текстовому файлу. Файловая переменная, полученная при открытии файла, должна быть передана в функцию, принимающую также переменное число аргументов (непустых строк). В файле необходимо найти вхождения всех строк из списка аргументов переменной длины в качестве подстрок, и напечатать в стандартный поток вывода номера символов из файла (начиная с 1) с указанием всех подстрок, начинающихся с данного символа.
+ */
+int letuchka201025(
+    int argc,
+    char* argv[])
+{
+    // TODO
+
+    return 0;
+}
+
 int avg(
     size_t values_count,
     double *target,
@@ -242,6 +255,71 @@ int avg(
 
     *target = (double)result / values_count;
     return 0;
+}
+
+char* bad_concat(
+    size_t count,
+    ...)
+{
+    char *result, *for_realloc;
+    int result_length = 0;
+    int i;
+    va_list args;
+    // #define va_start(ap, x) ((ap) = (va_list)(&(x) + 1))
+    
+    result = (char*)malloc(sizeof(char) * 1);
+    if (result == NULL)
+    {
+        return NULL;
+    }
+    strcpy(result, ""); // *result = 0; - the same
+
+    if (count == 0)
+    {
+        // return "";
+        // return strdup("");
+        return result;
+    }
+
+    va_start(args, count); // args = (va_list)(&count + 1);
+    for (i = 0; i < count; ++i)
+    {
+        char *str = va_arg(args, char const*);
+        size_t str_len = strlen(str);
+        
+        if ((for_realloc = (char*)realloc(result, sizeof(char) * (result_length + str_len + 1))) == NULL)
+        {
+            free(result);
+            return NULL;
+        }
+        result = for_realloc;
+
+        // strcat(result, str); // this is slow
+        strcpy(result + result_length, str); // this is faster
+        result_length += str_len;
+
+        //printf("\tva_list[%d] == \"%s\"\n", i, va_arg(args, char const*));
+    }
+    va_end(args);
+
+    return result;
+}
+
+int code_from_201025(
+    int argc,
+    char *argv[])
+{
+    char* concatenated_strings = bad_concat(0, "AbcdE", "BCdfhfdkdfjdfkdfD", "DFGHJKLKGFGHJKL:", "", "", "1234567890");
+    switch ((size_t)concatenated_strings)
+    {
+        case 0:
+            printf("Memory allocation error!!1!1");
+            break;
+        default:
+            printf("concat result == \"%s\"\n", concatenated_strings);
+            free(concatenated_strings);
+            break;
+    }
 }
 
 int main(
@@ -487,15 +565,15 @@ int main(
 
     fclose(input_file);*/
 
-    int Arsenya = -2;
-    printf("%d\n", ++Arsenya);
-    printf("%d\n\n", Arsenya);
-
-    int i;
-    for (i = 0; i < argc; ++i)
-    {
-        printf("argv[%d] == \"%s\"\n", i, argv[i]);
-    }
+    //int Arsenya = -2;
+    //printf("%d\n", ++Arsenya);
+    //printf("%d\n\n", Arsenya);
+    //
+    //int i;
+    //for (i = 0; i < argc; ++i)
+    //{
+    //    printf("argv[%d] == \"%s\"\n", i, argv[i]);
+    //}
 
     //letuchka131025(argc, argv);
 
@@ -503,20 +581,22 @@ int main(
     //printf("%d", MUL(1 + 2, 3 + 4));
     //printf("%d", (1 + 2) * (3 + 4));
     //printf("%d", хы);
-    double result = 0.0;
+    //double result = 0.0;
+    //
+    //switch (avg(5, NULL, 1, 2, 3, 7, 13))
+    //{
+    //case 0:
+    //    printf("%.6lf", result);
+    //    break;
+    //case 1:
+    //    printf("Puk-puk, values count can't be EQ to 0!");
+    //    break;
+    //case 2:
+    //    printf("Puk-srenjk, can't store result!");
+    //    break;
+    //}
 
-    switch (avg(5, NULL, 1, 2, 3, 7, 13))
-    {
-    case 0:
-        printf("%.6lf", result);
-        break;
-    case 1:
-        printf("Puk-puk, values count can't be EQ to 0!");
-        break;
-    case 2:
-        printf("Puk-srenjk, can't store result!");
-        break;
-    }
+    return code_from_201025(argc, argv);
 
     return 0;
 }
