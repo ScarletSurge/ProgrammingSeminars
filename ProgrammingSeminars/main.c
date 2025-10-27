@@ -230,6 +230,21 @@ int letuchka201025(
     return 0;
 }
 
+/*
+ * На языке программирования C (стандарт C99 и выше) реализовать приложение, принимающее в качестве аргументов командной строки аргументы: основание системы счисления base (натуральное число) из диапазона [2..36]; значения n и k (натуральные числа, k <= n), записанные в системе счисления с основанием base; путь к выходному файлу output_file_path; основание системы счисления base2 (натуральное число) из диапазона [2..36]. В рамках приложения необходимо:
+1. создать динамический массив длины n и заполнить его псевдослучайными числами из диапазона [-5000...7500);
+2. найти k наибольших элементов сгенерированного массива и переписать их в новый динамический массив длины k, сохранив оригинальный порядок следования элементов;
+3. записать в выходной файл (путь к файлу - аргумент командной строки) элементы обоих массивов; разделитель между записанными значениями одного массива - пробел, разделитель между массивами - символ переноса строки; значения элементов при этом записываются в системе счисления с основанием base2.
+*/
+int letuchka271025(
+    int argc,
+    char* argv[])
+{
+    // TODO: 
+
+    return 0;
+}
+
 int avg(
     size_t values_count,
     double *target,
@@ -284,7 +299,7 @@ char* bad_concat(
     va_start(args, count); // args = (va_list)(&count + 1);
     for (i = 0; i < count; ++i)
     {
-        char *str = va_arg(args, char const*);
+        char const *str = va_arg(args, char const*);
         size_t str_len = strlen(str);
         
         if ((for_realloc = (char*)realloc(result, sizeof(char) * (result_length + str_len + 1))) == NULL)
@@ -320,6 +335,195 @@ int code_from_201025(
             free(concatenated_strings);
             break;
     }
+}
+
+void tuned_free_all(
+    void** to_free,
+    ...);
+
+typedef struct student
+{
+    char *surname;
+    char *name;
+    char *patronymic;
+    size_t age;
+    char sex;
+    char *group_name;
+} student, stud, *p_student;
+
+void free_student(
+    p_student stud_ptr)
+{
+    tuned_free_all((void **)&stud_ptr->surname, &stud_ptr->name, &stud_ptr->patronymic, &stud_ptr->group_name, NULL);
+}
+
+// typedef void* T;
+
+void free_all(
+    void* to_free,
+    ...)
+{
+    if (to_free == NULL)
+    {
+        return;
+    }
+
+    free(to_free);
+
+    va_list va;
+    va_start(va, to_free);
+    void *from_va;
+
+    while ((from_va = va_arg(va, void*)) != NULL)
+    {
+        free(from_va);
+    }
+}
+
+void tuned_free_all(
+    void **to_free,
+    ...)
+{
+    if (to_free == NULL)
+    {
+        return;
+    }
+
+    free(*to_free);
+    *to_free = NULL;
+
+    va_list va;
+    va_start(va, to_free);
+    void** from_va;
+
+    while ((from_va = va_arg(va, void**)) != NULL)
+    {
+        free(*from_va);
+        *from_va = NULL;
+    }
+}
+
+int code_from_271025(
+    int argc,
+    char* argv[])
+{
+    sizeof(52+7); // expression-or-type
+
+    float f = -12397.0975008;
+    float *fptr = &f;
+    
+    int *iptr = (int *)&f;
+    iptr = (int *)&f;
+
+    printf("Bits as int: %d\n", *iptr);
+    printf("Bits as float: %f\n\n", *fptr);
+
+    // open file with existence check
+    // FILE *f;
+    // if (!(f = fopen(file_path, file_mode)))
+    // {
+    //     // TODO
+    // }
+    
+    // file reading loop (with EOF handling)
+    // char c;
+    // while (!feof(f))
+    // {
+    //     c = fgetc(f);
+    //     // TODO: handle read character/byte
+    // }
+    
+    // file reading loop (without EOF handling)
+    // char c;
+    // while ((c = fgetc(f)) != EOF)
+    // {
+    //     // TODO: handle read character/byte
+    // }
+
+    // Gorner schema
+    // char const *value = "12bC04", *v = value;
+    //                      ^
+    //                      |
+    //                      v
+    // size_t const base = 18;
+    // int result = 0;
+    // while (*v)
+    // {
+    //     result = result * base + (isdigit(*v)
+    //       ? *v++ - '0'
+    //       : toupper(*v++) - 'A' + 10);
+    // }
+    
+    // Gorner inverted schema
+    // int value = 1923876;
+    // int const base = 16;
+    // char buf[BUFSIZ], *b = buf + BUFSIZ - 1;
+    // *b = 0;
+    // if (value == 0) { *--b = '0'; }
+    // // TODO: handle value sign
+    // while (value)
+    // {
+    //     int const rem = value % base;
+    //     *--b = rem < 10
+    //       ? rem + '0'
+    //       : rem + 'A' - 10;
+    //     value /= base;
+    // }
+
+    student stud_instance;
+    stud_instance.age = 17;
+
+    stud_instance.surname = (char *)malloc(sizeof(char) * (strlen("Sadykov") + 1));
+    if (stud_instance.surname == NULL)
+    {
+        return 1;
+    }
+    strcpy(stud_instance.surname, "Sadykov");
+
+    stud_instance.name = (char*)malloc(sizeof(char) * (strlen("Timur") + 1));
+    if (stud_instance.name == NULL)
+    {
+        free(stud_instance.surname);
+        return 1;
+    }
+    strcpy(stud_instance.surname, "Timur");
+
+    stud_instance.patronymic = (char*)malloc(sizeof(char) * (strlen("Eduardovich") + 1));
+    if (stud_instance.patronymic == NULL)
+    {
+        // free(stud_instance.surname);
+        // free(stud_instance.name);
+        free_all(stud_instance.surname, stud_instance.name, NULL);
+        return 1;
+    }
+    strcpy(stud_instance.surname, "Eduardovich");
+
+    stud_instance.group_name = (char*)malloc(sizeof(char) * (strlen("ITPM-125") + 1));
+    if (stud_instance.group_name == NULL)
+    {
+        // free(stud_instance.surname);
+        // free(stud_instance.name);
+        // free(stud_instance.patronymic);
+        free_all(stud_instance.surname, stud_instance.name, stud_instance.patronymic, NULL);
+        return 1;
+    }
+    strcpy(stud_instance.surname, "ITPM-125");
+
+    stud_instance.sex = 52;
+
+    printf("sizeof(puk_srenjk) == %u\n", sizeof(struct puk_srenjk));
+    printf("sum of sizeofs of char and int == %u", sizeof(char) + sizeof(int));
+
+    free_student(&stud_instance);
+
+    // TODO: usage of initialized struct instance...
+
+    // TODO: make this at home
+    // int init_string_at_heap(
+    //    char** to_init,
+    //    char const* source);
+
+    return 0;
 }
 
 int main(
@@ -596,7 +800,7 @@ int main(
     //    break;
     //}
 
-    return code_from_201025(argc, argv);
+    return code_from_271025(argc, argv);
 
     return 0;
 }
