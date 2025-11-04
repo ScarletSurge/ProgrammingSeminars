@@ -1,6 +1,8 @@
 ﻿#ifndef QUICK_QUIZZES_H
 #define QUICK_QUIZZES_H
 
+#pragma warning(disable: 4996)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

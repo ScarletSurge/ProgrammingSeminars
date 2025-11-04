@@ -126,6 +126,11 @@
     <ClCompile Include="dynamic_array.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="quick_quizzes.c" />
+    <ClCompile Include="seminar_25_09_15.h" />
+    <ClCompile Include="seminar_25_09_22.h" />
+    <ClCompile Include="seminar_25_10_06.h" />
+    <ClCompile Include="seminar_25_10_13.h" />
+    <ClCompile Include="seminar_25_10_27.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt" />
@@ -133,6 +138,10 @@
   <ItemGroup>
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="quick_quizzes.h" />
+    <ClInclude Include="seminar_25_09_08.h" />
+    <ClInclude Include="seminar_25_09_29.h" />
+    <ClInclude Include="seminar_25_10_20.h" />
+    <ClInclude Include="seminar_25_11_03.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

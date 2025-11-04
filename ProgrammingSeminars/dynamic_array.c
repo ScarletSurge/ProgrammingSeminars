@@ -81,11 +81,13 @@ int insert_by_index_into_dynamic_array(
         }
 
         to_insert_into->values = for_realloc;
+        for_realloc = NULL;
         to_insert_into->physical_size <<= 1;
 
     }
-    unsigned int i;
-    for (i = to_insert_into->virtual_size - 1; i >= index;i--)
+
+    int i;
+    for (i = to_insert_into->virtual_size - 1; i >= (int)index; i--)
     {
         to_insert_into->values[i + 1] = to_insert_into->values[i];
     }

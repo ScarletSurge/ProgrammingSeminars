@@ -18,10 +18,51 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dynamic_array.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="quick_quizzes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seminar_25_10_27.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seminar_25_09_15.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seminar_25_10_06.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seminar_25_10_13.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seminar_25_09_22.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dynamic_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="quick_quizzes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_10_20.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_09_08.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_09_29.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_11_03.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
