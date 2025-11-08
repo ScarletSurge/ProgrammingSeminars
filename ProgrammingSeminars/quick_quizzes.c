@@ -222,11 +222,256 @@ int quick_quiz_27_10_25(
     return 0;
 }
 
+typedef struct time
+{
+    unsigned int hours;
+    unsigned int minutes;
+};
+
+typedef struct schedule_unit
+{
+    unsigned int route_number;
+    char* station_name;
+    struct time stop_time;
+} schedule_unit;
+
+int read_schedule_from_file(
+    char const* file_path,
+    schedule_unit **read_schedule_units,
+    size_t *read_schedule_units_count);
+
+int read_schedule_unit(
+    FILE *read_context,
+    schedule_unit *target);
+
 int quick_quiz_03_11_25(
     int argc,
     char *argv[])
 {
+    int x;
+    schedule_unit *read_units;
+    size_t read_units_count;
+    switch (read_schedule_from_file("D:\\Repos\\KosyginRSU\\ProgrammingSeminars\\ProgrammingSeminars\\schedule.txt", &read_units, &read_units_count))
+    {
+    case 0:
+        x = 10;
+        break;
+    }
 
+    return 0;
+}
+
+int read_schedule_from_file(
+    char const* file_path,
+    schedule_unit** read_schedule_units,
+    size_t* read_schedule_units_count)
+{
+    int exit_code = 0;
+
+    if (file_path == NULL)
+    {
+        exit_code |= 0x1;
+    }
+
+    if (read_schedule_units == NULL)
+    {
+        exit_code |= 0x2;
+    }
+
+    if (read_schedule_units_count == NULL)
+    {
+        exit_code |= 0x4;
+    }
+
+    if (exit_code != 0)
+    {
+        return exit_code;
+    }
+
+    FILE *input_file;
+    if (!(input_file = fopen(file_path, "r")))
+    {
+        return 8;
+    }
+
+    if ((*read_schedule_units = (schedule_unit*)malloc(sizeof(schedule_unit) * (*read_schedule_units_count = 16))) == NULL)
+    {
+        fclose(input_file);
+        return 16;
+    }
+
+    int idx = 0;
+
+    while (!feof(input_file))
+    {
+        // &a[i] <-> a + i
+        if (idx == *read_schedule_units_count)
+        {
+            schedule_unit *for_realloc = (schedule_unit *)realloc(*read_schedule_units, sizeof(schedule_unit) * (*read_schedule_units_count << 1));
+            if (for_realloc == NULL)
+            {
+                int i;
+                for (i = 0; i < *read_schedule_units_count; ++i)
+                {
+                    free((*read_schedule_units)[i].station_name);
+                }
+                free(*read_schedule_units);
+                *read_schedule_units = NULL;
+                *read_schedule_units_count = 0;
+                return 32;
+            }
+            *read_schedule_units = for_realloc;
+            for_realloc = NULL;
+            *read_schedule_units_count <<= 1;
+        }
+
+        switch (read_schedule_unit(input_file, *read_schedule_units + idx))
+        {
+        case 0:
+
+            break;
+        }
+
+        ++idx;
+    }
+
+    fclose(input_file);
+
+    if (idx < *read_schedule_units_count)
+    {
+        schedule_unit* for_realloc = (schedule_unit*)realloc(*read_schedule_units, sizeof(schedule_unit) * idx);
+        if (for_realloc == NULL)
+        {
+            int i;
+            for (i = 0; i < *read_schedule_units_count; ++i)
+            {
+                free((*read_schedule_units)[i].station_name);
+            }
+            free(*read_schedule_units);
+            *read_schedule_units = NULL;
+            *read_schedule_units_count = 0;
+            return 32;
+        }
+        *read_schedule_units = for_realloc;
+        for_realloc = NULL;
+        *read_schedule_units_count = idx;
+    }
+
+    return exit_code;
+}
+
+int read_schedule_unit(
+    FILE *read_context,
+    schedule_unit *target)
+{
+    if (read_context == NULL)
+    {
+        return 1;
+    }
+
+    if (target == NULL)
+    {
+        return 2;
+    }
+
+    target->route_number = 0;
+    target->stop_time.hours = 0;
+    target->stop_time.minutes = 0;
+    size_t station_name_buf_len = 16;
+    if ((target->station_name = (char*)malloc(sizeof(char) * station_name_buf_len)) == NULL)
+    {
+        return 3;
+    }
+    char *sn = target->station_name;
+
+    char c = ' ';
+    int read_flag = 0; // 0 - while reading route number; 1 - while reading time; 2 - read station name
+    int reading_minutes = 0;
+
+    unsigned int *time_var_addr;
+
+    while (1)
+    {
+        c = fgetc(read_context);
+
+        if (c == EOF || c == '\n' || c == '\r')
+        {
+            if (sn - target->station_name == station_name_buf_len)
+            {
+                char* for_realloc = (char*)realloc(target->station_name, sizeof(char) * (station_name_buf_len + 1));
+                if (for_realloc == NULL)
+                {
+                    free(target->station_name);
+                    target->station_name = NULL;
+                    return 4;
+                }
+                target->station_name = for_realloc;
+                sn = target->station_name + station_name_buf_len;
+            }
+
+            *sn = 0;
+
+            int strl;
+            if ((strl = sn - target->station_name) != station_name_buf_len)
+            {
+                char *for_realloc = (char *)realloc(target->station_name, sizeof(char) * (strl + 1));
+                if (for_realloc == NULL)
+                {
+                    free(target->station_name);
+                    target->station_name = NULL;
+                    return 4;
+                }
+                target->station_name = for_realloc;
+            }
+
+            break;
+        }
+        
+        if (read_flag == 2)
+        {
+            if (sn - target->station_name == station_name_buf_len)
+            {
+                char* for_realloc = (char*)realloc(target->station_name, sizeof(char) * (station_name_buf_len << 1));
+                if (for_realloc == NULL)
+                {
+                    free(target->station_name);
+                    target->station_name = NULL;
+                    return 4;
+                }
+                target->station_name = for_realloc;
+                sn = target->station_name + station_name_buf_len;
+                station_name_buf_len <<= 1;
+            }
+            *sn++ = c;
+        }
+        if (c == ':' && read_flag == 1)
+        {
+            reading_minutes = 1;
+        }
+        else if (isdigit(c))
+        {
+            switch (read_flag)
+            {
+            case 0:
+                target->route_number = target->route_number * 10 + c - '0';
+                break;
+            case 1:
+                time_var_addr = reading_minutes == 0
+                    ? &target->stop_time.hours
+                    : &target->stop_time.minutes;
+                *time_var_addr = *time_var_addr * 10 + (c - '0');
+                break;
+            }
+        }
+
+        else if (c == ' ')
+        {
+            if (read_flag != 2)
+            {
+                ++read_flag;
+            }
+        }
+    }
 
     return 0;
 }

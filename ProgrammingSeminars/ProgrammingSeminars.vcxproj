@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt" />
+    <Text Include="schedule.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dynamic_array.h" />
