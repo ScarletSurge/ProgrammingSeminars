@@ -7,6 +7,7 @@
 #include "seminar_25_10_20.h"
 #include "seminar_25_10_27.h"
 #include "seminar_25_11_03.h"
+#include "seminar_25_11_10.h"
 #include "quick_quizzes.h"
 
 int main(
@@ -22,5 +23,5 @@ int main(
     // return seminar_25_10_20(argc, argv);
     // return seminar_25_10_27(argc, argv);
     // return seminar_25_11_03(argc, argv);
-    return quick_quiz_03_11_25(argc, argv);
+    return seminar_25_11_10(argc, argv);
 }

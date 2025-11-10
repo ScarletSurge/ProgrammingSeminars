@@ -143,6 +143,7 @@
     <ClInclude Include="seminar_25_09_29.h" />
     <ClInclude Include="seminar_25_10_20.h" />
     <ClInclude Include="seminar_25_11_03.h" />
+    <ClInclude Include="seminar_25_11_10.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

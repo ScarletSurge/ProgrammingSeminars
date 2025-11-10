@@ -67,5 +67,8 @@
     <ClInclude Include="seminar_25_11_03.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="seminar_25_11_10.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

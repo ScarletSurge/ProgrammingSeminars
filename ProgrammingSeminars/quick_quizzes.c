@@ -475,3 +475,12 @@ int read_schedule_unit(
 
     return 0;
 }
+
+int quick_quiz_10_11_25(
+    int argc,
+    char* argv[])
+{
+
+
+    return 0;
+}
