@@ -108,7 +108,7 @@ int traverse_predicate(
 {
 	// is_prime: 1 - prime, 0 - not prime
 	// is_prime(...) -> 0 - prime, 1 - not prime
-	return !is_prime(*((int *)*value_ptr));
+	return !is_prime(*((int const * const)*value_ptr));
 }
 
 int traverse_successor(
@@ -116,6 +116,8 @@ int traverse_successor(
 	int index)
 {
 	*((int *)(*value_ptr)) *= *((int*)(*value_ptr));
+
+	return 0;
 }
 
 int print_predicate(
@@ -129,12 +131,13 @@ int print_successor(
 	T* value_ptr,
 	int index)
 {
-	
 	printf("%6d ", *((int *)*value_ptr));
 	if (index != 0 && index % 10 == 0)
 	{
 		printf("\n");
 	}
+
+	return 0;
 }
 
 int seminar_25_11_10(
