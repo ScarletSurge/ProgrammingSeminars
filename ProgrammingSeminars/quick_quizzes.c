@@ -476,11 +476,312 @@ int read_schedule_unit(
     return 0;
 }
 
+typedef struct dyn_array
+{
+    void** values;
+    size_t capacity;
+    size_t size;
+    size_t value_size;
+} dyn_array, * p_dyn_array;
+
+int create_dyn_array(
+    dyn_array* target,
+    size_t value_size)
+{
+    if (target == NULL)
+    {
+        return 1;
+    }
+
+    target->value_size = value_size;
+    target->size = 0;
+    target->capacity = 16;
+    if ((target->values = (void**)malloc(sizeof(void*) * target->capacity)) == NULL)
+    {
+        return 2;
+    }
+
+    return 0;
+}
+
+int destroy_dyn_array(
+    dyn_array* target)
+{
+    if (target == NULL)
+    {
+        return 1;
+    }
+
+    int i;
+    for (i = 0; i < target->size; ++i)
+    {
+        free(target->values[i]);
+    }
+    free(target->values);
+    target->values = NULL;
+
+    return 0;
+}
+
+int insert_value_into_dyn_arr(
+    dyn_array* target,
+    size_t index,
+    void const* value_to_insert)
+{
+    if (target == NULL)
+    {
+        return 1;
+    }
+
+    if (value_to_insert == NULL)
+    {
+        return 2;
+    }
+
+    if (index > target->size)
+    {
+        return 3;
+    }
+
+    if (target->size == target->capacity)
+    {
+        void** for_realloc = (void**)realloc(target->values, sizeof(void*) * (target->capacity << 1));
+        if (for_realloc == NULL)
+        {
+            return 4;
+        }
+
+        target->capacity <<= 1;
+        target->values = for_realloc;
+    }
+
+    void* inserted_value = malloc(target->value_size);
+    if (inserted_value == NULL)
+    {
+        return 5;
+    }
+
+    int i;
+    for (i = (int)target->size - 1; i >= (int)index; --i)
+    {
+        target->values[i + 1] = target->values[i];
+    }
+
+    target->values[index] = inserted_value;
+
+    ++target->size;
+
+    memcpy(target->values[index], value_to_insert, target->value_size);
+
+    return 0;
+}
+
+int remove_from_dyn_array(
+    dyn_array* target,
+    int index)
+{
+    if (target == NULL)
+    {
+        return 1;
+    }
+
+    if (index >= target->size)
+    {
+        return 2;
+    }
+
+    free(target->values[index]);
+    int i;
+    for (i = index; i <= target->size - 2; ++i)
+    {
+        target->values[i] = target->values[i + 1];
+    }
+    if (target->capacity != 16 && --target->size == (target->capacity >> 1))
+    {
+        void **for_realloc = (void **)realloc(target->values, sizeof(void *) * ((target->capacity >> 1)));
+        if (for_realloc == NULL)
+        {
+            return 3;
+        }
+
+        target->values = for_realloc;
+        target->capacity >>= 1;
+    }
+
+    --target->size;
+
+    return 0;
+}
+
+// part 2
+typedef struct producer
+{
+    int id;
+    char* name;
+    char* country;
+} producer;
+
+int read_file(
+    const char* file_path,
+    dyn_array** read_info)
+{
+    if (file_path == NULL)
+    {
+        return 1;
+    }
+
+    if (read_info == NULL)
+    {
+        return 2;
+    }
+
+    FILE* input_file;
+    if (!(input_file = fopen(file_path, "r")))
+    {
+        return 3;
+    }
+
+    if (!(*read_info = (dyn_array*)malloc(sizeof(dyn_array))))
+    {
+        fclose(input_file);
+        return 4;
+    }
+
+    create_dyn_array(*read_info, sizeof(producer));
+
+    char buf[BUFSIZ], * b = buf;
+    int id = 0;
+    char c, c_ = ' ';
+    int part_flag = 1;
+    producer instance;
+
+    while (!feof(input_file))
+    {
+        c = fgetc(input_file);
+        if (part_flag == 1)
+        {
+            if (isdigit(c))
+            {
+                id = id * 10 + c - '0';
+            }
+            else
+            {
+                instance.id = id;
+                id = 0;
+                part_flag = 2;
+            }
+        }
+        else if (part_flag == 2)
+        {
+            if (c != ' ')
+            {
+                *b++ = c;
+            }
+            else
+            {
+                *b = 0;
+                b = buf;
+                if ((instance.name = (char*)malloc(sizeof(char) * (strlen(buf) + 1))) == NULL)
+                {
+                    int i;
+                    for (i = 0; i < (*read_info)->size; ++i)
+                    {
+                        free(((producer*)((*read_info)->values[i]))->name);
+                        free(((producer*)((*read_info)->values[i]))->country);
+                    }
+                    destroy_dyn_array(*read_info);
+                    free(*read_info);
+                    *read_info = NULL;
+                    return 5;
+                }
+                strcpy(instance.name, buf);
+                part_flag = 3;
+            }
+        }
+        else if (part_flag == 3)
+        {
+            if (!isspace(c) && c != EOF)
+            {
+                *b++ = c;
+            }
+            else
+            {
+                *b = 0;
+                b = buf;
+                if ((instance.country = (char*)malloc(sizeof(char) * (strlen(buf) + 1))) == NULL)
+                {
+                    free(instance.name);
+                    int i;
+                    for (i = 0; i < (*read_info)->size; ++i)
+                    {
+                        free(((producer*)((*read_info)->values[i]))->name);
+                        free(((producer*)((*read_info)->values[i]))->country);
+                    }
+                    destroy_dyn_array(*read_info);
+                    free(*read_info);
+                    *read_info = NULL;
+                    return 5;
+                }
+                strcpy(instance.country, buf);
+                part_flag = 1;
+
+                insert_value_into_dyn_arr(*read_info, (*read_info)->size, (void const*)&instance);
+            }
+        }
+    }
+
+    fclose(input_file);
+    return 0;
+}
+
 int quick_quiz_10_11_25(
     int argc,
     char* argv[])
 {
+    if (argc != 2)
+    {
+        printf("Usage: app.exe <file_path>");
+        return -1;
+    }
 
+    int i;
+    dyn_array *read_info;
+    switch (read_file(argv[1], &read_info))
+    {
+    case 0:
+        printf("Initial state:\n");
+        for (i = 0; i < read_info->size; ++i)
+        {
+            printf("\tId: %d, Name: \"%s\", Country: \"%s\"\n",
+                ((producer *)read_info->values[i])->id,
+                ((producer *)read_info->values[i])->name,
+                ((producer *)read_info->values[i])->country);
+        }
+        printf("\nState without removed elements:\n");
+
+        for (i = 0; i < read_info->size; ++i)
+        {
+            if (!strcmp(((producer*)read_info->values[i])->country, "Test") && strstr(((producer*)read_info->values[i])->name, "52") != NULL)
+            {
+                free(((producer*)read_info->values[i])->name);
+                free(((producer*)read_info->values[i])->country);
+                remove_from_dyn_array(read_info, i);
+                --i;
+            }
+        }
+
+        for (i = 0; i < read_info->size; ++i)
+        {
+            printf("\tId: %d, Name: \"%s\", Country: \"%s\"\n",
+                ((producer*)read_info->values[i])->id,
+                ((producer*)read_info->values[i])->name,
+                ((producer*)read_info->values[i])->country);
+        }
+
+        destroy_dyn_array(read_info);
+        free(read_info);
+        break;
+    }
 
     return 0;
 }

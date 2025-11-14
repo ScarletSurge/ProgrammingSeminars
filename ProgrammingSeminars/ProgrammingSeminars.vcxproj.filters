@@ -47,6 +47,9 @@
     <Text Include="schedule.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="producers.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dynamic_array.h">

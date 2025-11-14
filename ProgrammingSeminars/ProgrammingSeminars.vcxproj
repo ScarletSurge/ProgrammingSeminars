@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt" />
+    <Text Include="producers.txt" />
     <Text Include="schedule.txt" />
   </ItemGroup>
   <ItemGroup>

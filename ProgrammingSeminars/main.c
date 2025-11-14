@@ -23,5 +23,6 @@ int main(
     // return seminar_25_10_20(argc, argv);
     // return seminar_25_10_27(argc, argv);
     // return seminar_25_11_03(argc, argv);
-    return seminar_25_11_10(argc, argv);
+    // return seminar_25_11_10(argc, argv);
+    return quick_quiz_10_11_25(argc, argv);
 }
