@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dynamic_array.c" />
+    <ClCompile Include="forward_list.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="quick_quizzes.c" />
     <ClCompile Include="seminar_25_09_15.h" />
@@ -131,6 +132,8 @@
     <ClCompile Include="seminar_25_10_06.h" />
     <ClCompile Include="seminar_25_10_13.h" />
     <ClCompile Include="seminar_25_10_27.h" />
+    <ClCompile Include="seminar_25_11_24.h" />
+    <ClCompile Include="stack.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt" />
@@ -145,6 +148,8 @@
     <ClInclude Include="seminar_25_10_20.h" />
     <ClInclude Include="seminar_25_11_03.h" />
     <ClInclude Include="seminar_25_11_10.h" />
+    <ClInclude Include="forward_list.h" />
+    <ClInclude Include="stack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -39,6 +39,15 @@
     <ClCompile Include="seminar_25_09_22.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="seminar_25_11_24.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="forward_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt">
@@ -71,6 +80,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="seminar_25_11_10.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="forward_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
