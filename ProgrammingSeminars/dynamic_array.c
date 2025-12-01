@@ -1,5 +1,5 @@
-#include "dynamic_array.h" 
 #include <stdlib.h>
+#include "dynamic_array.h"
 
 int initialize_dynamic_array(
     p_dynamic_array to_init,

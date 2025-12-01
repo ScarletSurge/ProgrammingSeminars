@@ -69,6 +69,8 @@ int seminar_25_10_20(
         free(concatenated_strings);
         break;
     }
+
+    return 0;
 }
 
 #endif

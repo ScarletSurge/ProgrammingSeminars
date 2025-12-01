@@ -33,7 +33,10 @@ int obtain_by_index_in_forward_list(
 	int index,
 	int *obtained_value_storage);
 
-// TODO: add traverse
+int traverse_forward_list(
+	forward_list *to_traverse,
+	int (*successor)(int *value, int index));
+
 // TODO: add generics parody o_O
 
 #endif

@@ -39,14 +39,17 @@
     <ClCompile Include="seminar_25_09_22.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="seminar_25_11_24.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="forward_list.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stack.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seminar_25_12_01.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seminar_25_11_24.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
-﻿#include "forward_list.h"
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <malloc.h>
+#include "forward_list.h"
 
 // TODO: препаду лень делать валидацыэ((9(9
 
@@ -108,5 +108,21 @@ int obtain_by_index_in_forward_list(
 	int index,
 	int* obtained_value_storage)
 {
-	// TODO: You can do it o_O
+	return 0;
+}
+
+int traverse_forward_list(
+	forward_list* to_traverse,
+	int (*successor)(int* value, int index))
+{
+	// ((a + b) + c)
+	// (a = (b = c))
+	int index = 0;
+	forward_list_item* current = to_traverse->first;
+	while (current != NULL)
+	{
+		successor(&current->data, index++);
+		current = current->next;
+	}
+	return 0;
 }
