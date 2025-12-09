@@ -104,10 +104,31 @@ int delete_from_forward_list(
 }
 
 int obtain_by_index_in_forward_list(
-	forward_list const* to_obtain_by_index_in,
+	forward_list const *to_obtain_by_index_in,
 	int index,
-	int* obtained_value_storage)
+	int *obtained_value_storage)
 {
+	// TODO: validate
+
+	int i = 0;
+	forward_list_item* current = to_obtain_by_index_in->first;
+	for (; i < index; ++i)
+	{
+		if (current == NULL)
+		{
+			return 1;
+		}
+
+		current = current->next;
+	}
+
+	if (current == NULL)
+	{
+		return 1;
+	}
+
+	*obtained_value_storage = current->data;
+
 	return 0;
 }
 

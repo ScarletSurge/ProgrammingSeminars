@@ -69,7 +69,7 @@ int find_by_index_inside_dynamic_array(
 
 int insert_by_index_into_dynamic_array(
     p_dynamic_array to_insert_into,
-    T const* value_to_insert,
+    T const *value_to_insert,
     unsigned int index)
 {
     if (to_insert_into == NULL)
