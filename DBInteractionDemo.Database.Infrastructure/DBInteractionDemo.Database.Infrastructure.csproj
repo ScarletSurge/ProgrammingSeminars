@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DbInteractionDemo.Core\DbInteractionDemo.Core.csproj" />
+    <ProjectReference Include="..\DbInteractionDemo.Database.Data\DbInteractionDemo.Database.Data.csproj" />
+    <ProjectReference Include="..\DbInteractionDemo.Database.Repository\DbInteractionDemo.Database.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
