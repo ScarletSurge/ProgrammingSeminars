@@ -1,0 +1,82 @@
+# CLion .gitignore template
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# cmake-build-debug directory
+cmake-build-debug/
+
+# Visual Studio .gitignore template
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache/options
+vs/
+
+# C++ specific files
+*.ilk
+*.pdb
+*.obj
+*.pch
+*.idb
+*.ipch
+*.tlog
+
+# Test results
+[Tt]est[Rr]esult*/
+
+# Backup & temporary files
+~$*
+*.tmp
+*.log
+
+# NuGet Packages
+packages/
+*.nupkg
+
+# Others
+Thumbs.db
+Desktop.ini
+
+# Temporary cache files (hand made)
+.vs
