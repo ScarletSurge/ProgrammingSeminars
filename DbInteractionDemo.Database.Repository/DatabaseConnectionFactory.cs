@@ -8,7 +8,8 @@ namespace DbInteractionDemo.Database.Repository;
 /// 
 /// </summary>
 public sealed class DatabaseConnectionFactory:
-    IAbstractFactory<NpgsqlConnection>
+    IAbstractFactory<NpgsqlConnection>,
+    IAbstractFactory<NpgsqlCommand>
 {
 
     #region Fields
@@ -48,9 +49,20 @@ public sealed class DatabaseConnectionFactory:
     #region DBInteractionDemo.Core.IAbstractFactory<NpgsqlConnection> implementation
 
     /// <inheritdoc cref="IAbstractFactory{T}.Create" />
-    public NpgsqlConnection Create()
+    NpgsqlConnection IAbstractFactory<NpgsqlConnection>.Create()
     {
         return new NpgsqlConnection(_connectionString);
+        // TODO: open async may be placed here...
+    }
+
+    #endregion
+
+    #region DBInteractionDemo.Core.IAbstractFactory<NpgsqlConnection> implementation
+
+    /// <inheritdoc cref="IAbstractFactory{T}.Create" />
+    NpgsqlCommand IAbstractFactory<NpgsqlCommand>.Create()
+    {
+        return new NpgsqlCommand();
     }
 
     #endregion

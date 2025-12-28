@@ -1,5 +1,8 @@
 ﻿using Npgsql;
-using System.Xml;
+using System.Data;
+using System.Text;
+
+using DbInteractionDemo.Core;
 
 namespace DbInteractionDemo.Database.Repository;
 
@@ -8,6 +11,25 @@ namespace DbInteractionDemo.Database.Repository;
 /// </summary>
 public sealed class MigrationsRepository
 {
+
+    #region Constants
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private const string TableSchema = "public";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private const string TableName = "migrations";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private const string TableNameAlias = "m";
+
+    #endregion
 
     #region Fields
 
@@ -26,8 +48,15 @@ public sealed class MigrationsRepository
     /// </summary>
     private readonly List<(string, string)> _migrationsTexts =
     [
-        ("n1","CREATE TABLE airlines (...)"),
-        ("n2","CREATE TABLE planes (...)")
+        ("v1.0.1", CreateTableAirlinesQueryBuilder()),
+        ("v1.0.2", CreateTableAirlinesQueryBuilder()),
+        ("v1.0.3", CreateTableAirlinesQueryBuilder()),
+        ("v1.0.4", CreateTableAirlinesQueryBuilder()),
+        ("v1.1.0", CreateTableAirlinesQueryBuilder()),
+        ("v1.1.1", CreateTableAirlinesQueryBuilder()),
+        ("v1.1.2", CreateTableAirlinesQueryBuilder()),
+        ("v1.2.0", CreateTableAirlinesQueryBuilder()),
+        //("v1.0.2", "CREATE TABLE planes (...)")
     ];
 
     #endregion
@@ -44,8 +73,25 @@ public sealed class MigrationsRepository
         DatabaseConnectionFactory postgresDcf,
         DatabaseConnectionFactory targetDcf)
     {
-        _postgresDcf = _postgresDcf ?? throw new ArgumentNullException(nameof(postgresDcf));
+        _migrationsTexts = _migrationsTexts;
+        _postgresDcf = postgresDcf ?? throw new ArgumentNullException(nameof(postgresDcf));
         _targetDcf = targetDcf ?? throw new ArgumentNullException(nameof(targetDcf));
+    }
+
+    #endregion
+
+    #region Methods
+
+    private static string CreateTableAirlinesQueryBuilder()
+    {
+        return new StringBuilder()
+            .Append("CREATE TABLE public.airline")
+            .Append("(")
+            .Append("id VARCHAR(100) NOT NULL PRIMARY KEY,")
+            .Append("full_name VARCHAR(255) NOT NULL,")
+            .Append("base_airport_code VARCHAR(16) NOT NULL") // FK
+            .Append(");")
+            .ToString();
     }
 
     #endregion
@@ -64,8 +110,6 @@ public sealed class MigrationsRepository
     {
 
     }
-    
-    // a = (b.operator=(c))
 
     /// <summary>
     /// 
@@ -75,28 +119,49 @@ public sealed class MigrationsRepository
     public async Task MigrateAsync(
         CancellationToken cancellationToken = default)
     {
-        var sb = new System.Text.StringBuilder();
-        sb
-            .Append("Где")
-            .Append(" Никита")
-            .Append(" Демч")
-            .Append("енко??!?!")
-            .ToString();
+        var targetDatabaseName = new NpgsqlConnectionStringBuilder(_targetDcf.ConnectionString).Database;
 
-        var databaseName = new NpgsqlConnectionStringBuilder(_targetDcf.ConnectionString).Database;
+        var targetDbExistsQuery = $"SELECT EXISTS(SELECT datname FROM pg_catalog.pg_database WHERE LOWER(datname) = LOWER('{targetDatabaseName}'));";
 
-        var query = $"CREATE DATABASE IF NOT EXISTS puksrenjk;";
-    }
+        await using var postgresConnection = ((IAbstractFactory<NpgsqlConnection>)_postgresDcf).Create();
+        await postgresConnection.OpenAsync(cancellationToken);
+        await using var targetDbExistsCommand = ((IAbstractFactory<NpgsqlCommand>)_postgresDcf).Create();
+        targetDbExistsCommand.Connection = postgresConnection;
+        targetDbExistsCommand.CommandType = CommandType.Text;
+        targetDbExistsCommand.CommandText = targetDbExistsQuery;
+        if (!(bool)await targetDbExistsCommand.ExecuteScalarAsync(cancellationToken))
+        {
+            var createDatabaseQuery = $"CREATE DATABASE {targetDatabaseName};";
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="migrationName"></param>
-    /// <param name="migrationText"></param>
-    public void AddMigration(
-        string migrationName,
-        string migrationText)
-    {
+            await using var postgresCommand = ((IAbstractFactory<NpgsqlCommand>)_postgresDcf).Create();
+
+            postgresCommand.Connection = postgresConnection;
+            postgresCommand.CommandType = CommandType.Text;
+            postgresCommand.CommandText = createDatabaseQuery;
+
+            await postgresCommand.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        {
+            var migrationsTableCreateQuery = new StringBuilder()
+                .Append($"CREATE TABLE IF NOT EXISTS {TableSchema}.{TableName}")
+                .Append("(")
+                .Append("version VARCHAR(16) NOT NULL PRIMARY KEY")
+                .Append(")")
+                .ToString();
+            await using var migrationsTableCreateCommand = ((IAbstractFactory<NpgsqlCommand>)_targetDcf).Create();
+            await using var targetConnection = ((IAbstractFactory<NpgsqlConnection>)_targetDcf).Create();
+            await targetConnection.OpenAsync(cancellationToken);
+            migrationsTableCreateCommand.Connection = targetConnection;
+            migrationsTableCreateCommand.CommandType = CommandType.Text;
+            migrationsTableCreateCommand.CommandText = migrationsTableCreateQuery;
+            await migrationsTableCreateCommand.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        {
+
+        }
+
 
     }
 

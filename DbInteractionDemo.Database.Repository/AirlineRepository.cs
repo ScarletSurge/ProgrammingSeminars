@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 
 using DbInteractionDemo.Database.Data;
+using DbInteractionDemo.Core;
 
 namespace DbInteractionDemo.Database.Repository;
 
@@ -95,7 +96,7 @@ public sealed class AirlineRepository
         // TODO: так делают только пуксреньки
         var query = $"SELECT * FROM {TableSchema}.{TableName} {TableNameAlias} WHERE {TableNameAlias}.id = '{id}'";
 
-        using var connection = _dcf.Create();
+        using var connection = ((IAbstractFactory<NpgsqlConnection>)_dcf).Create();
         using var command = new NpgsqlCommand(query, connection);
         command.CommandType = System.Data.CommandType.Text;
 
@@ -130,7 +131,7 @@ public sealed class AirlineRepository
         // TODO: так делают только пуксреньки
         var query = $"SELECT * FROM {TableSchema}.{TableName} {TableNameAlias}";
 
-        using var connection = _dcf.Create();
+        using var connection = ((IAbstractFactory<NpgsqlConnection>)_dcf).Create();
         using var command = new NpgsqlCommand(query, connection);
         command.CommandType = System.Data.CommandType.Text;
 
