@@ -142,6 +142,7 @@
     <ClCompile Include="dynamic_array.c" />
     <ClCompile Include="forward_list.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="quick_quizzes.c" />
     <ClCompile Include="stack.c" />
   </ItemGroup>

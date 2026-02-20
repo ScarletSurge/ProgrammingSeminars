@@ -12,7 +12,7 @@
 #include "seminar_25_12_01.h"
 #include "quick_quizzes.h"
 
-int main(
+int main1(
     int argc,
     char *argv[])
 {

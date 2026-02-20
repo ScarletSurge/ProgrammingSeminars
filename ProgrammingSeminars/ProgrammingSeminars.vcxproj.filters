@@ -24,32 +24,14 @@
     <ClCompile Include="quick_quizzes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="seminar_25_10_27.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="seminar_25_09_15.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="seminar_25_10_06.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="seminar_25_10_13.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="seminar_25_09_22.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="forward_list.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stack.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="seminar_25_12_01.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="seminar_25_11_24.h">
-      <Filter>Header Files</Filter>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +71,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_09_15.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_09_22.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_10_06.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_10_13.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_10_27.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_11_24.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="seminar_25_12_01.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
