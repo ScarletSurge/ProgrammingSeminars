@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="forward_list.h" />
+    <ClInclude Include="int_wrapper.h" />
     <ClInclude Include="quick_quizzes.h" />
     <ClInclude Include="seminar_25_09_08.h" />
     <ClInclude Include="seminar_25_09_15.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="stack.h" />
     <ClCompile Include="dynamic_array.c" />
     <ClCompile Include="forward_list.c" />
+    <ClCompile Include="int_wrapper.cpp" />
     <ClCompile Include="main.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="quick_quizzes.c" />

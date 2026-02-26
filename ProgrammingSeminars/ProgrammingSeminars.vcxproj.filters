@@ -33,6 +33,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="int_wrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt">
@@ -93,6 +96,9 @@
     </ClInclude>
     <ClInclude Include="seminar_25_12_01.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="int_wrapper.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

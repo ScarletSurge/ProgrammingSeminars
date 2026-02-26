@@ -1,5 +1,7 @@
 ﻿#include <iostream>
 
+#include "int_wrapper.h"
+
 int x;
 
 class compiler_defaults
@@ -221,76 +223,16 @@ void rule_of_3_demo()
 	std::cout << "rule_of_3_demo work ends..." << std::endl;
 }
 
-class int_wrapper
-{
-
-private:
-
-	void destruct()
-	{
-		delete _value;
-		_value = nullptr;
-	}
-
-	void copy(
-		int_wrapper const& from)
-	{
-		_value = new int(*from._value);
-	}
-
-private:
-
-	int *_value;
-
-public:
-
-	/*explicit*/ int_wrapper(
-		int value = 0):
-			_value(new int(value))
-	{
-		std::cout << *_value;
-	}
-
-public:
-
-	~int_wrapper() noexcept
-	{
-		destruct();
-	}
-
-	int_wrapper(
-		int_wrapper const& other)
-	{
-		copy(other);
-	}
-
-	int_wrapper &operator=(
-		int_wrapper const &other)
-	{
-		// 1. self-assignment check
-		if (this == &other)
-		{
-			return *this;
-		}
-
-		// 2. destruct old state
-		destruct();
-
-		// 3. copy new state
-		copy(other);
-
-		// 4. support Fluent API chain
-		return *this;
-	}
-
-	// a = b = c = d';
-	// a''' += e;
-	// builder
-};
-
 void int_wrapper_demo()
 {
-	int_wrapper wr(52);
+	int_wrapper wr1(52);
+	int_wrapper wr2(80);
+
+	wr1 = wr2;
+	// TODO: read about prototype construction pattern
+	// auto obj = wr1.clone();
+	int_wrapper wr3 = wr1 + wr2;
+	wr1 += wr2;
 }
 
 int main()
