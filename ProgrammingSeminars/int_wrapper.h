@@ -17,7 +17,7 @@ private:
 
 public:
 
-	/*explicit*/ int_wrapper(
+	explicit int_wrapper(
 		int value = 0) :
 		_value(new int(value))
 	{
@@ -73,12 +73,80 @@ public:
 	// builder
 
 	// c = (int_wrapper(a) += b);
-	int_wrapper &operator+=(
-		int_wrapper const &summand) &;
+	int_wrapper& operator+=(
+		int value) &;
 
 	int_wrapper operator+(
+		int value) const;
+
+	// static: int_wrapper::operator+()
+	friend int_wrapper operator+(
+		int value,
+		int_wrapper const &obj);
+
+	void foo() {}
+	// obj.foo()
+	// void operator+(T const &obj) {...}
+	// obj1 + obj2
+
+	int_wrapper& operator+=(
+		int_wrapper const& summand)&;
+
+	int_wrapper operator+(
+		int_wrapper const& summand) const;
+
+	int_wrapper &operator-=(
+		int_wrapper const &summand) &;
+
+	int_wrapper operator-(
 		int_wrapper const &summand) const;
 
+	int_wrapper &operator*=(
+		int_wrapper const &summand) &;
+
+	int_wrapper operator*(
+		int_wrapper const &summand) const;
+
+	int_wrapper &operator/=(
+		int_wrapper const &summand) &;
+
+	int_wrapper operator/(
+		int_wrapper const &summand) const;
+
+	int_wrapper &operator%=(
+		int_wrapper const &summand) &;
+
+	int_wrapper operator%(
+		int_wrapper const &summand) const;
+
+	int_wrapper operator-() const;
+
+	int_wrapper operator+() const;
+
+	// int_wrapper obj(10);
+	// auto obj2 = ++obj;
+	// prefix
+	int_wrapper &operator++();
+
+	// postfix (infix)
+	int_wrapper operator++(int);
+
+	// += -= *= /= %=
+	// + - * / %
+	// ++x, x++, --x, x--
+	// -x, +x
+	
+	// <<, >> (IO)
+	// <<, <<=, >>, >>=, &, &=, |, |=, ^, ^=, ~
+	// &&, &&=, ||, ||=, !
+	// ==, !=
+	// <, <=, >, >=
+	// <=>
+
+	// [], ()
+
+	// for (int i = 0; i < 10; ++i)
+	// auto obj3 = obj++;
 };
 
 #endif // INT_WRAPPER_H

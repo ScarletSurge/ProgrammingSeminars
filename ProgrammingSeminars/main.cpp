@@ -233,6 +233,12 @@ void int_wrapper_demo()
 	// auto obj = wr1.clone();
 	int_wrapper wr3 = wr1 + wr2;
 	wr1 += wr2;
+	wr1 += 10;
+	wr1 + 10;
+	10 + wr1;
+	// a + b; b + a;
+	//auto x = wr1 + 10;
+	//x =  + 10
 }
 
 int main()
