@@ -1,4 +1,5 @@
 #include "int_wrapper.h"
+#include <stdexcept>
 
 void int_wrapper::destruct()
 {
@@ -61,7 +62,7 @@ int_wrapper int_wrapper::operator+(
 int_wrapper & int_wrapper::operator-=(
 	int_wrapper const &summand) &
 {
-	throw 52;
+	throw int_wrapper(10);
 }
 
 int_wrapper int_wrapper::operator-(
@@ -82,10 +83,22 @@ int_wrapper int_wrapper::operator*(
 	throw 52;
 }
 
+// maybe, variant
+// Maybe<T> -> Empty | T
+
+// either, any
+// Either<T1, T2> -> T1 | T2
 int_wrapper &int_wrapper::operator/=(
 	int_wrapper const &summand) &
 {
-	throw 52;
+	if (*summand._value == 0)
+	{
+		throw std::logic_error("dividing by zero!!1!1");
+	}
+
+	*_value /= *summand._value;
+
+	return *this;
 }
 
 int_wrapper int_wrapper::operator/(
@@ -120,4 +133,57 @@ int_wrapper int_wrapper::operator++(int)
 	++*this;
 
 	return result;
+}
+
+std::ostream &operator<<(
+	std::ostream &stream,
+	int_wrapper const &obj)
+{
+	return stream << *obj._value;
+}
+
+std::istream& operator>>(
+	std::istream& stream,
+	int_wrapper& obj)
+{
+	return stream >> *obj._value;
+}
+
+bool int_wrapper::operator==(
+	int_wrapper const& other) const
+{
+	return *_value == *other._value;
+	// return !(*this != other);
+}
+
+bool int_wrapper::operator!=(
+	int_wrapper const& other) const
+{
+	return !(*this == other);
+	// return *_value != *other._value;
+}
+
+bool int_wrapper::operator<(
+	int_wrapper const& other) const
+{
+	return *(this->_value) < *other._value;
+}
+
+bool int_wrapper::operator<=(
+	int_wrapper const& other) const
+{
+	// return *(this->_value) <= *other._value;
+	return *this < other || *this == other;
+}
+
+bool int_wrapper::operator>(
+	int_wrapper const& other) const
+{
+	return !(*this <= other);
+}
+
+bool int_wrapper::operator>=(
+	int_wrapper const& other) const
+{
+	return !(*this < other);
 }

@@ -1,6 +1,8 @@
 #ifndef INT_WRAPPER_H
 #define INT_WRAPPER_H
 
+#include <iostream>
+
 class int_wrapper
 {
 
@@ -79,15 +81,17 @@ public:
 	int_wrapper operator+(
 		int value) const;
 
+	// Matrix Matrix::operator*(double value) const;
+	// friend Matrix operator*(double value, Matrix const &matr)
+	// {
+	//     return matr * value;
+	// }
+	// Matrix matr; auto matr_modified = 7 * matr;
+
 	// static: int_wrapper::operator+()
 	friend int_wrapper operator+(
 		int value,
 		int_wrapper const &obj);
-
-	void foo() {}
-	// obj.foo()
-	// void operator+(T const &obj) {...}
-	// obj1 + obj2
 
 	int_wrapper& operator+=(
 		int_wrapper const& summand)&;
@@ -131,6 +135,37 @@ public:
 	// postfix (infix)
 	int_wrapper operator++(int);
 
+	friend std::ostream& operator<<(
+		std::ostream& stream,
+		int_wrapper const& obj);
+
+	friend std::istream &operator>>(
+		std::istream &stream,
+		int_wrapper &obj);
+
+	bool operator==(
+		int_wrapper const& other) const;
+
+	bool operator!=(
+		int_wrapper const& other) const;
+
+	bool operator<(
+		int_wrapper const& other) const;
+
+	bool operator<=(
+		int_wrapper const& other) const;
+
+	bool operator>(
+		int_wrapper const& other) const;
+
+	bool operator>=(
+		int_wrapper const& other) const;
+
+	// std::cin >> x >> y >> z;
+	// int_wrapper x;
+	// x << std::cout;
+	// std::cout << x;
+
 	// += -= *= /= %=
 	// + - * / %
 	// ++x, x++, --x, x--
@@ -145,8 +180,6 @@ public:
 
 	// [], ()
 
-	// for (int i = 0; i < 10; ++i)
-	// auto obj3 = obj++;
 };
 
 #endif // INT_WRAPPER_H

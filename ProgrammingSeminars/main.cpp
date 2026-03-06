@@ -223,10 +223,46 @@ void rule_of_3_demo()
 	std::cout << "rule_of_3_demo work ends..." << std::endl;
 }
 
+class number
+{
+
+private:
+
+	int value;
+
+public:
+
+	number(int value = 0):
+		value(value)
+	{
+
+	}
+
+public:
+
+	number& operator+=(
+		number const& other) &
+	{
+		value += other.value;
+
+		return *this;
+	}
+
+	number operator+(
+		number const& other) const
+	{
+		number result = *this;
+		return result += other;
+	}
+
+};
+
 void int_wrapper_demo()
 {
 	int_wrapper wr1(52);
 	int_wrapper wr2(80);
+
+	(std::cout << 10) << "string" << wr1;
 
 	wr1 = wr2;
 	// TODO: read about prototype construction pattern
@@ -241,6 +277,28 @@ void int_wrapper_demo()
 	//x =  + 10
 }
 
+void exceptions_demo()
+{
+	int_wrapper x(10);
+	int_wrapper y(1);
+
+	int* values = new int[10];
+
+	try
+	{
+		std::cout << (x /= y);
+	}
+	catch (std::logic_error const& ex)
+	{
+		delete[] values;
+		std::cout << "Something went wrong: \"" << ex.what() << "\"";
+	}
+
+	std::cout << std::endl << "We got here!";
+
+	delete[] values;
+}
+
 int main()
 {
 	char c = 10;
@@ -249,7 +307,7 @@ int main()
 	// int_wrapper x1(c);
 	// references_demo();
 	//rule_of_3_demo();
-	int_wrapper_demo();
+	//int_wrapper_demo();
 	// int x = 15; // sizeof(int) == 4
 	// // Little endian, Big endian
 	// // 00001111 00000000 00000000 00000000
@@ -276,6 +334,7 @@ int main()
 	// x = y = z;
 	// x + y + z;
 
+	exceptions_demo();
 
 	return 0;
 }
