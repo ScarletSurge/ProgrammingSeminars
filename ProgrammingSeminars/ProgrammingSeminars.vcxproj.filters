@@ -36,6 +36,9 @@
     <ClCompile Include="int_wrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="one_more_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt">
@@ -47,6 +50,7 @@
     <Text Include="producers.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="puksrenjk.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dynamic_array.h">
@@ -99,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="int_wrapper.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="priority_queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="binomial_heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mergeable_priority_queue.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

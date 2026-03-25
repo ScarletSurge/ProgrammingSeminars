@@ -299,8 +299,54 @@ void exceptions_demo()
 	delete[] values;
 }
 
+class base
+{
+public:
+	base()
+	{
+		std::cout << "base::base() called" << std::endl;
+	}
+
+	virtual ~base() noexcept
+	{
+		std::cout << "base::~base() called" << std::endl;
+	}
+};
+
+class derived:
+	public base
+{
+private:
+	int* _ptr;
+public:
+	derived() :
+		_ptr(new int[10])
+	{
+		std::cout << "derived::derived() called" << std::endl;
+	}
+public:
+	~derived()
+	{
+		std::cout << "derived::~derived() called" << std::endl;
+		delete[] _ptr;
+	}
+};
+
+void destructors_chain_demo()
+{
+	base *obj = new derived;
+
+	// TODO: 
+
+	delete obj;
+}
+
 int main()
 {
+	// destructors_chain_demo();
+	return 0;
+
+	std::cout << "punjk srenjk((9(9";
 	char c = 10;
 	// TODO: find case when this not works
 	// int_wrapper x(10);

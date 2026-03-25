@@ -123,9 +123,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="binomial_heap.h" />
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="forward_list.h" />
     <ClInclude Include="int_wrapper.h" />
+    <ClInclude Include="mergeable_priority_queue.h" />
+    <ClInclude Include="priority_queue.h" />
     <ClInclude Include="quick_quizzes.h" />
     <ClInclude Include="seminar_25_09_08.h" />
     <ClInclude Include="seminar_25_09_15.h" />
@@ -145,12 +148,14 @@
     <ClCompile Include="int_wrapper.cpp" />
     <ClCompile Include="main.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="one_more_main.c" />
     <ClCompile Include="quick_quizzes.c" />
     <ClCompile Include="stack.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt" />
     <Text Include="producers.txt" />
+    <Text Include="puksrenjk.txt" />
     <Text Include="schedule.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
