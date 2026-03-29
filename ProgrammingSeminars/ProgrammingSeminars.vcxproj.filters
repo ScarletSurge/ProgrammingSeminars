@@ -107,7 +107,7 @@
     <ClInclude Include="priority_queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="binomial_heap.h">
+    <ClInclude Include="binomial_priority_queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mergeable_priority_queue.h">

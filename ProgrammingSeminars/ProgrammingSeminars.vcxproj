@@ -123,7 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="binomial_heap.h" />
+    <ClInclude Include="binomial_priority_queue.h" />
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="forward_list.h" />
     <ClInclude Include="int_wrapper.h" />

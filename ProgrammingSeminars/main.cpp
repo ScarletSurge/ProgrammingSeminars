@@ -341,13 +341,52 @@ void destructors_chain_demo()
 	delete obj;
 }
 
+void dynamic_cast_demo()
+{
+	class puk1 { public: virtual ~puk1() noexcept = default; };
+	class puk2 : public puk1 {};
+	class puk3 {};
+
+	puk1 *obj = new puk2;
+	if (dynamic_cast<puk3*>(obj) == nullptr)
+	{
+		std::cout << "Invalid cast";
+	}
+	else
+	{
+		std::cout << "OK cast";
+	}
+}
+
+#include "binomial_priority_queue.h"
+
+int priorities_comparer(
+	int first,
+	int second)
+{
+	return first - second;
+}
+
+void bpq_demo()
+{
+	srand((unsigned)time(NULL));
+
+	binomial_priority_queue instance(priorities_comparer);
+
+	for (int i = 0; i < 250; i++)
+	{
+		instance.insert(rand() % 15 + 1, "pukpuk");
+		instance.debug_print();
+	}
+}
+
 int main()
 {
 	// destructors_chain_demo();
-	return 0;
+	// return 0;
 
-	std::cout << "punjk srenjk((9(9";
-	char c = 10;
+	// std::cout << "punjk srenjk((9(9";
+	// char c = 10;
 	// TODO: find case when this not works
 	// int_wrapper x(10);
 	// int_wrapper x1(c);
@@ -380,7 +419,16 @@ int main()
 	// x = y = z;
 	// x + y + z;
 
-	exceptions_demo();
+	// exceptions_demo();
+
+	std::cout << ((sqrt(2.0) * sqrt(2.0) == 2.0)
+		? "Equal"
+		: "Not equal")
+		<< std::endl;
+	std::cout << (-1 << 3) << std::endl;
+
+	// dynamic_cast_demo();
+	bpq_demo();
 
 	return 0;
 }

@@ -10,7 +10,7 @@ class mergeable_priority_queue:
 public:
 
 	virtual void merge(
-		mergeable_priority_queue *to_merge_into) = 0;
+		mergeable_priority_queue *to_merge_from) = 0;
 
 	virtual mergeable_priority_queue *meld(
 		mergeable_priority_queue const *to_meld_with) const = 0;
