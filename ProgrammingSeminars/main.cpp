@@ -373,7 +373,7 @@ void bpq_demo()
 
 	binomial_priority_queue instance(priorities_comparer);
 
-	for (int i = 0; i < 250; i++)
+	for (int i = 0; i < 256; i++)
 	{
 		instance.insert(rand() % 15 + 1, "pukpuk");
 		instance.debug_print();

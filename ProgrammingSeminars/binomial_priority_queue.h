@@ -185,6 +185,7 @@ public:
 	{
 		binomial_priority_queue new_heap(_priorities_comparer);
 		(new_heap._root = create_node(priority, value))->brother = new_heap._root;
+		new_heap._values_count = 1;
 
 		merge(&new_heap);
 	}
@@ -213,7 +214,8 @@ public:
 		
 		do
 		{
-			std::cout << 'B' << get_rank(runner) << " -> ";
+			std::cout << 'B' << get_rank(runner) << '<' << runner->priority << '>' << " -> ";
+			runner = runner->brother;
 		} while (runner != _root);
 		std::cout << std::endl;
 	}
