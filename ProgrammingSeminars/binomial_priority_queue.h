@@ -5,7 +5,6 @@
 
 #include "mergeable_priority_queue.h"
 #include <cstring>
-#include <exception>
 #include <stdexcept>
 #include <iostream>
 
@@ -23,11 +22,87 @@ private:
 		node *children;
 	};
 
+public:
+
+	class empty_priority_queue_exception:
+		public std::exception
+	{
+
+	public:
+
+		char const *what() const override
+		{
+			return "Can't get/remove maximum from priority queue";
+		}
+
+	};
+
 private:
 
 	node *_root;
 	int (*_priorities_comparer)(int, int);
 	size_t _values_count;
+
+private:
+
+	static void delete_node_state(
+		node *state)
+	{
+		delete[] state->value;
+		state->value = nullptr;
+	}
+
+	static void delete_binomial_trees_list(
+		node **tree_root)
+	{
+		if (*tree_root == nullptr)
+		{
+			return;
+		}
+
+		node *runner = *tree_root;
+		do
+		{
+			delete_binomial_trees_list(&runner->children);
+			node *to_delete = runner;
+			runner = runner->brother;
+			delete_node_state(to_delete);
+			delete to_delete;
+		} while (runner != *tree_root);
+
+		*tree_root = nullptr;
+	}
+
+	static node *copy_binomial_trees_list(
+		node const *root)
+	{
+			if (root == nullptr)
+			{
+				return nullptr;
+			}
+
+		node const *runner = root;
+		node *runner_copy = nullptr;
+		node *first_node = nullptr;
+		do
+		{
+			if (first_node == nullptr)
+			{
+				runner_copy = first_node = create_node(runner->priority, runner->value);
+			}
+			else
+			{
+				runner_copy->brother = create_node(runner->priority, runner->value);
+				runner_copy = runner_copy->brother;
+			}
+			runner_copy->children = copy_binomial_trees_list(runner->children);
+
+			runner = runner->brother;
+		} while (runner != root);
+
+		runner_copy->brother = first_node;
+		return first_node;
+	}
 
 public:
 
@@ -42,20 +117,39 @@ public:
 
 	~binomial_priority_queue() noexcept override
 	{
-		// TODO: ?!
+		delete_binomial_trees_list(&_root);
+		_values_count = 0;
+		_priorities_comparer = nullptr;
 	}
 
+
 	binomial_priority_queue(
-		binomial_priority_queue const &copy_from)
+		binomial_priority_queue const &copy_from):
+			_root(copy_binomial_trees_list(copy_from._root)),
+			_values_count(copy_from._values_count),
+			_priorities_comparer(copy_from._priorities_comparer)
 	{
 
 	}
 
 	binomial_priority_queue &operator=(
-		binomial_priority_queue const &)
+		binomial_priority_queue const &other)
 	{
+		if (this == &other)
+		{
+			return *this;
+		}
 
+		delete_binomial_trees_list(&_root);
+
+		_root = copy_binomial_trees_list(other._root);
+		_values_count = other._values_count;
+		_priorities_comparer = other._priorities_comparer;
+
+		return *this;
 	}
+
+public:
 
 	void merge(
 		mergeable_priority_queue *to_merge_from) override
@@ -173,8 +267,18 @@ public:
 	mergeable_priority_queue *meld(
 		mergeable_priority_queue const *to_meld_with) const override
 	{
-		// TODO: ?!
-		return dynamic_cast<mergeable_priority_queue *>(new binomial_priority_queue(*this));
+		binomial_priority_queue const * bpq_to_meld_from;
+
+		if ((bpq_to_meld_from = dynamic_cast<binomial_priority_queue const *>(to_meld_with)) == nullptr)
+		{
+			throw std::invalid_argument("Parameter must be of type binomial_priority_queue const *");
+		}
+
+		binomial_priority_queue *to_meld_into = new binomial_priority_queue(*this);
+		binomial_priority_queue to_meld_from(*bpq_to_meld_from);
+		to_meld_into->merge(&to_meld_from);
+
+		return to_meld_into;
 	}
 
 public:
@@ -192,12 +296,55 @@ public:
 
 	char *remove_max() override
 	{
-		return nullptr;
+		if (_root == nullptr)
+		{
+			throw empty_priority_queue_exception();
+		}
+
+		node *tree_to_split = _root;
+		if (tree_to_split->brother == tree_to_split)
+		{
+			_root = nullptr;
+		}
+		else
+		{
+			node *new_max_tree = tree_to_split->brother;
+			node *runner = tree_to_split->brother;
+			while (runner->brother != _root)
+			{
+				if (_priorities_comparer(runner->priority, new_max_tree->priority) > 0)
+				{
+					new_max_tree = runner;
+				}
+				runner = runner->brother;
+			}
+			runner->brother = runner->brother->brother;
+			_root = new_max_tree;
+		}
+
+		_values_count -= (1 << get_rank(tree_to_split));
+
+		binomial_priority_queue new_heap(_priorities_comparer);
+		new_heap._root = tree_to_split->children;
+		new_heap._values_count = (1 << get_rank(tree_to_split)) - 1;
+
+		char *to_return = tree_to_split->value;
+
+		delete tree_to_split;
+
+		merge(&new_heap);
+
+		return to_return;
 	}
 
 	char const *get_max() override
 	{
-		return nullptr;
+		if (_root == nullptr)
+		{
+			throw empty_priority_queue_exception();
+		}
+
+		return _root->value;
 	}
 
 public:
@@ -205,10 +352,13 @@ public:
 	void debug_print() const
 	{
 		node* runner = _root;
+
+		std::cout << _values_count << ": ";
 		
 		if (runner == nullptr)
 		{
 			std::cout << "<EMPTY>" << std::endl;
+
 			return;
 		}
 		
@@ -222,7 +372,7 @@ public:
 
 private:
 
-	node *create_node(
+	static node *create_node(
 		int priority,
 		char const *value)
 	{

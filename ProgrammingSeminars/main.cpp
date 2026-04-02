@@ -373,10 +373,36 @@ void bpq_demo()
 
 	binomial_priority_queue instance(priorities_comparer);
 
-	for (int i = 0; i < 256; i++)
+	binomial_priority_queue meld_from_all(priorities_comparer);
+
+	char *removed_value;
+	for (int i = 0; i < 250; i++)
 	{
-		instance.insert(rand() % 15 + 1, "pukpuk");
+		switch (rand() % 1)
+		{
+		case 0:
+			instance.insert(rand() % 9000 + 1000, "pukpuk");
+			break;
+		case 1:
+			try
+			{
+				delete (removed_value = instance.remove_max());
+			}
+			catch (binomial_priority_queue::empty_priority_queue_exception const &ex)
+			{
+				std::cout << ex.what() << std::endl;
+			}
+			break;
+		}
+
+		binomial_priority_queue *melded = dynamic_cast<binomial_priority_queue*>(meld_from_all.meld(&instance));
+		meld_from_all = *melded;
+		delete melded;
+
+		std::cout << "instance: ";
 		instance.debug_print();
+		std::cout << "melded: ";
+		meld_from_all.debug_print();
 	}
 }
 
