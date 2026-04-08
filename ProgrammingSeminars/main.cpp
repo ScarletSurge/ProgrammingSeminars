@@ -406,6 +406,51 @@ void bpq_demo()
 	}
 }
 
+int c_strings_demo()
+{
+	char const* buf = "123abc\0p2345678";
+
+	printf("%s\n", buf + 7);
+
+	return 0;
+}
+
+#include "trie.h"
+
+int trie_demo()
+{
+	char const *alphabet = "abcdefghijklmnopqrstuvwxyz0123456789_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	size_t const alphabet_length = strlen(alphabet);
+	char buf[BUFSIZ];
+	trie instance(alphabet);
+
+	srand((unsigned)time(nullptr));
+
+	for (int i = 0; i < 50000; ++i)
+	{
+		size_t str_len = rand() % 21 + 10;
+
+		for (int j = 0; j < str_len; ++j)
+		{
+			buf[j] = alphabet[rand() % alphabet_length];
+		}
+
+		buf[str_len] = '\0';
+
+		try
+		{
+			instance.insert(buf, i);
+			std::cout << "Successfully inserted key == \"" << buf << "\" with value == " << i << std::endl;
+		}
+		catch (std::logic_error const &ex)
+		{
+			std::cout << ex.what() << std::endl;
+		}
+	}
+
+	return 0;
+}
+
 int main()
 {
 	// destructors_chain_demo();
@@ -446,6 +491,10 @@ int main()
 	// x + y + z;
 
 	// exceptions_demo();
+
+	//return c_strings_demo();
+
+	return trie_demo();
 
 	std::cout << ((sqrt(2.0) * sqrt(2.0) == 2.0)
 		? "Equal"

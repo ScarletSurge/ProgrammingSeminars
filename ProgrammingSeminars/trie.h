@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <stdexcept>
+#include <string>
 
 class trie final
 {
@@ -18,7 +19,7 @@ private:
 			size_t subtrees_count):
 				value(nullptr)
 		{
-			subtrees = new node * [subtrees_count + 1];
+			subtrees = new node *[1 + subtrees_count];
 			*reinterpret_cast<size_t *>(subtrees) = subtrees_count;
 			for (int i = 1; i <= subtrees_count; ++i)
 			{
@@ -29,6 +30,7 @@ private:
 		~node()
 		{
 			delete value;
+			delete[] subtrees;
 		}
 
 		node(
@@ -48,7 +50,7 @@ private:
 		node &operator=(
 			node const &other)
 		{
-			// TODO: You can do it :)
+			// TODO: You can do it :')
 
 			return *this;
 		}
@@ -83,8 +85,10 @@ public:
 			}
 		}
 
-		_alphabet = new char[_alphabet_length + 1];
-		strcpy(_alphabet, alphabet);
+		_alphabet = new char[_alphabet_length];
+		memcpy(_alphabet, alphabet, sizeof(char) * _alphabet_length);
+
+		_root = new node(_alphabet_length);
 	}
 
 private:
@@ -130,28 +134,142 @@ public:
 
 private:
 
+	size_t get_idx_by_char(
+		char maybe_alphabet_element) const
+	{
+		char *alphabet_item = _alphabet;
+		for (int i = 0; i < _alphabet_length; ++i)
+		{
+			if (maybe_alphabet_element == *alphabet_item)
+			{
+				break;
+			}
+
+			++alphabet_item;
+		}
+
+		return alphabet_item - _alphabet;
+	}
+
+private:
+
 	void insert(
 		node *&subtree_root,
 		char const *key,
 		int value)
 	{
+		if (subtree_root == nullptr)
+		{
+			subtree_root = new node(_alphabet_length);
+		}
+
 		if (*key == '\0')
 		{
-			// node place found
-			if (subtree_root == nullptr)
-			{
-				subtree_root = new node(_alphabet_length);
-			}
-
 			if (subtree_root->value != nullptr)
 			{
-				// TODO: key already exists (exception)
+				throw std::logic_error("duplicate key");
 			}
 
 			subtree_root->value = new int(value);
+
+			return;
 		}
 
-		
+		size_t first_character_idx = get_idx_by_char(*key);
+		if (first_character_idx == _alphabet_length)
+		{
+			// TODO: throw an exception :(
+		}
+
+		insert(subtree_root->subtrees[1 + first_character_idx], key + 1, value);
+	}
+
+	int &find(
+		node const *subtree_root,
+		char const *key) const
+	{
+		if (subtree_root == nullptr)
+		{
+			throw std::invalid_argument("subtree_root");
+		}
+
+		if (*key == '\0')
+		{
+			if (subtree_root->value != nullptr)
+			{
+				// TODO: key not exists (exception)
+			}
+
+			return *(subtree_root->value);
+		}
+
+		size_t first_character_idx = get_idx_by_char(*key);
+		if (first_character_idx == _alphabet_length)
+		{
+			// TODO: throw an exception :(
+		}
+
+		return find(subtree_root->subtrees[1 + first_character_idx], key + 1);
+	}
+
+	void after_removal(
+		node *&subtree_root)
+	{
+		if (subtree_root == _root)
+		{
+			return;
+		}
+
+		if (subtree_root->value != nullptr)
+		{
+			return;
+		}
+
+		for (int i = 1; i < _alphabet_length; ++i)
+		{
+			if (subtree_root->subtrees[i] != nullptr)
+			{
+				return;
+			}
+		}
+
+		delete subtree_root;
+		subtree_root = nullptr;
+	}
+
+	void remove(
+		node *&subtree_root,
+		char const *key)
+	{
+		if (subtree_root == nullptr)
+		{
+			throw std::out_of_range("key doesn't exist inside trie");
+		}
+
+		if (*key == '\0')
+		{
+			if (subtree_root->value == nullptr)
+			{
+				// TODO: throw an exception
+			}
+
+			delete subtree_root->value;
+			subtree_root->value = nullptr;
+
+			after_removal(subtree_root);
+
+			return;
+		}
+
+		size_t first_character_idx = get_idx_by_char(*key);
+		if (first_character_idx == _alphabet_length)
+		{
+			// TODO: throw an exception :(
+		}
+
+		remove(subtree_root->subtrees[1 + first_character_idx], key + 1);
+
+		after_removal(subtree_root);
 	}
 
 public:
@@ -160,19 +278,33 @@ public:
 		char const *key,
 		int value)
 	{
-		return insert(_root, key, value);
+		try
+		{
+			return insert(_root, key, value);
+		}
+		catch (std::logic_error const &)
+		{
+			char exception_message[BUFSIZ];
+			strcpy(exception_message, "Can't insert value = ");
+			strcat(exception_message, std::to_string(value).c_str());
+			strcat(exception_message, " by duplicate key = \"");
+			strcat(exception_message, key);
+			strcat(exception_message, "\"");
+
+			throw std::logic_error(exception_message);
+		}
 	}
 
 	int &find(
-		char const *key)
+		char const *key) const
 	{
-		// TODO
+		return find(_root, key);
 	}
 
 	void remove(
 		char const *key)
 	{
-		// TODO
+		remove(_root, key);
 	}
 
 };

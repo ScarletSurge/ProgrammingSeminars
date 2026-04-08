@@ -151,6 +151,7 @@
     <ClCompile Include="one_more_main.c" />
     <ClCompile Include="quick_quizzes.c" />
     <ClCompile Include="stack.c" />
+    <ClInclude Include="trie.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="inputFile.txt" />
