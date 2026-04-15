@@ -116,5 +116,8 @@
     <ClInclude Include="trie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="arithmetic_expressions_context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
