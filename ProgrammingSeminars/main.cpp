@@ -451,8 +451,51 @@ int trie_demo()
 	return 0;
 }
 
+#include "arithmetic_expressions_context.h"
+
+int expression_tree_demo()
+{
+	trie variables("abcdefghijklmnopqrstuvwxyz0123456789_");
+	variables.insert("x1", 75);
+	variables.insert("x2", -9);
+	std::cout << arithmetic_expressions_context::get_instance().calculate_expression("x2 - ((9 - 7) * (11 - 81) + 4) / (3 - x1) * 8", variables);
+
+	// "x2 - 8"
+
+	return 0;
+}
+
+class static_demo_ final
+{
+
+private:
+
+	static int x;
+
+public:
+
+	void print() const { std::cout << x++ << std::endl; }
+
+};
+
+int static_demo_::x = 10;
+
+int static_demo()
+{
+	//static_demo_::x = 10;
+	static_demo_ obj1, obj2, obj3;
+	obj1.print();
+	obj2.print();
+	obj3.print();
+
+
+	return 0;
+}
+
 int main()
 {
+	//return static_demo();
+	return expression_tree_demo();
 	// destructors_chain_demo();
 	// return 0;
 
