@@ -1,6 +1,8 @@
 #ifndef TRIE_H
 #define TRIE_H
 
+#pragma warning(disable: 4996)
+
 #include <cstring>
 #include <stdexcept>
 #include <string>
@@ -35,13 +37,13 @@ private:
 
 		node(
 			node const& other):
-				subtrees(new node *[reinterpret_cast<size_t>(other.subtrees[0]) + 1])
+				subtrees(new node *[other.get_subtrees_count() + 1])
 		{
 			value = other.value == nullptr
 				? nullptr
 				: new int(*other.value);
 			subtrees[0] = other.subtrees[0];
-			for (int i = 1; i <= reinterpret_cast<size_t>(subtrees[0]); ++i)
+			for (int i = 1; i <= get_subtrees_count(); ++i)
 			{
 				subtrees[i] = nullptr;
 			}
@@ -50,10 +52,81 @@ private:
 		node &operator=(
 			node const &other)
 		{
-			// TODO: You can do it :')
+			if (this == &other)
+			{
+				return *this;
+			}
+
+			delete[] subtrees;
+			delete value;
+
+			subtrees = new node *[1 + other.get_subtrees_count()];
+			subtrees[0] = other.subtrees[0];
+			for (int i = 1; i <= get_subtrees_count(); ++i)
+			{
+				subtrees[i] = nullptr;
+			}
+
+			value = other.value == nullptr
+				? nullptr
+				: new int(*other.value);
 
 			return *this;
 		}
+
+	public:
+
+		size_t get_subtrees_count() const
+		{
+			return reinterpret_cast<size_t>(subtrees[0]);
+		}
+
+	};
+
+public:
+
+	class iterator final
+	{
+
+	private:
+
+		char *key;
+
+	public:
+
+		struct retval
+		{
+			char *key;
+			int &value;
+		};
+
+	public:
+
+		iterator &operator++()
+		{
+
+		}
+
+		iterator operator++(
+			int)
+		{
+
+		}
+
+		bool operator==(
+			iterator const &other) const
+		{
+
+		}
+
+		bool operator!=(
+			iterator const &other) const
+		{
+
+		}
+
+
+
 	};
 
 private:
@@ -93,6 +166,24 @@ public:
 
 private:
 
+	node *copy_node_recursive(
+		node const *to_copy)
+	{
+		if (to_copy == nullptr)
+		{
+			return nullptr;
+		}
+
+		node *result = new node(*to_copy);
+
+		for (int i = 1; i <= to_copy->get_subtrees_count(); ++i)
+		{
+			result->subtrees[i] = copy_node_recursive(to_copy->subtrees[i]);
+		}
+
+		return result;
+	}
+
 	void free_node_recursive(
 		node *&to_free)
 	{
@@ -119,15 +210,29 @@ public:
 	}
 
 	trie(
-		trie const &other)
+		trie const &other):
+			_root(copy_node_recursive(other._root)),
+			_alphabet(new char[_alphabet_length]),
+			_alphabet_length(other._alphabet_length)
 	{
-		// TODO
+		memcpy(_alphabet, other._alphabet, sizeof(char) * _alphabet_length);
 	}
 
 	trie &operator=(
 		trie const &other)
 	{
-		// TODO
+		if (this == &other) return *this;
+
+		delete[] _alphabet;
+		free_node_recursive(_root);
+
+		_root = copy_node_recursive(other._root); 
+		
+		_alphabet = new char[_alphabet_length];
+		
+		_alphabet_length = other._alphabet_length; 
+
+		memcpy(_alphabet, other._alphabet, sizeof(char) * _alphabet_length);
 
 		return *this;
 	}
@@ -178,7 +283,7 @@ private:
 		size_t first_character_idx = get_idx_by_char(*key);
 		if (first_character_idx == _alphabet_length)
 		{
-			// TODO: throw an exception :(
+			throw std::invalid_argument("invalid character found");
 		}
 
 		insert(subtree_root->subtrees[1 + first_character_idx], key + 1, value);
@@ -195,9 +300,9 @@ private:
 
 		if (*key == '\0')
 		{
-			if (subtree_root->value != nullptr)
+			if (subtree_root->value == nullptr)
 			{
-				// TODO: key not exists (exception)
+				throw std::logic_error("value not found by key");
 			}
 
 			return *(subtree_root->value);
@@ -206,7 +311,7 @@ private:
 		size_t first_character_idx = get_idx_by_char(*key);
 		if (first_character_idx == _alphabet_length)
 		{
-			// TODO: throw an exception :(
+			throw std::invalid_argument("invalid character found");
 		}
 
 		return find(subtree_root->subtrees[1 + first_character_idx], key + 1);
@@ -250,7 +355,7 @@ private:
 		{
 			if (subtree_root->value == nullptr)
 			{
-				// TODO: throw an exception
+				throw std::logic_error("value not found by key");
 			}
 
 			delete subtree_root->value;
@@ -264,7 +369,7 @@ private:
 		size_t first_character_idx = get_idx_by_char(*key);
 		if (first_character_idx == _alphabet_length)
 		{
-			// TODO: throw an exception :(
+			throw std::invalid_argument("invalid character found");
 		}
 
 		remove(subtree_root->subtrees[1 + first_character_idx], key + 1);
@@ -293,6 +398,7 @@ public:
 
 			throw std::logic_error(exception_message);
 		}
+		// TODO: handle invalid_argument exception instance
 	}
 
 	int &find(

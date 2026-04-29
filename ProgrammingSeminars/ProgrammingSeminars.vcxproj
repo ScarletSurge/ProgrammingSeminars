@@ -129,6 +129,7 @@
     <ClInclude Include="forward_list.h" />
     <ClInclude Include="int_wrapper.h" />
     <ClInclude Include="mergeable_priority_queue.h" />
+    <ClInclude Include="polynomial.h" />
     <ClInclude Include="priority_queue.h" />
     <ClInclude Include="quick_quizzes.h" />
     <ClInclude Include="seminar_25_09_08.h" />

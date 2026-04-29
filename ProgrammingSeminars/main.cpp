@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 
 #include "int_wrapper.h"
+#include "polynomial.h"
 
 int x;
 
@@ -419,7 +420,7 @@ int c_strings_demo()
 
 int trie_demo()
 {
-	char const *alphabet = "abcdefghijklmnopqrstuvwxyz0123456789_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char const *alphabet = "abcdefghijklmnopqrstuvwxyz";
 	size_t const alphabet_length = strlen(alphabet);
 	char buf[BUFSIZ];
 	trie instance(alphabet);
@@ -456,9 +457,10 @@ int trie_demo()
 int expression_tree_demo()
 {
 	trie variables("abcdefghijklmnopqrstuvwxyz0123456789_");
-	variables.insert("x1", 75);
-	variables.insert("x2", -9);
-	std::cout << arithmetic_expressions_context::get_instance().calculate_expression("x2 - ((9 - 7) * (11 - 81) + 4) / (3 - x1) * 8", variables);
+	variables.insert("y1", 15);
+	variables.insert("y2", 34);
+	variables.insert("xy", 83);
+	std::cout << arithmetic_expressions_context::get_instance().calculate_expression("((y1 - y2) + 358) - xy", variables);
 
 	// "x2 - 8"
 
@@ -492,8 +494,19 @@ int static_demo()
 	return 0;
 }
 
+#include <vector>
+
+int polynomials_demo()
+{
+	polynomial::monomial obj("123.987");
+
+	return 0;
+}
+
 int main()
 {
+	return polynomials_demo();
+	// return trie_demo();
 	//return static_demo();
 	return expression_tree_demo();
 	// destructors_chain_demo();
