@@ -498,7 +498,24 @@ int static_demo()
 
 int polynomials_demo()
 {
-	polynomial::monomial obj("123.987");
+	//polynomial::monomial obj("123.987*xy^2*x^3*x^4*abc^7");
+
+	trie puksrenjk("abcdef");
+	puksrenjk.insert("abcd", 43);
+	puksrenjk.insert("abcde", 43);
+	puksrenjk.insert("bacdefbacdcd", 43);
+	puksrenjk.insert("cabdebdc", 43);
+	puksrenjk.insert("fbcadb", 43);
+	puksrenjk.insert("abdabcdbc", 43);
+	puksrenjk.insert("cbedbad", 43);
+	puksrenjk.insert("fbcbcbeca", 43);
+	puksrenjk.insert("ebcabcde", 43);
+	puksrenjk.insert("dddbcabdca", 43);
+	for (auto it = puksrenjk.cbegin(); it != puksrenjk.cend(); ++it)
+	{
+		auto rv = *it;
+		std::cout << rv.key << ' ' << rv.value << std::endl;
+	}
 
 	return 0;
 }
