@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="arithmetic_expressions_context.h" />
+    <ClInclude Include="binary_search_tree.h" />
     <ClInclude Include="binomial_priority_queue.h" />
     <ClInclude Include="dynamic_array.h" />
     <ClInclude Include="forward_list.h" />
