@@ -500,6 +500,12 @@ int polynomials_demo()
 {
 	//polynomial::monomial obj("123.987*xy^2*x^3*x^4*abc^7");
 
+
+	// 4 1/3
+	int x = 43;
+	std::move(43);
+	std::forward<int &&>(43); // int && -> rvalue int
+	std::forward<int &&>(x); // int && -> lvalue int
 	trie puksrenjk("abcdef");
 	puksrenjk.insert("abcd", 43);
 	puksrenjk.insert("abcde", 43);
