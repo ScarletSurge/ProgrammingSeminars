@@ -2,6 +2,7 @@
 
 #include "int_wrapper.h"
 #include "polynomial.h"
+#include "binary_search_tree.h"
 
 int x;
 
@@ -526,12 +527,67 @@ int polynomials_demo()
 	return 0;
 }
 
+int compare_ints(
+	int const &first,
+	int const &second)
+{
+	return first - second;
+}
+
+int binary_search_tree_demo()
+{
+	char const buf[100] = "12345abcde";
+	binary_search_tree<int, int> tree(compare_ints);
+
+	srand((unsigned)time(nullptr));
+	for (int i = 0; i < 2500; ++i)
+	{
+		int value;
+		bool upsertion_result;
+		auto key = rand() % 50 + 1;
+		switch (rand() % 3)
+		{
+		case 0: // insert
+			upsertion_result = tree.upsert(key, i);
+			std::cout << (upsertion_result
+				? "Inserted key == "
+				: "Updated value by key == ") << key << std::endl;
+			break;
+		case 1: // find
+			try
+			{
+				value = tree.find(key);
+				std::cout << "found value == " << value << "by key == " << key << std::endl;
+			}
+			catch (std::out_of_range const &ex)
+			{
+				std::cout << "key == " << key << " not found inside tree" << std::endl;
+			}
+			break;
+		case 2: // erase
+			try
+			{
+				value = tree.erase(key);
+				std::cout << "erased value == " << value << "by key == " << key << std::endl;
+			}
+			catch (std::out_of_range const &ex)
+			{
+				std::cout << "key == " << key << " not erased from tree, as it doesn't exist" << std::endl;
+			}
+			break;
+		}
+	}
+
+	return 0;
+}
+
 int main()
 {
-	return polynomials_demo();
+	return binary_search_tree_demo();
+	// return polynomials_demo();
 	// return trie_demo();
-	//return static_demo();
-	return expression_tree_demo();
+	// return static_demo();
+	// return expression_tree_demo();
 	// destructors_chain_demo();
 	// return 0;
 
@@ -573,16 +629,16 @@ int main()
 
 	//return c_strings_demo();
 
-	return trie_demo();
-
-	std::cout << ((sqrt(2.0) * sqrt(2.0) == 2.0)
-		? "Equal"
-		: "Not equal")
-		<< std::endl;
-	std::cout << (-1 << 3) << std::endl;
+	// return trie_demo();
+	// 
+	// std::cout << ((sqrt(2.0) * sqrt(2.0) == 2.0)
+	// 	? "Equal"
+	// 	: "Not equal")
+	// 	<< std::endl;
+	// std::cout << (-1 << 3) << std::endl;
 
 	// dynamic_cast_demo();
-	bpq_demo();
+	// bpq_demo();
 
 	return 0;
 }
