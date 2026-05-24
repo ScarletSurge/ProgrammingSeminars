@@ -539,12 +539,14 @@ int binary_search_tree_demo()
 	char const buf[100] = "12345abcde";
 	binary_search_tree<int, int> tree(compare_ints);
 
-	srand((unsigned)time(nullptr));
-	for (int i = 0; i < 2500; ++i)
+	//srand((unsigned)time(nullptr));
+	srand(67521337);
+	
+	for (int i = 0; i < 2000; ++i)
 	{
 		int value;
 		bool upsertion_result;
-		auto key = rand() % 50 + 1;
+		auto key = rand() % 1000 + 1;
 		switch (rand() % 3)
 		{
 		case 0: // insert
@@ -557,7 +559,7 @@ int binary_search_tree_demo()
 			try
 			{
 				value = tree.find(key);
-				std::cout << "found value == " << value << "by key == " << key << std::endl;
+				std::cout << "found value == " << value << " by key == " << key << std::endl;
 			}
 			catch (std::out_of_range const &ex)
 			{
@@ -568,13 +570,24 @@ int binary_search_tree_demo()
 			try
 			{
 				value = tree.erase(key);
-				std::cout << "erased value == " << value << "by key == " << key << std::endl;
+				std::cout << "erased value == " << value << " by key == " << key << std::endl;
 			}
 			catch (std::out_of_range const &ex)
 			{
 				std::cout << "key == " << key << " not erased from tree, as it doesn't exist" << std::endl;
 			}
 			break;
+		}
+
+		for (auto it = tree.begin_prefix(); it != tree.end_prefix(); ++it)
+		{
+			auto const rv = *it;
+			for (int i = 0; i < rv.depth; ++i)
+			{
+				std::cout << " ";
+			}
+			
+			std::cout << "{ " << rv.key << ", " << rv.value_ref << " }" << std::endl;
 		}
 	}
 

@@ -2,6 +2,8 @@
 #define BINARY_SEARCH_TREE_H
 
 #include <iostream>
+#include <stack>
+#include <tuple>
 
 template<
     typename tkey,
@@ -51,9 +53,20 @@ public:
 
     struct iterator_retval final
     {
+
+        friend class binary_search_tree<tkey, tvalue>;
+
         tkey key;
         tvalue &value_ref;
         size_t depth;
+
+    private:
+
+        iterator_retval(
+            tkey key,
+            tvalue &value_ref,
+            size_t depth);
+
     };
 
 public:
@@ -65,16 +78,29 @@ public:
 
         binary_search_tree<tkey, tvalue> *_context;
         iterator_retval *_retval;
+        std::stack<std::tuple<node *, bool, bool>> _path;
 
     public:
 
         prefix_iterator(
-            binary_search_tree<tkey, tvalue> *context):
-                _context(context),
-                _retval(nullptr)
-        {
+            binary_search_tree<tkey, tvalue> *context,
+            bool is_begin_iterator);
 
-        }
+    public:
+
+        ~prefix_iterator() noexcept;
+
+        prefix_iterator(
+            prefix_iterator const &other);
+
+        prefix_iterator &operator=(
+            prefix_iterator const &other);
+
+        prefix_iterator(
+            prefix_iterator &&other) noexcept;
+
+        prefix_iterator &operator=(
+            prefix_iterator &&other) noexcept;
 
     public:
 
@@ -92,6 +118,10 @@ public:
         iterator_retval operator*() const;
 
         iterator_retval const *operator->() const;
+
+    private:
+
+        void copy_current_to_retval();
 
     };
 
@@ -154,9 +184,9 @@ public:
 
 public:
 
-    prefix_iterator begin_prefix() const;
+    prefix_iterator begin_prefix();
 
-    prefix_iterator end_prefix() const;
+    prefix_iterator end_prefix();
 
 };
 
@@ -165,10 +195,109 @@ public:
 template<
     typename tkey,
     typename tvalue>
+binary_search_tree<tkey, tvalue>::iterator_retval::iterator_retval(
+    tkey key,
+    tvalue &value_ref,
+    size_t depth):
+        key(std::move(key)),
+        value_ref(value_ref),
+        depth(depth)
+{
+
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+binary_search_tree<tkey, tvalue>::prefix_iterator::prefix_iterator(
+    binary_search_tree<tkey, tvalue> *context,
+    bool is_begin_iterator):
+        _context(context),
+        _retval(nullptr)
+{
+    if (!is_begin_iterator)
+    {
+        return;
+    }
+
+    if (context->_root != nullptr)
+    {
+        _path.push(std::make_tuple(context->_root, false, false));
+        _retval = new iterator_retval(context->_root->key, context->_root->value, 0);
+    }
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+binary_search_tree<tkey, tvalue>::prefix_iterator::prefix_iterator(
+    typename binary_search_tree<tkey, tvalue>::prefix_iterator const &other)
+{
+
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+binary_search_tree<tkey, tvalue>::prefix_iterator::~prefix_iterator() noexcept
+{
+    delete _retval;
+    _retval = nullptr;
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+typename binary_search_tree<tkey, tvalue>::prefix_iterator &binary_search_tree<tkey, tvalue>::prefix_iterator::operator=(
+    typename binary_search_tree<tkey, tvalue>::prefix_iterator const &other)
+{
+    // TODO
+
+    return *this;
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+binary_search_tree<tkey, tvalue>::prefix_iterator::prefix_iterator(
+    typename binary_search_tree<tkey, tvalue>::prefix_iterator &&other) noexcept
+{
+    // TODO
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+typename binary_search_tree<tkey, tvalue>::prefix_iterator &binary_search_tree<tkey, tvalue>::prefix_iterator::operator=(
+    typename binary_search_tree<tkey, tvalue>::prefix_iterator &&other) noexcept
+{
+    // TODO
+
+    return *this;
+}
+
+template<
+    typename tkey,
+    typename tvalue>
 bool binary_search_tree<tkey, tvalue>::prefix_iterator::operator==(
     typename binary_search_tree<tkey, tvalue>::prefix_iterator const &other) const
 {
-    return false;
+    if (_context != other._context)
+    {
+        return false;
+    }
+
+    if (_path.empty() && other._path.empty())
+    {
+        return true;
+    }
+
+    if (_path.empty() ^ other._path.empty()) // !=
+    {
+        return false;
+    }
+
+    return _path.top() == other._path.top();
 }
 
 template<
@@ -185,7 +314,44 @@ template<
     typename tvalue>
 typename binary_search_tree<tkey, tvalue>::prefix_iterator &binary_search_tree<tkey, tvalue>::prefix_iterator::operator++()
 {
-    // TODO: ?!
+    while (!_path.empty())
+    {
+        std::tuple<binary_search_tree<tkey, tvalue>::node *, bool, bool> &current = _path.top();
+        if (std::get<1>(current) == false && std::get<0>(current)->left_subtree != nullptr)
+        {
+            std::get<1>(current) = true;
+            _path.push(std::make_tuple(std::get<0>(current)->left_subtree, false, false));
+            copy_current_to_retval();
+
+            return *this;
+        }
+
+        if (std::get<2>(current) == false && std::get<0>(current)->right_subtree != nullptr)
+        {
+            std::get<2>(current) = true;
+            _path.push(std::make_tuple(std::get<0>(current)->right_subtree, false, false));
+            copy_current_to_retval();
+
+            return *this;
+        }
+
+        _path.pop();
+        if (!_path.empty())
+        {
+            if (std::get<0>(current) == std::get<0>(_path.top())->left_subtree)
+            {
+                std::get<1>(_path.top()) = true;
+            }
+
+            if (std::get<0>(current) == std::get<0>(_path.top())->right_subtree)
+            {
+                std::get<2>(_path.top()) = true;
+            }
+        }
+    }
+
+    delete _retval;
+    _retval = nullptr;
     
     return *this;
 }
@@ -208,6 +374,11 @@ template<
     typename tvalue>
 typename binary_search_tree<tkey, tvalue>::iterator_retval binary_search_tree<tkey, tvalue>::prefix_iterator::operator*() const
 {
+    if (_retval == nullptr)
+    {
+        throw std::runtime_error("can't get data from iterator, which is outside of container");
+    }
+
     return *_retval;
 }
 
@@ -216,7 +387,28 @@ template<
     typename tvalue>
 typename binary_search_tree<tkey, tvalue>::iterator_retval const *binary_search_tree<tkey, tvalue>::prefix_iterator::operator->() const
 {
+    if (_retval == nullptr)
+    {
+        throw std::runtime_error("can't get data from iterator, which is outside of container");
+    }
+
     return _retval;
+}
+
+template<
+    typename tkey,
+    typename tvalue>
+void binary_search_tree<tkey, tvalue>::prefix_iterator::copy_current_to_retval()
+{
+    if (_path.empty())
+    {
+        return;
+    }
+
+    binary_search_tree<tkey, tvalue>::node *top = std::get<0>(_path.top());
+    _retval->key = top->key;
+    _retval->value_ref = top->value;
+    _retval->depth = _path.size() - 1;
 }
 
 #pragma endregion
@@ -437,44 +629,44 @@ template<
 tvalue binary_search_tree<tkey, tvalue>::erase(
     tkey const &key)
 {
-    binary_search_tree<tkey, tvalue>::node *subtree_root = _root;
+    binary_search_tree<tkey, tvalue>::node **subtree_root = &_root;
 
-    while (subtree_root != nullptr)
+    while (*subtree_root != nullptr)
     {
-        auto comparison_result = _keys_comparer(key, subtree_root->key);
+        auto comparison_result = _keys_comparer(key, (*subtree_root)->key);
         if (comparison_result == 0)
         {
-            tvalue result = std::move(subtree_root->value);
+            tvalue result = std::move((*subtree_root)->value);
 
-            if (subtree_root->left_subtree == nullptr && subtree_root->right_subtree == nullptr) // no subtrees
+            if ((*subtree_root)->left_subtree == nullptr && (*subtree_root)->right_subtree == nullptr) // no subtrees
             {
-                delete subtree_root;
-                subtree_root = nullptr;
+                delete *subtree_root;
+                *subtree_root = nullptr;
             }
-            else if (subtree_root->left_subtree == nullptr || subtree_root->right_subtree == nullptr) // one subtree
+            else if ((*subtree_root)->left_subtree == nullptr || (*subtree_root)->right_subtree == nullptr) // one subtree
             {
-                node *existing_subtree = subtree_root->left_subtree == nullptr
-                    ? subtree_root->right_subtree
-                    : subtree_root->left_subtree;
-                delete subtree_root;
-                subtree_root = existing_subtree;
+                node *existing_subtree = (*subtree_root)->left_subtree == nullptr
+                    ? (*subtree_root)->right_subtree
+                    : (*subtree_root)->left_subtree;
+                delete *subtree_root;
+                *subtree_root = existing_subtree;
             }
             else // two subtrees
             {
-                node *&right_subtree_min = subtree_root->right_subtree;
+                node *&right_subtree_min = (*subtree_root)->right_subtree;
                 while (right_subtree_min->left_subtree != nullptr)
                 {
                     right_subtree_min = right_subtree_min->left_subtree;
                 }
 
                 {
-                    tkey temp = std::move(subtree_root->key);
-                    subtree_root->key = std::move(right_subtree_min->key);
+                    tkey temp = std::move((*subtree_root)->key);
+                    (*subtree_root)->key = std::move(right_subtree_min->key);
                     right_subtree_min->key = std::move(temp);
                 }
                 {
-                    tvalue temp = std::move(subtree_root->value);
-                    subtree_root->value = std::move(right_subtree_min->value);
+                    tvalue temp = std::move((*subtree_root)->value);
+                    (*subtree_root)->value = std::move(right_subtree_min->value);
                     right_subtree_min->value = std::move(temp);
                 }
 
@@ -487,8 +679,8 @@ tvalue binary_search_tree<tkey, tvalue>::erase(
         }
 
         subtree_root = (comparison_result < 0
-            ? subtree_root->left_subtree
-            : subtree_root->right_subtree);
+            ? &((*subtree_root)->left_subtree)
+            : &((*subtree_root)->right_subtree));
     }
 
     throw std::out_of_range("Key to erase doesn't exist inside tree");
@@ -497,19 +689,19 @@ tvalue binary_search_tree<tkey, tvalue>::erase(
 template<
     typename tkey,
     typename tvalue>
-typename binary_search_tree<tkey, tvalue>::prefix_iterator binary_search_tree<tkey, tvalue>::begin_prefix() const
+typename binary_search_tree<tkey, tvalue>::prefix_iterator binary_search_tree<tkey, tvalue>::begin_prefix()
 {
     // TODO:
-    return binary_search_tree<tkey, tvalue>::prefix_iterator(this);
+    return binary_search_tree<tkey, tvalue>::prefix_iterator(this, true);
 }
 
 template<
     typename tkey,
     typename tvalue>
-typename binary_search_tree<tkey, tvalue>::prefix_iterator binary_search_tree<tkey, tvalue>::end_prefix() const
+typename binary_search_tree<tkey, tvalue>::prefix_iterator binary_search_tree<tkey, tvalue>::end_prefix()
 {
     // TODO:
-    return binary_search_tree<tkey, tvalue>::prefix_iterator(this);
+    return binary_search_tree<tkey, tvalue>::prefix_iterator(this, false);
 }
 
 #endif
